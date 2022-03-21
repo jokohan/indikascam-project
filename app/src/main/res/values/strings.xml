@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">Indikascam</string>
+
+    <string-array name="platforms">
+
+    </string-array>
+
+    <string-array name="products">
+        <item>-</item>
+        <item id="1">Fashion</item>
+        <item>Makanan</item>
+        <item>Perabotan</item>
+        <item>Elektronik</item>
+        <item>Gadget</item>
+        <item>Obat</item>
+        <item>Jasa</item>
+        <item>lainnya...</item>
+    </string-array>
+
+    <string-array name="jenisGangguan">
+        <item>-</item>
+        <item>Penipuan / Fraud / Scam</item>
+        <item>Spam</item>
+        <item>Marketer</item>
+        <item>Robocall</item>
+        <item>lainnya...</item>
+    </string-array>
+
+    <string-array name="namaBank">
+        <item>-</item>
+        <item>BCA</item>
+        <item>Mandiri</item>
+        <item>BRI</item>
+        <item>BNI</item>
+        <item>CIMB Niaga</item>
+        <item>lainnya...</item>
+    </string-array>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="indikascam">Indikascam</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="masuk">Masuk</string>
+    <string name="belum_punya_akun_klik_disini">Belum punya akun? Klik disini</string>
+    <string name="daftar_akun">Daftar Akun</string>
+    <string name="daftar">Daftar</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="kode_otc_pada_email">Kode OTC pada email</string>
+    <string name="verifikasi_otc">Verifikasi OTC</string>
+    <string name="kode_otc_dikirim_ke_email">Kode OTC dikirim ke email</string>
+    <string name="belum_terima_email">Belum terima email?</string>
+    <string name="lanjut">Lanjut</string>
+    <string name="terima_kasih_caption">Aplikasi ini digunakan untuk memblokir panggilan masuk pada nomor-nomor yang terindikasi pernah melakukan penipuan sebelumnya</string>
+    <string name="terima_kasih_title">Terima kasih telah memakai aplikasi Indikascam</string>
+    <string name="lihat_statistik">Lihat Statistik</string>
+    <string name="tinggi">Tinggi</string>
+    <string name="sedang">Sedang</string>
+    <string name="rendah">Rendah</string>
+    <string name="terapkan">Terapkan</string>
+    <string name="proteksi_tinggi">Indikascam akan melakukan blokir otomatis untuk semua nomor telepon yang sudah pernah dilaporkan oleh pengguna lain</string>
+    <string name="proteksi_sedang">Indikascam akan melakukan blokir otomatis untuk semua nomor telepon yang sudah pernah dilaporkan atas <b><i>kasus penipuan</i></b> oleh pengguna lain</string>
+    <string name="proteksi_rendah">Indikascam tidak akan melakukan blokir otomatis terhadap nomor telepon apapun</string>
+    <string name="gangguan">Gangguan</string>
+
+</resources>

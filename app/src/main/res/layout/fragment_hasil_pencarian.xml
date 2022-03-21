@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".HasilPencarianFragment">
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_flag"
+        app:tint="@color/design_default_color_primary" />
+
+    <TextView
+        android:id="@+id/hasilPencarianFragment_tv_nomor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nomor tidak ditemukan"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:layout_marginTop="60dp"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/hasilPencarianFragment_btn_lapor"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/hasilPencarianFragment_tv_nomor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:drawableTop="@drawable/ic_lapor"
+        android:textAllCaps="false"
+        android:text="Lapor"
+        android:drawableTint="@color/white"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/hasilPencarianFragment_btn_tolak"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/hasilPencarianFragment_tv_nomor"
+        app:layout_constraintEnd_toStartOf="@id/hasilPencarianFragment_btn_lapor"
+        app:layout_constraintStart_toStartOf="parent"
+        android:drawableTop="@drawable/ic_phone_disabled"
+        android:textAllCaps="false"
+        android:text="Blokir"
+        android:drawableTint="@color/white"
+        android:layout_marginTop="16dp"/>
+
+    <Button
+        android:id="@+id/hasilPencarianFragment_btn_riwayat"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/hasilPencarianFragment_tv_nomor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/hasilPencarianFragment_btn_lapor"
+        android:drawableTop="@drawable/ic_history"
+        android:textAllCaps="false"
+        android:text="Riwayat"
+        android:drawableTint="@color/white"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/hasilPencarianFragment_caption_komentar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/hasilPencarianFragment_btn_lapor"
+        android:text="Komentar"
+        android:layout_margin="8dp"
+        android:textStyle="bold"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/hasilPencarianFragment_rcv_comment"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toBottomOf="@id/hasilPencarianFragment_caption_komentar"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Tambah Komentar"
+        android:drawableLeft="@drawable/ic_add"
+        android:drawableTint="@color/white"
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toBottomOf="@id/hasilPencarianFragment_rcv_comment"
+        app:layout_constraintStart_toStartOf="@id/hasilPencarianFragment_rcv_comment"
+        app:layout_constraintEnd_toEndOf="@id/hasilPencarianFragment_rcv_comment"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

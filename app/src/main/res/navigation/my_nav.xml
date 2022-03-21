@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/my_nav"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.indikascam.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_hasilPencarianFragment"
+            app:destination="@id/hasilPencarianFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hasilPencarianFragment"
+        android:name="com.example.indikascam.HasilPencarianFragment"
+        android:label="Hasil Pencarian"
+        tools:layout="@layout/fragment_hasil_pencarian" >
+        <argument
+            android:name="searchNumber"
+            app:argType="string[]" />
+    </fragment>
+    <fragment
+        android:id="@+id/laporFragment"
+        android:name="com.example.indikascam.LaporFragment"
+        android:label="Lapor"
+        tools:layout="@layout/fragment_lapor" />
+    <fragment
+        android:id="@+id/notifikasiFragment"
+        android:name="com.example.indikascam.NotifikasiFragment"
+        android:label="Notifikasi"
+        tools:layout="@layout/fragment_notifikasi" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.indikascam.ProfileFragment"
+        android:label="Profil"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_daftarUsahaFragment"
+            app:destination="@id/daftarUsahaFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.indikascam.SignInFragment"
+        android:label="Sign In"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_otcFragment"
+            app:destination="@id/otcFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.indikascam.SignUpFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_otcFragment"
+            app:destination="@id/otcFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/otcFragment"
+        android:name="com.example.indikascam.OtcFragment"
+        android:label="OTC"
+        tools:layout="@layout/fragment_otc" >
+        <action
+            android:id="@+id/action_otcFragment_to_newPasswordFragment"
+            app:destination="@id/newPasswordFragment" />
+        <argument
+            android:name="needs"
+            app:argType="string"
+            android:defaultValue="signUpConfirmation" />
+        <action
+            android:id="@+id/action_otcFragment_to_authCongratulationFragment"
+            app:destination="@id/authCongratulationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.example.indikascam.ForgotPasswordFragment"
+        android:label="Lupa Password"
+        tools:layout="@layout/fragment_forgot_password" >
+        <action
+            android:id="@+id/action_forgotPasswordFragment_to_otcFragment"
+            app:destination="@id/otcFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPasswordFragment"
+        android:name="com.example.indikascam.NewPasswordFragment"
+        android:label="Password Baru"
+        tools:layout="@layout/fragment_new_password" >
+        <action
+            android:id="@+id/action_newPasswordFragment_to_authCongratulationFragment"
+            app:destination="@id/authCongratulationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/authCongratulationFragment"
+        android:name="com.example.indikascam.AuthCongratulationFragment"
+        android:label=""
+        tools:layout="@layout/fragment_auth_congratulation" >
+        <argument
+            android:name="caption"
+            app:argType="string"
+            android:defaultValue="Selamat! Email Anda sudah terverifikasi. Silahkan melanjutkan ke halaman login" />
+        <action
+            android:id="@+id/action_authCongratulationFragment_to_signInFragment"
+            app:destination="@id/signInFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/signInFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/daftarUsahaFragment"
+        android:name="com.example.indikascam.DaftarUsahaFragment"
+        android:label="Daftar Usaha"
+        tools:layout="@layout/fragment_daftar_usaha" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.indikascam.SettingsFragment"
+        android:label="Pengaturan"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_pengaturanTingkatProteksiFragment"
+            app:destination="@id/pengaturanTingkatProteksiFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pengaturanTingkatProteksiFragment"
+        android:name="com.example.indikascam.PengaturanTingkatProteksiFragment"
+        android:label="Tingkat Proteksi"
+        tools:layout="@layout/fragment_pengaturan_tingkat_proteksi" />
+</navigation>

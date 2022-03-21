@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/terima_kasih_title"
+        android:textSize="26sp"
+        android:gravity="center"
+        android:textStyle="bold"/>
+    
+    <ImageView
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:scaleType="centerCrop"
+        android:layout_margin="20dp"
+        android:src="@drawable/thank_you"
+        android:contentDescription="@string/terima_kasih_title" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textStyle="italic"
+        android:text="@string/terima_kasih_caption"/>
+
+    <Button
+        android:id="@+id/welcomeFragment_btn_lanjut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textAllCaps="false"
+        android:text="@string/lihat_statistik"/>
+
+</LinearLayout>

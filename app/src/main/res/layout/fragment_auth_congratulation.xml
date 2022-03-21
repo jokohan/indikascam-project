@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AuthCongratulationFragment"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="130dp"
+        android:src="@drawable/ic_verified"/>
+
+    <TextView
+        android:id="@+id/authCongratulationFragment_tv_caption"
+        android:layout_width="320dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textStyle="bold|italic"
+        android:textSize="16sp"
+        android:text="selamat" />
+
+    <Button
+        android:id="@+id/authCongratulationFragment_btn_backToLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="login"/>
+
+</LinearLayout>

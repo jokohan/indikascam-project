@@ -8,7 +8,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.FileUtils
 import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,11 +24,9 @@ import com.example.indikascam.adapter.BuktiLaporanAdapter
 import com.example.indikascam.databinding.FragmentLaporBinding
 import com.example.indikascam.dialog.BuktiDialog
 import com.example.indikascam.model.BuktiLaporanItem
-import com.example.indikascam.model.LaporPost
 import com.example.indikascam.repository.Repository
 import com.example.indikascam.sessionManager.SessionManager
 import com.google.gson.Gson
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -86,7 +83,6 @@ class LaporFragment : Fragment() {
         }
     }
 
-
     private fun removeBuktiLaporanList(it: Int) {
         buktiLaporanList.removeAt(it)
         buktiLaporanListAdapter.notifyDataSetChanged()
@@ -100,7 +96,7 @@ class LaporFragment : Fragment() {
             binding.laporFragmentRcvBuktiLaporan.visibility = View.VISIBLE
         }
 
-        var newItem = BuktiLaporanItem(imageSelected, fileName, type)
+        val newItem = BuktiLaporanItem(imageSelected, fileName, type)
 
         buktiLaporanList.add(newItem)
         buktiLaporanListAdapter.notifyDataSetChanged()
@@ -128,19 +124,6 @@ class LaporFragment : Fragment() {
             val sessionManager = SessionManager(requireContext())
             val accessToken = sessionManager.fetchAuthToken()
 
-            val laporPost = LaporPost(
-                gangguanFinal!!,
-                banksFinal!!,
-                binding.laporFragmentEtNomorRekeningPelaku.text.toString(),
-                binding.laporFragmentEtNamaPelaku.text.toString(),
-                platformFinal!!,
-                productsFinal!!,
-                binding.laporFragmentEtKronologi.text.toString(),
-                buktiFinal,
-                binding.laporFragmentEtTotalKerugian.text.toString().toInt(),
-                binding.laporFragmentEtNomorTeleponPelaku.text.toString()
-                )
-
             val repository = Repository()
             val viewModelFactory = MainViewModelFactory(repository)
             viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
@@ -155,7 +138,7 @@ class LaporFragment : Fragment() {
                 binding.laporFragmentEtTotalKerugian.text.toString().toInt(),
                 binding.laporFragmentEtNomorTeleponPelaku.text.toString())
             viewModel.myResponseUserReport.observe(viewLifecycleOwner, Observer { response ->
-                if(response.isSuccessful && response.code() == 200){
+                if(response.isSuccessful && response.code() == 201){
                     val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
                     Log.d("SUKSES LAPOR", jsonObject.toString())
                 } else {
@@ -165,10 +148,6 @@ class LaporFragment : Fragment() {
                     Log.d("ResponseError", reader.toString())
                 }
             })
-
-//            for(bukti in buktiFinal){
-//                Log.d("BUKTI", bukti.toString())
-//            }
 
         }
     }
@@ -187,7 +166,7 @@ class LaporFragment : Fragment() {
                     products += data.asJsonObject["name"].toString().removeSurrounding("\"")
                     productIds += data.asJsonObject["id"].asInt
                 }
-                val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, products)
+                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, products)
                 binding.laporFragmentAcProduct.setAdapter(adapter)
 
                 binding.laporFragmentAcProduct.setOnItemClickListener { _, _, i, _ ->
@@ -211,7 +190,7 @@ class LaporFragment : Fragment() {
                     banks += data.asJsonObject["name"].toString().removeSurrounding("\"")
                     bankIds += data.asJsonObject["id"].asInt
                 }
-                val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, banks)
+                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, banks)
                 binding.laporFragmentAcNamaBank.setAdapter(adapter)
 
                 binding.laporFragmentAcNamaBank.setOnItemClickListener { _, _, i, _ ->
@@ -235,7 +214,7 @@ class LaporFragment : Fragment() {
                     platforms += data.asJsonObject["name"].toString().removeSurrounding("\"")
                     platformIds += data.asJsonObject["id"].asInt
                 }
-                val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, platforms)
+                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, platforms)
                 binding.laporFragmentAcPlatform.setAdapter(adapter)
 
                 binding.laporFragmentAcPlatform.setOnItemClickListener { _, _, i, _ ->
@@ -259,7 +238,7 @@ class LaporFragment : Fragment() {
                     reportTypes += data.asJsonObject["name"].toString().removeSurrounding("\"")
                     reportTypeIds += data.asJsonObject["id"].asInt
                 }
-                val adapter = ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, reportTypes)
+                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, reportTypes)
                 binding.laporFragmentAcGangguan.setAdapter(adapter)
 
                 binding.laporFragmentAcGangguan.setOnItemClickListener { _, _, i, _ ->
@@ -296,13 +275,11 @@ class LaporFragment : Fragment() {
         return binding.root
     }
 
-
-
     private fun selectBukti() {
         val choice = arrayOf<CharSequence>("Bukti Gambar", "Bukti PDF", "Cancel")
         val myAlertDialog: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         myAlertDialog.setTitle("Pilih Bukti")
-        myAlertDialog.setItems(choice, DialogInterface.OnClickListener { dialog, item ->
+        myAlertDialog.setItems(choice, DialogInterface.OnClickListener { _, item ->
             when {
                 choice[item] == "Bukti Gambar" -> {
                     val pickFromGallery = Intent(Intent.ACTION_PICK)
@@ -332,7 +309,6 @@ class LaporFragment : Fragment() {
                 1 -> if (resultCode == RESULT_OK && data != null) {
                     val imageUri = data.data
                     val fileName: String?
-                    val imageFile: File
                     val cursor = context?.contentResolver?.query(imageUri!!, null, null, null, null)
                     cursor?.moveToFirst()
                     fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
@@ -352,7 +328,6 @@ class LaporFragment : Fragment() {
                 12 -> if (resultCode == RESULT_OK && data != null) {
                     val pdfUri = data.data
                     val fileName: String?
-                    val pdfFile: File
                     val cursor = context?.contentResolver?.query(pdfUri!!, null, null, null, null)
                     cursor?.moveToFirst()
                     fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
@@ -372,11 +347,6 @@ class LaporFragment : Fragment() {
             }
         }
 
-    }
-
-    private fun setDropDownAdapter(stringArray: Int): ArrayAdapter<String> {
-        val string = resources.getStringArray(stringArray)
-        return ArrayAdapter(requireContext(), R.layout.dropdown_platform, string)
     }
 
     private fun setTeleponRekeningClickable() {

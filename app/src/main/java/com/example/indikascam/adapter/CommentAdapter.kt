@@ -10,11 +10,11 @@ import com.example.indikascam.R
 
 class CommentAdapter: RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
 
-    private var titles = arrayOf("Ucok", "Ucok", "Ucok", "Ucok", "Ucok", "Ucok", "Ucok", "Ucok", "Ucok", "Ucok", "Ucok")
+    private var titles = arrayOf("Ucok", "Anonim", "Doe")
 
-    private var description= arrayOf("awas penipu\nhati-hati", "awas penipu\nhati-hati", "awas penipu\nhati-hati", "awas penipu\nhati-hati", "awas penipu\nhati-hati", "awas penipu\nhati-hati", "awas penipu\nhati-hati", "awas penipu\nhati-hati", "awas penipu\nhati-hati", "awas penipu\nhati-hati", "awas penipu\nhati-hati")
+    private var description= arrayOf("Scam", "Scam", "Spam")
 
-    private var icons = intArrayOf(R.drawable.ic_profil, R.drawable.ic_profil, R.drawable.ic_profil, R.drawable.ic_profil, R.drawable.ic_profil, R.drawable.ic_profil, R.drawable.ic_profil, R.drawable.ic_profil, R.drawable.ic_profil, R.drawable.ic_profil, R.drawable.ic_profil)
+    private var icons = intArrayOf(R.drawable.business_partnership_illustration, R.drawable.ic_profil, R.drawable.configuration_protection)
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         var commentIcon: ImageView

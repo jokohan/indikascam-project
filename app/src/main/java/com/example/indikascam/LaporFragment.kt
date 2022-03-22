@@ -1,6 +1,5 @@
 package com.example.indikascam
 
-
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
@@ -34,7 +33,6 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

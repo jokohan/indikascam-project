@@ -20,18 +20,18 @@ class StatisticsDialog(buttonText: String): DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var rootView: View = inflater.inflate(R.layout.fragment_statistics_dialog, container, false)
+        val rootView: View = inflater.inflate(R.layout.fragment_statistics_dialog, container, false)
 
         rootView.findViewById<Button>(R.id.statisticsDialogFragment_btn_mulaiBlokir).text = text
 
-        var layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rootView.findViewById<RecyclerView>(R.id.statisticsDialogFragment_rcv_banner).layoutManager = layoutManager
-        var adapter = ScammedBannerAdapter()
+        val adapter = ScammedBannerAdapter()
         rootView.findViewById<RecyclerView>(R.id.statisticsDialogFragment_rcv_banner).adapter = adapter
 
-        var productLayoutManager =LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        val productLayoutManager =LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rootView.findViewById<RecyclerView>(R.id.statisticsDialogFragment_rcv_product).layoutManager = productLayoutManager
-        var productAdapter = ScammedProductAdapter()
+        val productAdapter = ScammedProductAdapter()
         rootView.findViewById<RecyclerView>(R.id.statisticsDialogFragment_rcv_product).adapter = productAdapter
 
         rootView.findViewById<Button>(R.id.statisticsDialogFragment_btn_mulaiBlokir).setOnClickListener {

@@ -1,17 +1,17 @@
 package com.example.indikascam
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.indikascam.adapter.CommentAdapter
-import com.example.indikascam.adapter.ScammedBannerAdapter
-import com.example.indikascam.adapter.ScammedProductAdapter
+import com.example.indikascam.databinding.FragmentHasilPencarianBinding
+import com.example.indikascam.dialog.ReviewUlangDialog
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,7 +36,10 @@ class HasilPencarianFragment : Fragment() {
         }
     }
 
-    val args: HasilPencarianFragmentArgs by navArgs()
+    private var _binding: FragmentHasilPencarianBinding? = null
+    private val binding get() = _binding!!
+
+    private val args: HasilPencarianFragmentArgs by navArgs()
 
     private var commentLayoutManager: RecyclerView.LayoutManager? = null
     private var commentAdapter: RecyclerView.Adapter<CommentAdapter.ViewHolder>? = null
@@ -44,22 +47,45 @@ class HasilPencarianFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_hasil_pencarian, container, false)
+        _binding = FragmentHasilPencarianBinding.inflate(inflater, container, false)
 
-        val searchNumber = args.searchNumber
+        setupHasilPencarianFragment(args.searchNumber)
+        binding.hasilPencarianFragmentBtnLapor.setOnClickListener {
+            val action = HasilPencarianFragmentDirections.actionHasilPencarianFragmentToLaporFragment(args.searchNumber)
+            Navigation.findNavController(binding.root).navigate(action)
+        }
+        return binding.root
+    }
 
+    private fun setupHasilPencarianFragment(searchNumber: Array<String>) {
+        //searchNumber[0] == nomor yang dicari, searchNumber[1] == jenis nomor
         if (searchNumber[0].isNotBlank()){
-            view.findViewById<TextView>(R.id.hasilPencarianFragment_tv_nomor).text = "${searchNumber[0]} ${searchNumber[1]}"
+            binding.hasilPencarianFragmentTvNomor.text = searchNumber[0]
+        } else{
+            binding.hasilPencarianFragmentTvNomor.text = "Tidak Ditemukan"
         }
 
-        commentLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        view.findViewById<RecyclerView>(R.id.hasilPencarianFragment_rcv_comment).layoutManager = commentLayoutManager
-        commentAdapter = CommentAdapter()
-        view.findViewById<RecyclerView>(R.id.hasilPencarianFragment_rcv_comment).adapter = commentAdapter
+        if(searchNumber[1] == "0") {
+            binding.hasilPencarianFragmentTvCaptionNomor.text = "Nomor Telepon"
+        }else {
+            binding.hasilPencarianFragmentTvCaptionNomor.text = "Nomor Rekening"
+            binding.hasilPencarianFragmentBtnBlokir.visibility = View.GONE
+        }
 
-        return view
+        val rcvRiwayat = binding.hasilPencarianFragmentRcvRiwayat
+        commentLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        rcvRiwayat.layoutManager = commentLayoutManager
+        commentAdapter = CommentAdapter()
+        rcvRiwayat.adapter = commentAdapter
+
+        binding.hasilPencarianFragmentIvReviewUlang.setOnClickListener {
+            val reviewUlangDialog = ReviewUlangDialog(searchNumber[0], searchNumber[1])
+            reviewUlangDialog.show(requireActivity().supportFragmentManager, "Welcome Dialog")
+        }
+
+
     }
 
     companion object {

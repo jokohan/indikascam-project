@@ -22,12 +22,19 @@
         <argument
             android:name="searchNumber"
             app:argType="string[]" />
+        <action
+            android:id="@+id/action_hasilPencarianFragment_to_laporFragment"
+            app:destination="@id/laporFragment" />
     </fragment>
     <fragment
         android:id="@+id/laporFragment"
         android:name="com.example.indikascam.LaporFragment"
         android:label="Lapor"
-        tools:layout="@layout/fragment_lapor" />
+        tools:layout="@layout/fragment_lapor" >
+        <argument
+            android:name="nomorYangAkanDilaporkan"
+            app:argType="string[]" />
+    </fragment>
     <fragment
         android:id="@+id/notifikasiFragment"
         android:name="com.example.indikascam.NotifikasiFragment"

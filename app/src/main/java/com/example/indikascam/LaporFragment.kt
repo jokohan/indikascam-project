@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.indikascam.adapter.BuktiLaporanAdapter
 import com.example.indikascam.databinding.FragmentLaporBinding
@@ -49,6 +50,8 @@ class LaporFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private val args: LaporFragmentArgs by navArgs()
+
     private var _binding: FragmentLaporBinding? = null
     private val binding get() = _binding!!
 
@@ -79,6 +82,93 @@ class LaporFragment : Fragment() {
             //delete click
             removeBuktiLaporanList(string[1].toInt())
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        // Inflate the layout for this fragment
+        _binding = FragmentLaporBinding.inflate(inflater, container, false)
+
+        val nomorYangAkanDilaporkan = args.nomorYangAkanDilaporkan
+        if(nomorYangAkanDilaporkan[1] == "0"){
+            binding.laporFragmentCbNomorTelepon.isChecked = true
+            binding.laporFragmentCbNomorRekening.isChecked = false
+            binding.laporFragmentEtNomorTeleponPelaku.setText(nomorYangAkanDilaporkan[0])
+        } else{
+            binding.laporFragmentCbNomorRekening.isChecked = true
+            binding.laporFragmentCbNomorTelepon.isChecked = false
+            binding.laporFragmentEtNomorRekeningPelaku.setText(nomorYangAkanDilaporkan[0])
+        }
+
+        if(buktiLaporanList.size == 0){
+            binding.laporFragmentRcvBuktiLaporan.visibility = View.GONE
+        }
+
+        binding.laporFragmentCbNomorTelepon.setOnCheckedChangeListener { _, _ ->  setTeleponRekeningVisibility(binding.laporFragmentCbNomorTelepon)}
+        binding.laporFragmentCbNomorRekening.setOnCheckedChangeListener{ _, _ -> setTeleponRekeningVisibility(binding.laporFragmentCbNomorRekening)}
+        binding.laporFragmentCbNomorRekening.setOnClickListener {setTeleponRekeningClickable()}
+        binding.laporFragmentCbNomorTelepon.setOnClickListener {setTeleponRekeningClickable()}
+        binding.laporFragmentCbNomorTelepon.isClickable = false
+
+        binding.laporFragmentRcvBuktiLaporan.adapter = buktiLaporanListAdapter
+        binding.laporFragmentRcvBuktiLaporan.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.laporFragmentBtnTambahBukti.setOnClickListener {
+            selectBukti()
+        }
+
+
+        return binding.root
+    }
+
+    @SuppressLint("Range")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode != RESULT_CANCELED) {
+            when (requestCode) {
+                1 -> if (resultCode == RESULT_OK && data != null) {
+                    val imageUri = data.data
+                    val fileName: String?
+                    val cursor = context?.contentResolver?.query(imageUri!!, null, null, null, null)
+                    cursor?.moveToFirst()
+                    fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    cursor?.close()
+                    tambahBukti(imageUri, fileName!!, 1)
+
+                    val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(imageUri!!,"r", null) ?: return
+                    val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+                    val fileOld = File(context?.cacheDir, fileName)
+                    val outputStream = FileOutputStream(fileOld)
+                    inputStream.copyTo(outputStream)
+
+                    val requestBody: RequestBody = fileOld.asRequestBody("Image/*".toMediaTypeOrNull())
+                    val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("files[]", fileName, requestBody)
+                    buktiFinal.add(multipartBody)
+                }
+                12 -> if (resultCode == RESULT_OK && data != null) {
+                    val pdfUri = data.data
+                    val fileName: String?
+                    val cursor = context?.contentResolver?.query(pdfUri!!, null, null, null, null)
+                    cursor?.moveToFirst()
+                    fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    cursor?.close()
+                    tambahBukti(pdfUri, fileName!!, 12)
+
+                    val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(pdfUri!!,"r", null) ?: return
+                    val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
+                    val fileOld = File(context?.cacheDir, fileName)
+                    val outputStream = FileOutputStream(fileOld)
+                    inputStream.copyTo(outputStream)
+
+                    val requestBody: RequestBody = fileOld.asRequestBody("Image/*".toMediaTypeOrNull())
+                    val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("files[]", fileName, requestBody)
+                    buktiFinal.add(multipartBody)
+                }
+            }
+        }
+
     }
 
     private fun removeBuktiLaporanList(it: Int) {
@@ -246,32 +336,7 @@ class LaporFragment : Fragment() {
         })
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        _binding = FragmentLaporBinding.inflate(inflater, container, false)
 
-        if(buktiLaporanList.size == 0){
-            binding.laporFragmentRcvBuktiLaporan.visibility = View.GONE
-        }
-
-        binding.laporFragmentCbNomorTelepon.setOnCheckedChangeListener { _, _ ->  setTeleponRekeningVisibility(binding.laporFragmentCbNomorTelepon)}
-        binding.laporFragmentCbNomorRekening.setOnCheckedChangeListener{ _, _ -> setTeleponRekeningVisibility(binding.laporFragmentCbNomorRekening)}
-        binding.laporFragmentCbNomorRekening.setOnClickListener {setTeleponRekeningClickable()}
-        binding.laporFragmentCbNomorTelepon.setOnClickListener {setTeleponRekeningClickable()}
-        binding.laporFragmentCbNomorTelepon.isClickable = false
-
-        binding.laporFragmentRcvBuktiLaporan.adapter = buktiLaporanListAdapter
-        binding.laporFragmentRcvBuktiLaporan.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.laporFragmentBtnTambahBukti.setOnClickListener {
-            selectBukti()
-        }
-
-
-        return binding.root
-    }
 
     private fun selectBukti() {
         val choice = arrayOf<CharSequence>("Bukti Gambar", "Bukti PDF", "Cancel")
@@ -298,54 +363,7 @@ class LaporFragment : Fragment() {
         myAlertDialog.show()
     }
 
-    @SuppressLint("Range")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode != RESULT_CANCELED) {
-            when (requestCode) {
-                1 -> if (resultCode == RESULT_OK && data != null) {
-                    val imageUri = data.data
-                    val fileName: String?
-                    val cursor = context?.contentResolver?.query(imageUri!!, null, null, null, null)
-                    cursor?.moveToFirst()
-                    fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                    cursor?.close()
-                    tambahBukti(imageUri, fileName!!, 1)
-
-                    val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(imageUri!!,"r", null) ?: return
-                    val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-                    val fileOld = File(context?.cacheDir, fileName)
-                    val outputStream = FileOutputStream(fileOld)
-                    inputStream.copyTo(outputStream)
-
-                    val requestBody: RequestBody = fileOld.asRequestBody("Image/*".toMediaTypeOrNull())
-                    val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("files[]", fileName, requestBody)
-                    buktiFinal.add(multipartBody)
-                }
-                12 -> if (resultCode == RESULT_OK && data != null) {
-                    val pdfUri = data.data
-                    val fileName: String?
-                    val cursor = context?.contentResolver?.query(pdfUri!!, null, null, null, null)
-                    cursor?.moveToFirst()
-                    fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                    cursor?.close()
-                    tambahBukti(pdfUri, fileName!!, 12)
-
-                    val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(pdfUri!!,"r", null) ?: return
-                    val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-                    val fileOld = File(context?.cacheDir, fileName)
-                    val outputStream = FileOutputStream(fileOld)
-                    inputStream.copyTo(outputStream)
-
-                    val requestBody: RequestBody = fileOld.asRequestBody("Image/*".toMediaTypeOrNull())
-                    val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("files[]", fileName, requestBody)
-                    buktiFinal.add(multipartBody)
-                }
-            }
-        }
-
-    }
 
     private fun setTeleponRekeningClickable() {
         when {

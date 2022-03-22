@@ -64,5 +64,16 @@
     <string name="proteksi_sedang">Indikascam akan melakukan blokir otomatis untuk semua nomor telepon yang sudah pernah dilaporkan atas <b><i>kasus penipuan</i></b> oleh pengguna lain</string>
     <string name="proteksi_rendah">Indikascam tidak akan melakukan blokir otomatis terhadap nomor telepon apapun</string>
     <string name="gangguan">Gangguan</string>
+    <string name="request_review_kembali">Request review kembali</string>
+    <string name="nomor">Nomor</string>
+    <string name="nomor_tidak_ditemukan">Nomor tidak ditemukan</string>
+    <string name="blokir">Blokir</string>
+    <string name="lapor">Lapor</string>
+    <string name="riwayat_laporan">Riwayat Laporan</string>
+    <string name="ajukan_permohonan_review_ulang">Ajukan Permohonan Review Ulang</string>
+    <string name="review_ulang">Review Ulang</string>
+    <string name="silahkan_masukkan_email_anda">Silahkan masukkan email Anda</string>
+    <string name="kirim">Kirim</string>
+    <string name="silahkan_masukkan_email_anda_agar_admin_kami_bisa_segera_review_ulang">Silahkan masukkan email Anda agar admin kami bisa segera review ulang</string>
 
 </resources>

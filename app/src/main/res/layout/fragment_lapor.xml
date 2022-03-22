@@ -33,8 +33,7 @@
                 android:id="@+id/laporFragment_Et_namaPelaku"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:text="Ucok"/>
+                android:inputType="textEmailAddress"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,8 +55,7 @@
                 android:id="@+id/laporFragment_cb_nomorRekening"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nomor Rekening"
-                android:checked="true"/>
+                android:text="Nomor Rekening"/>
 
         </LinearLayout>
 
@@ -81,8 +79,7 @@
                     android:id="@+id/laporFragment_Et_nomorTeleponPelaku"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:text="08123456789"/>
+                    android:inputType="textEmailAddress"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -135,8 +132,7 @@
                     android:id="@+id/laporFragment_Et_nomorRekeningPelaku"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:text="100123456789"/>
+                    android:inputType="textEmailAddress"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -234,8 +230,7 @@
                     android:id="@+id/laporFragment_et_totalKerugian"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="number"
-                    android:text="50000000"/>
+                    android:inputType="number"/>
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

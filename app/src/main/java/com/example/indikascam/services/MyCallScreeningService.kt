@@ -9,12 +9,23 @@ import android.net.Uri
 import android.os.Build
 import android.telecom.Call
 import android.telecom.CallScreeningService
-import android.view.Gravity
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.indikascam.MainActivity
+import com.example.indikascam.MainViewModel
 import com.example.indikascam.R
+import com.example.indikascam.api.SimpleApi
+import com.example.indikascam.util.Constants.Companion.BASE_URL
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Retrofit
+import retrofit2.awaitResponse
+import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
 
 private val CHANNEL_ID = "channel_id_scammer"
 private val notificationId = 101
@@ -23,11 +34,38 @@ class MyCallScreeningService : CallScreeningService() {
 
     override fun onScreenCall(p0: Call.Details) {
         val phoneNumber = getPhoneNumber(p0)
-        var response = CallResponse.Builder()
+        callApi(p0, phoneNumber)
+    }
 
-        response = handlePhoneCall(response, phoneNumber)
+    private fun callApi(p0: Call.Details, phoneNumber: String) {
+        val api = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(SimpleApi::class.java)
 
-        respondToCall(p0, response.build())
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                val response = api.getCatFacts().awaitResponse()
+                if (response.isSuccessful){
+                    val data = response.body()!!
+                    Log.d("TAG", data.fact)
+
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(applicationContext, data.fact, Toast.LENGTH_LONG).show()
+                    }
+                    var responseForCall = CallResponse.Builder()
+                    responseForCall = handlePhoneCall(responseForCall, phoneNumber)
+                    respondToCall(p0, responseForCall.build())
+                }
+            } catch (e: Exception){
+                withContext(Dispatchers.Main){
+                    Toast.makeText(applicationContext, "ada yg salah", Toast.LENGTH_LONG).show()
+                }
+            }
+
+        }
+
     }
 
     private fun createNotificationChannel() {
@@ -45,15 +83,11 @@ class MyCallScreeningService : CallScreeningService() {
     }
 
     private fun sendNotification(phoneNumber: String) {
-
         val intent = Intent(applicationContext, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
-
         intent.putExtra("a", phoneNumber)
-
         val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-
         val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("IndikaScam")
@@ -61,7 +95,6 @@ class MyCallScreeningService : CallScreeningService() {
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
         with(NotificationManagerCompat.from(applicationContext)){
             notify(notificationId, builder.build())
         }
@@ -72,9 +105,9 @@ class MyCallScreeningService : CallScreeningService() {
         phoneNumber: String
     ): CallResponse.Builder {
         val scammer = "+6282129993401"
+
 //        val alert = Toast.makeText(applicationContext, "Awas Penipu!", Toast.LENGTH_LONG)
 //        alert.setGravity(Gravity.CENTER, 0, 0)
-
 //        createNotificationChannel()
 
         if (scammer == phoneNumber) {
@@ -85,8 +118,10 @@ class MyCallScreeningService : CallScreeningService() {
                 //user tidak mendapatkan panggilan masuk
                 setDisallowCall(true)
             }
+
 //            sendNotification(phoneNumber)
 //            alert.show()
+
         } else {
 //            alert.setText("Telepon masuk: $phoneNumber")
 //            alert.show()

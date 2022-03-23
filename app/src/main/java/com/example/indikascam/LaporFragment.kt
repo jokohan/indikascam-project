@@ -91,15 +91,20 @@ class LaporFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentLaporBinding.inflate(inflater, container, false)
 
-        val nomorYangAkanDilaporkan = args.nomorYangAkanDilaporkan
-        if(nomorYangAkanDilaporkan[1] == "0"){
-            binding.laporFragmentCbNomorTelepon.isChecked = true
-            binding.laporFragmentCbNomorRekening.isChecked = false
-            binding.laporFragmentEtNomorTeleponPelaku.setText(nomorYangAkanDilaporkan[0])
-        } else{
-            binding.laporFragmentCbNomorRekening.isChecked = true
-            binding.laporFragmentCbNomorTelepon.isChecked = false
-            binding.laporFragmentEtNomorRekeningPelaku.setText(nomorYangAkanDilaporkan[0])
+        if(args.nomorYangAkanDilaporkan != null){
+            val nomorYangAkanDilaporkan = args.nomorYangAkanDilaporkan
+            if(nomorYangAkanDilaporkan!![1] == "0"){
+                binding.laporFragmentCbNomorTelepon.isChecked = true
+                binding.laporFragmentCbNomorRekening.isChecked = false
+                binding.laporFragmentEtNomorTeleponPelaku.setText(nomorYangAkanDilaporkan[0])
+            } else if(nomorYangAkanDilaporkan[1] == "1"){
+                binding.laporFragmentCbNomorRekening.isChecked = true
+                binding.laporFragmentCbNomorTelepon.isChecked = false
+                binding.laporFragmentEtNomorRekeningPelaku.setText(nomorYangAkanDilaporkan[0])
+                binding.laporFragmentClRekening.visibility = View.VISIBLE
+                binding.laporFragmentClTelepon.visibility = View.GONE
+                setLayoutRekeningMargin()
+            }
         }
 
         if(buktiLaporanList.size == 0){
@@ -110,7 +115,7 @@ class LaporFragment : Fragment() {
         binding.laporFragmentCbNomorRekening.setOnCheckedChangeListener{ _, _ -> setTeleponRekeningVisibility(binding.laporFragmentCbNomorRekening)}
         binding.laporFragmentCbNomorRekening.setOnClickListener {setTeleponRekeningClickable()}
         binding.laporFragmentCbNomorTelepon.setOnClickListener {setTeleponRekeningClickable()}
-        binding.laporFragmentCbNomorTelepon.isClickable = false
+        setTeleponRekeningClickable()
 
         binding.laporFragmentRcvBuktiLaporan.adapter = buktiLaporanListAdapter
         binding.laporFragmentRcvBuktiLaporan.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -396,6 +401,11 @@ class LaporFragment : Fragment() {
                 binding.laporFragmentClRekening.visibility = View.GONE
             }
         }
+
+        setLayoutRekeningMargin()
+    }
+
+    private fun setLayoutRekeningMargin() {
         (binding.laporFragmentClRekening.layoutParams as ViewGroup.MarginLayoutParams).apply {
             if(!binding.laporFragmentCbNomorTelepon.isChecked and binding.laporFragmentCbNomorRekening.isChecked){
                 setMargins(0,0,0,0)
@@ -403,7 +413,6 @@ class LaporFragment : Fragment() {
                 setMargins(0,((requireContext().resources.displayMetrics.density) * 8).toInt(),0,0)
             }
         }
-
     }
 
     companion object {

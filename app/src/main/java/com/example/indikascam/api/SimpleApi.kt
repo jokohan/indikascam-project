@@ -2,6 +2,7 @@ package com.example.indikascam.api
 
 import com.example.indikascam.model.*
 import okhttp3.MultipartBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -79,4 +80,7 @@ interface SimpleApi {
         @Part ("total_loss") totalKerugian: Int,
         @Part ("scammer_phone_number") noTelPenipu: String
     ):Response<Any>
+
+    @GET("fact?max_length=140")
+    fun getCatFacts(): Call<testing>
 }

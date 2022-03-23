@@ -33,7 +33,9 @@
         tools:layout="@layout/fragment_lapor" >
         <argument
             android:name="nomorYangAkanDilaporkan"
-            app:argType="string[]" />
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/notifikasiFragment"

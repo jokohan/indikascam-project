@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".DaftarUsahaFragment"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="20dp">
@@ -26,7 +24,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Daftarkan usaha Anda agar dikenali oleh user lainnya. Nomor telepon perusahaan yang Anda daftar tidak akan diblokir oleh sistem kami"
+        android:text="Daftarkan usaha Anda agar dikenali oleh user lainnya. Nomor telepon usaha yang Anda daftarkan tidak akan diblokir oleh sistem kami"
         android:gravity="center"
         android:textStyle="italic"/>
 

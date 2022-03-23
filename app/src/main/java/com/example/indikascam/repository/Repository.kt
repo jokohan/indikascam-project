@@ -3,6 +3,7 @@ package com.example.indikascam.repository
 import com.example.indikascam.api.RetrofitInstance
 import com.example.indikascam.model.*
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Part
 
@@ -40,7 +41,7 @@ class Repository {
         return RetrofitInstance.api.resendEmailTokenPost(token)
     }
 
-    suspend fun userReportPost(token: String, jenisGangguan: Int,bank: Int, noRek: String, namaPenipu: String, platform: Int, product: Int, kronologi: String, bukti: List<MultipartBody.Part>, totalKerugian: Int, noTelPenipu: String): Response<Any>{
+    suspend fun userReportPost(token: String, jenisGangguan: Int,bank: Int, noRek: RequestBody, namaPenipu: RequestBody, platform: Int, product: Int, kronologi: RequestBody, bukti: List<MultipartBody.Part>, totalKerugian: Int, noTelPenipu: RequestBody): Response<Any>{
         return RetrofitInstance.api.userReportPost(token, jenisGangguan, bank, noRek, namaPenipu, platform, product, kronologi, bukti, totalKerugian,noTelPenipu)
     }
 

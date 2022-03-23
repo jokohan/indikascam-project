@@ -7,12 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.OnBackPressedDispatcher
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -78,7 +74,7 @@ class ProfileFragment : Fragment() {
                         binding.profileFragmentTvNamaUser.text = "Nama"
                         binding.profileFragmentTvEmailUser.text = "Email"
                         binding.profileFragmentBtnLogout.isVisible = false
-                        binding.profileFragmentBtnKomentarSaya.isVisible = false
+//                        binding.profileFragmentBtnKomentarSaya.isVisible = false
                         binding.profileFragmentBtnLaporanSaya.isVisible = false
                         binding.profileFragmentBtnSignin.isVisible = true
                         sessionManager.saveAuthToken("")
@@ -93,8 +89,8 @@ class ProfileFragment : Fragment() {
 
         }
 
-        binding.profileFragmentBtnDaftarUsaha.setOnClickListener {
-            Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_daftarUsahaFragment)
+        binding.profileFragmentBtnProfilUsaha.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_profilUsahaFragment)
         }
 
         binding.profileFragmentBtnPengaturan.setOnClickListener {
@@ -109,7 +105,7 @@ class ProfileFragment : Fragment() {
             binding.profileFragmentTvNamaUser.text = "Nama"
             binding.profileFragmentTvEmailUser.text = "Email"
             binding.profileFragmentBtnLogout.isVisible = false
-            binding.profileFragmentBtnKomentarSaya.isVisible = false
+//            binding.profileFragmentBtnKomentarSaya.isVisible = false
             binding.profileFragmentBtnLaporanSaya.isVisible = false
 //            binding.profileFragmentBtnSignin.isVisible = true
         } else {
@@ -120,7 +116,7 @@ class ProfileFragment : Fragment() {
                 binding.profileFragmentTvEmailUser.text = email
             })
             binding.profileFragmentBtnLogout.isVisible = true
-            binding.profileFragmentBtnKomentarSaya.isVisible = true
+//            binding.profileFragmentBtnKomentarSaya.isVisible = true
             binding.profileFragmentBtnLaporanSaya.isVisible = true
 //            binding.profileFragmentBtnSignin.isVisible = false
         }

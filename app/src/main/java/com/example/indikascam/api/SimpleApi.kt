@@ -2,6 +2,7 @@ package com.example.indikascam.api
 
 import com.example.indikascam.model.*
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -71,14 +72,14 @@ interface SimpleApi {
         @Header("Authorization") token: String,
         @Part ("report_type_id") jenisGangguan: Int,
         @Part ("bank_id") bank: Int,
-        @Part ("bank_account_number") noRek: String,
-        @Part ("scammer_name") namaPenipu: String,
+        @Part ("bank_account_number") noRek: RequestBody,
+        @Part ("scammer_name") namaPenipu: RequestBody,
         @Part ("platform_id") platform: Int,
         @Part ("product_id") product: Int,
-        @Part ("chronology") kronologi: String,
+        @Part ("chronology") kronologi: RequestBody,
         @Part bukti: List<MultipartBody.Part>,
         @Part ("total_loss") totalKerugian: Int,
-        @Part ("scammer_phone_number") noTelPenipu: String
+        @Part ("scammer_phone_number") noTelPenipu: RequestBody
     ):Response<Any>
 
     @GET("fact?max_length=140")

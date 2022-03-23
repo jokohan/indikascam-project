@@ -14,19 +14,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.indikascam.adapter.BuktiLaporanAdapter
 import com.example.indikascam.databinding.FragmentLaporBinding
 import com.example.indikascam.dialog.BuktiDialog
+import com.example.indikascam.dialog.LaporDialog
 import com.example.indikascam.model.BuktiLaporanItem
 import com.example.indikascam.repository.Repository
 import com.example.indikascam.sessionManager.SessionManager
 import com.google.gson.Gson
+import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -213,7 +217,6 @@ class LaporFragment : Fragment() {
         getReportType()
 
         binding.laporFragmentBtnLapor.setOnClickListener {
-
             val sessionManager = SessionManager(requireContext())
             val accessToken = sessionManager.fetchAuthToken()
 
@@ -222,18 +225,21 @@ class LaporFragment : Fragment() {
             viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
             viewModel.userReportPost("Bearer ${accessToken!!}", gangguanFinal!!,
                 banksFinal!!,
-                binding.laporFragmentEtNomorRekeningPelaku.text.toString(),
-                binding.laporFragmentEtNamaPelaku.text.toString(),
+                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNomorRekeningPelaku.text.toString()),
+                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNamaPelaku.text.toString()),
                 platformFinal!!,
                 productsFinal!!,
-                binding.laporFragmentEtKronologi.text.toString(),
+                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtKronologi.text.toString()),
                 buktiFinal,
                 binding.laporFragmentEtTotalKerugian.text.toString().toInt(),
-                binding.laporFragmentEtNomorTeleponPelaku.text.toString())
+                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNomorTeleponPelaku.text.toString()))
             viewModel.myResponseUserReport.observe(viewLifecycleOwner, Observer { response ->
                 if(response.isSuccessful && response.code() == 201){
                     val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
                     Log.d("SUKSES LAPOR", jsonObject.toString())
+                    val dialog = LaporDialog()
+                    dialog.show(parentFragmentManager,"")
+                    Navigation.findNavController(binding.root).navigateUp()
                 } else {
                     Log.d("ResponseError", response.code().toString())
                     Log.d("ResponseError", response.message())

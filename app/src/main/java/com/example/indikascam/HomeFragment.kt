@@ -81,7 +81,8 @@ class HomeFragment : Fragment() {
         view.findViewById<Button>(R.id.homeFragment_btn_searchNoHP).setOnClickListener{
             val someText = arrayOf<String>(view.findViewById<TextInputEditText>(R.id.signUpFragment_et_searchNomor).text.toString(), view.findViewById<TabLayout>(R.id.homeFragment_tl_teleponRekening).selectedTabPosition.toString())
             val action = HomeFragmentDirections.actionHomeFragmentToHasilPencarianFragment(someText)
-            Navigation.findNavController(view).navigate(action)}
+            Navigation.findNavController(view).navigate(action)
+        }
 
         view.findViewById<ImageView>(R.id.homeFragment_iv_statistics).setOnClickListener {
             val statisticsDialog = StatisticsDialog("Tutup")

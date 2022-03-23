@@ -51,11 +51,11 @@
             android:id="@+id/action_profileFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
         <action
-            android:id="@+id/action_profileFragment_to_daftarUsahaFragment"
-            app:destination="@id/daftarUsahaFragment" />
-        <action
             android:id="@+id/action_profileFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_profilUsahaFragment"
+            app:destination="@id/profilUsahaFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -133,10 +133,14 @@
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/daftarUsahaFragment"
-        android:name="com.example.indikascam.DaftarUsahaFragment"
-        android:label="Daftar Usaha"
-        tools:layout="@layout/fragment_daftar_usaha" />
+        android:id="@+id/DetailUsahaFragment"
+        android:name="com.example.indikascam.DetailUsahaFragment"
+        android:label="Detail Usaha"
+        tools:layout="@layout/fragment_detail_usaha" >
+        <argument
+            android:name="usaha"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.indikascam.SettingsFragment"
@@ -151,4 +155,13 @@
         android:name="com.example.indikascam.PengaturanTingkatProteksiFragment"
         android:label="Tingkat Proteksi"
         tools:layout="@layout/fragment_pengaturan_tingkat_proteksi" />
+    <fragment
+        android:id="@+id/profilUsahaFragment"
+        android:name="com.example.indikascam.ProfilUsahaFragment"
+        android:label="Profil Usaha"
+        tools:layout="@layout/fragment_profil_usaha" >
+        <action
+            android:id="@+id/action_profilUsahaFragment_to_detailUsahaFragment"
+            app:destination="@id/DetailUsahaFragment" />
+    </fragment>
 </navigation>

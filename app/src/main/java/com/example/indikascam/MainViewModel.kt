@@ -7,6 +7,7 @@ import com.example.indikascam.model.*
 import com.example.indikascam.repository.Repository
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 
 class MainViewModel(private val repository: Repository): ViewModel() {
@@ -117,7 +118,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
         }
     }
 
-    fun userReportPost(token: String, jenisGangguan: Int, bank: Int, noRek: String, namaPenipu: String, platform: Int, product: Int, kronologi: String, bukti: List<MultipartBody.Part>, totalKerugian: Int, noTelPenipu: String){
+    fun userReportPost(token: String, jenisGangguan: Int, bank: Int, noRek: RequestBody, namaPenipu: RequestBody, platform: Int, product: Int, kronologi: RequestBody, bukti: List<MultipartBody.Part>, totalKerugian: Int, noTelPenipu: RequestBody){
         viewModelScope.launch {
             val response = repository.userReportPost(token, jenisGangguan, bank, noRek, namaPenipu, platform,product, kronologi, bukti, totalKerugian,noTelPenipu)
             myResponseUserReport.value = response

@@ -4,26 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".DaftarUsahaFragment"
+    tools:context=".DetailUsahaFragment"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:padding="20dp">
-
-    <ImageView
-        android:id="@+id/daftarUsahaFragment_iv_info"
-        android:layout_width="30dp"
-        android:layout_height="25dp"
-        android:src="@drawable/ic_info"
-        android:layout_gravity="right"
-        android:layout_margin="8dp"
-        app:tint="@color/design_default_color_primary" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Daftar Usaha"
-        android:textStyle="bold"
-        android:textSize="24sp"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/daftarUsahaFragment_civ_businessLogo"
@@ -53,6 +37,7 @@
             android:text="Nama"/>
 
         <TextView
+            android:id="@+id/DetailUsahaFragment_tv_namaUsaha"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"

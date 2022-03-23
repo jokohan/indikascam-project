@@ -19,8 +19,7 @@ class BuktiLaporanAdapter(private val buktiLaporanList: List<BuktiLaporanItem>, 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BuktiLaporanViewHolder {
-        val itemView =
-            LayoutInflater.from(parent.context).inflate(R.layout.card_bukti_laporan, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.card_bukti_laporan, parent, false)
         return BuktiLaporanViewHolder(itemView)
     }
 

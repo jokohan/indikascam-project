@@ -45,28 +45,32 @@
    <TextView
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
-       android:text="@string/silahkan_masukkan_email_anda_agar_admin_kami_bisa_segera_review_ulang"
+       android:text="Silahkan isi data dibawah"
        android:gravity="center"
        android:textStyle="italic"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/laporFragment_Til_namaPelaku"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:id="@+id/dialogReviewUlang_Til_laporan"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Pilih Laporan"
         android:layout_marginTop="8dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/dialogReviewUlang_et_email"
+        <AutoCompleteTextView
+            android:id="@+id/dialogReviewUlang_ac_laporan"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="@string/email"
-            android:gravity="center_horizontal"/>
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:imeOptions="actionNext"
+            />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
+        android:id="@+id/dialogReviewUlang_btn_kirim"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/kirim"

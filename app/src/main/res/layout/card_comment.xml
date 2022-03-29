@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/item_comment_image"
@@ -29,7 +29,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/item_comment_image"
             app:layout_constraintStart_toEndOf="@id/item_comment_image"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="8dp"
+            android:text="Ucok"/>
 
         <TextView
             android:id="@+id/item_comment_description"
@@ -37,7 +38,28 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/item_comment_title"
             app:layout_constraintStart_toEndOf="@id/item_comment_image"
-            android:layout_margin="8dp"/>
+            android:layout_margin="8dp"
+            android:text="Scam"/>
+
+        <TextView
+            android:id="@+id/item_comment_tanggalLapor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/item_comment_title"
+            app:layout_constraintBottom_toBottomOf="@id/item_comment_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="10 Jan 2022"
+            />
+
+        <TextView
+            android:id="@+id/item_comment_statusLapor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/item_comment_description"
+            app:layout_constraintBottom_toBottomOf="@id/item_comment_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="Pending"
+            android:textStyle="italic|bold"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

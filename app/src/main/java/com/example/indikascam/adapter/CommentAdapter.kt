@@ -1,5 +1,6 @@
 package com.example.indikascam.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,43 +8,42 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.indikascam.R
+import com.example.indikascam.model.CommentItem
 
-class CommentAdapter: RecyclerView.Adapter<CommentAdapter.ViewHolder>() {
+class CommentAdapter(private val commentList: List<CommentItem>):
+    RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 
-    private var titles = arrayOf("Ucok", "Anonim", "Doe")
 
-    private var description= arrayOf("Scam", "Scam", "Spam")
 
-    private var icons = intArrayOf(R.drawable.business_partnership_illustration, R.drawable.ic_profil, R.drawable.configuration_protection)
+    class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        val title: TextView = itemView.findViewById(R.id.item_comment_title)
+        val description: TextView = itemView.findViewById(R.id.item_comment_description)
+        val image: ImageView = itemView.findViewById(R.id.item_comment_image)
+        val tanggal: TextView = itemView.findViewById(R.id.item_comment_tanggalLapor)
+        val status: TextView = itemView.findViewById(R.id.item_comment_statusLapor)
+    }
 
-    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        var commentIcon: ImageView
-        var commentTitle: TextView
-        var commentDesciption: TextView
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentAdapter.CommentViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.card_comment, parent, false)
+        return CommentViewHolder(itemView)
+    }
 
-        init {
-            commentIcon = itemView.findViewById(R.id.item_comment_image)
-            commentTitle = itemView.findViewById(R.id.item_comment_title)
-            commentDesciption = itemView.findViewById(R.id.item_comment_description)
+    override fun onBindViewHolder(holder: CommentAdapter.CommentViewHolder, position: Int) {
+        val currentItem = commentList[position]
+        holder.title.text = currentItem.title
+        holder.description.text = currentItem.description
+        holder.image.setImageResource(currentItem.image)
+        holder.tanggal.text = currentItem.tanggal
+        holder.status.text = currentItem.status
+        when(currentItem.status){
+            "Pending" -> holder.status.setTextColor(Color.parseColor("#FFCD44"))
+            "Ditolak" -> holder.status.setTextColor(Color.parseColor("#DD5246"))
+            "Diterima" -> holder.status.setTextColor(Color.parseColor("#19A15F"))
+            else -> holder.status.setTextColor(Color.parseColor("#FFCD44"))
         }
-
-    }
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): CommentAdapter.ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.card_comment, parent, false)
-        return ViewHolder(v)
-    }
-
-    override fun onBindViewHolder(holder: CommentAdapter.ViewHolder, position: Int) {
-        holder.commentDesciption.text = description[position]
-        holder.commentTitle.text = titles[position]
-        holder.commentIcon.setImageResource(icons[position])
     }
 
     override fun getItemCount(): Int {
-        return titles.size
+        return commentList.size
     }
 }

@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.Navigation
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,7 +36,13 @@ class NotifikasiFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notifikasi, container, false)
+        val view = inflater.inflate(R.layout.fragment_notifikasi, container, false)
+
+        view.findViewById<ConstraintLayout>(R.id.notifikasiFragment_cl_rincianBlokir).setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_notifikasiFragment_to_blockCallLogFragment)
+        }
+
+        return view
     }
 
     companion object {

@@ -63,20 +63,20 @@
             android:layout_marginBottom="4dp">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/homeFragment_til_searchNoHP"
+                android:id="@+id/homeFragment_til_searchNomor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:startIconDrawable="@drawable/ic_search"
-                android:hint="Cari Nomor"
+                android:hint="Cari Nomor Telepon"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="-1dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/homeFragment_btn_searchNoHP"
+                app:layout_constraintEnd_toStartOf="@id/homeFragment_btn_searchNomor"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/signUpFragment_et_searchNomor"
+                    android:id="@+id/homeFragment_et_searchNomor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="phone"
@@ -88,20 +88,21 @@
 
 
             <Button
-                android:id="@+id/homeFragment_btn_searchNoHP"
+                android:id="@+id/homeFragment_btn_searchNomor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginEnd="16dp"
                 android:text="Cari"
                 android:textAllCaps="false"
-                app:layout_constraintBottom_toBottomOf="@id/homeFragment_til_searchNoHP"
+                app:layout_constraintBottom_toBottomOf="@id/homeFragment_til_searchNomor"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/homeFragment_til_searchNoHP" />
+                app:layout_constraintTop_toTopOf="@id/homeFragment_til_searchNomor" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:id="@+id/homeFragment_tv_contoh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Contoh: 081234567890"/>
@@ -225,7 +226,7 @@
             android:layout_height="300dp"
             />
 
-        <com.github.mikephil.charting.charts.BarChart
+        <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/homeFragment_bc_blokingPerformance"
             android:layout_width="match_parent"
             android:layout_height="300dp"

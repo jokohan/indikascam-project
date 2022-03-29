@@ -59,6 +59,10 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        binding.profileFragmentIvEditProfile.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_editProfileFragment)
+        }
+
         sessionManager = SessionManager(requireContext())
 
         view.findViewById<Button>(R.id.profileFragment_btn_signin).setOnClickListener{Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_signInFragment)}

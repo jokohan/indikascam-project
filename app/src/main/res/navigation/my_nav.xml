@@ -41,7 +41,11 @@
         android:id="@+id/notifikasiFragment"
         android:name="com.example.indikascam.NotifikasiFragment"
         android:label="Notifikasi"
-        tools:layout="@layout/fragment_notifikasi" />
+        tools:layout="@layout/fragment_notifikasi" >
+        <action
+            android:id="@+id/action_notifikasiFragment_to_blockCallLogFragment"
+            app:destination="@id/blockCallLogFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.indikascam.ProfileFragment"
@@ -56,6 +60,9 @@
         <action
             android:id="@+id/action_profileFragment_to_profilUsahaFragment"
             app:destination="@id/profilUsahaFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -154,7 +161,11 @@
         android:id="@+id/pengaturanTingkatProteksiFragment"
         android:name="com.example.indikascam.PengaturanTingkatProteksiFragment"
         android:label="Tingkat Proteksi"
-        tools:layout="@layout/fragment_pengaturan_tingkat_proteksi" />
+        tools:layout="@layout/fragment_pengaturan_tingkat_proteksi" >
+        <action
+            android:id="@+id/action_pengaturanTingkatProteksiFragment_to_billingFragment"
+            app:destination="@id/billingFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profilUsahaFragment"
         android:name="com.example.indikascam.ProfilUsahaFragment"
@@ -164,4 +175,23 @@
             android:id="@+id/action_profilUsahaFragment_to_detailUsahaFragment"
             app:destination="@id/DetailUsahaFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/blockCallLogFragment"
+        android:name="com.example.indikascam.BlockCallLogFragment"
+        android:label="Daftar Blokir"
+        tools:layout="@layout/fragment_block_call_log" >
+        <action
+            android:id="@+id/action_blockCallLogFragment_to_laporFragment"
+            app:destination="@id/laporFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.indikascam.EditProfileFragment"
+        android:label="Edit Profil"
+        tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/billingFragment"
+        android:name="com.example.indikascam.BillingFragment"
+        android:label="Pembayaran"
+        tools:layout="@layout/fragment_billing" />
 </navigation>

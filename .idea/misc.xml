@@ -8,17 +8,20 @@
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/banner_layout.xml" value="0.1890625" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/card_banner.xml" value="0.36666666666666664" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/card_bukti_laporan.xml" value="0.36666666666666664" />
-        <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/card_comment.xml" value="0.5" />
+        <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/card_comment.xml" value="0.33" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/card_list_usaha.xml" value="0.36666666666666664" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/card_product.xml" value="0.2857789855072464" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/dialog_review_ulang.xml" value="0.36666666666666664" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/dialog_thank_you.xml" value="0.36666666666666664" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/dropdown_platform.xml" value="0.36666666666666664" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_auth_congratulation.xml" value="0.33" />
+        <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_billing.xml" value="0.36666666666666664" />
+        <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_block_call_log.xml" value="0.36666666666666664" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_bukti_dialog.xml" value="0.33" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_daftar_usaha.xml" value="0.36666666666666664" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_daftar_usaha_dialog.xml" value="0.36666666666666664" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_detail_usaha.xml" value="0.36666666666666664" />
+        <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_edit_profile.xml" value="0.36666666666666664" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_forgot_password.xml" value="0.33" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_hasil_pencarian.xml" value="0.33" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_home.xml" value="0.33" />
@@ -35,6 +38,7 @@
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_sign_up.xml" value="0.358695652173913" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_statistics_dialog.xml" value="0.33" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_welcome_dialog.xml" value="0.36666666666666664" />
+        <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/layout_item_notifikasi.xml" value="0.36666666666666664" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.38697916666666665" />
       </map>
     </option>

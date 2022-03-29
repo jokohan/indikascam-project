@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.Navigation
+import com.example.indikascam.databinding.FragmentLaporBinding
+import com.example.indikascam.databinding.FragmentPengaturanTingkatProteksiBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,6 +25,10 @@ class PengaturanTingkatProteksiFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private var _binding: FragmentPengaturanTingkatProteksiBinding? = null
+    private val binding get() = _binding!!
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -31,18 +37,29 @@ class PengaturanTingkatProteksiFragment : Fragment() {
         }
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_pengaturan_tingkat_proteksi, container, false)
-
-        view.findViewById<Button>(R.id.pengaturanTingkatProteksiFragment_btn_terapkanProteksi).setOnClickListener {
-            Navigation.findNavController(view).navigateUp()
+        _binding = FragmentPengaturanTingkatProteksiBinding.inflate(inflater, container, false)
+        binding.pengaturanTingkatProteksiFragmentRbProteksiTinggi.setOnCheckedChangeListener { compoundButton, b ->
+            if(binding.pengaturanTingkatProteksiFragmentRbProteksiTinggi.isChecked){
+                binding.pengaturanTingkatProteksiFragmentBtnTerapkanProteksi.text = "Rp 14k/bulan"
+            } else{
+                binding.pengaturanTingkatProteksiFragmentBtnTerapkanProteksi.text = "Terapkan"
+            }
+        }
+        binding.pengaturanTingkatProteksiFragmentBtnTerapkanProteksi.setOnClickListener {
+            if(binding.pengaturanTingkatProteksiFragmentBtnTerapkanProteksi.text == "Terapkan"){
+                Navigation.findNavController(binding.root).navigateUp()
+            } else{
+                Navigation.findNavController(binding.root).navigate(R.id.action_pengaturanTingkatProteksiFragment_to_billingFragment)
+            }
         }
 
-        return view
+        return binding.root
     }
 
     companion object {

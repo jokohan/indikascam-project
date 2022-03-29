@@ -14,6 +14,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.indikascam.adapter.ScammedBannerAdapter
 import com.example.indikascam.adapter.ScammedProductAdapter
+import com.example.indikascam.databinding.FragmentHomeBinding
+import com.example.indikascam.databinding.FragmentLaporBinding
 import com.example.indikascam.dialog.StatisticsDialog
 import com.example.indikascam.sessionManager.SessionManager
 import com.github.mikephil.charting.animation.Easing
@@ -22,13 +24,16 @@ import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.*
@@ -67,19 +72,23 @@ class HomeFragment : Fragment() {
     private var productLayoutManager: RecyclerView.LayoutManager? = null
     private var productAdapter: RecyclerView.Adapter<ScammedProductAdapter.ViewHolder>? = null
 
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val view = binding.root
 
 //        val textView = view.findViewById<TextInputEditText>(R.id.signUpFragment_et_searchNomor)
 //        val extras = activity?.intent?.extras
 //        textView.setText(extras?.getString("a"))
 
-        view.findViewById<Button>(R.id.homeFragment_btn_searchNoHP).setOnClickListener{
-            val someText = arrayOf<String>(view.findViewById<TextInputEditText>(R.id.signUpFragment_et_searchNomor).text.toString(), view.findViewById<TabLayout>(R.id.homeFragment_tl_teleponRekening).selectedTabPosition.toString())
+        view.findViewById<Button>(R.id.homeFragment_btn_searchNomor).setOnClickListener{
+            val someText = arrayOf<String>(view.findViewById<TextInputEditText>(R.id.homeFragment_et_searchNomor).text.toString(), view.findViewById<TabLayout>(R.id.homeFragment_tl_teleponRekening).selectedTabPosition.toString())
             val action = HomeFragmentDirections.actionHomeFragmentToHasilPencarianFragment(someText)
             Navigation.findNavController(view).navigate(action)
         }
@@ -97,48 +106,77 @@ class HomeFragment : Fragment() {
         loadBarChartData(barChart)
         setupBarChart(barChart)
 
+        binding.homeFragmentTlTeleponRekening.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                if (tab.position == 0) {
+                    binding.homeFragmentTvContoh.text = "Contoh: 081234567890"
+                    binding.homeFragmentTilSearchNomor.hint = "Cari Nomor Telepon"
+                } else {
+                    binding.homeFragmentTvContoh.text = "Contoh: 100123456789"
+                    binding.homeFragmentTilSearchNomor.hint = "Cari Nomor Rekening"
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
         return view
     }
 
     private fun setupBarChart(barChart: BarChart){
-        //        hide grid lines
-        barChart.axisLeft.setDrawGridLines(false)
-        val xAxis: XAxis = barChart.xAxis
-        xAxis.setDrawGridLines(false)
-        xAxis.setDrawAxisLine(false)
-
-        //remove right y-axis
-        barChart.axisRight.isEnabled = false
-
-        //remove legend
-        barChart.legend.isEnabled = false
-
-        //remove description label
-        barChart.description.isEnabled = false
-
         //add animation
         barChart.animateY(1000)
-
-
         val labels = ArrayList<String>()
         val c: Calendar = GregorianCalendar()
         c.time = Date()
-        val sdf = SimpleDateFormat("MMMM", Locale("in", "ID"))
+        val sdf = SimpleDateFormat("MMM", Locale("in", "ID"))
+        c.add(Calendar.MONTH, -3)
         labels.add(sdf.format(c.time))
-        c.add(Calendar.MONTH, -1)
+        c.add(Calendar.MONTH, 1)
         labels.add(sdf.format(c.time))
-        c.add(Calendar.MONTH, -1)
+        c.add(Calendar.MONTH, 1)
         labels.add(sdf.format(c.time))
-        c.add(Calendar.MONTH, -1)
+        c.add(Calendar.MONTH, 1)
         labels.add(sdf.format(c.time))
 
-        // to draw label on xAxis
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-        xAxis.setDrawLabels(true)
-        xAxis.granularity = 1f
-        xAxis.textColor = Color.BLACK
-        xAxis.textSize = 14F
+        barChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+        barChart.xAxis.granularity = 1f
+        barChart.xAxis.textSize = 14f
+        barChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        barChart.legend.isEnabled = false
+        barChart.axisLeft.setDrawLabels(false)
+        barChart.description.text = ""
+        barChart.xAxis.setDrawAxisLine(false)
+        barChart.xAxis.setDrawGridLines(false)
+        barChart.axisLeft.setDrawAxisLine(false)
+        barChart.axisLeft.setDrawGridLines(false)
+        barChart.axisRight.textSize = 14f
+        barChart.axisRight.setDrawGridLines(false)
+        barChart.axisRight.setDrawGridLines(false)
+        barChart.setScaleEnabled(false)
+        barChart.setPinchZoom(false)
+        barChart.isDoubleTapToZoomEnabled = false
+        barChart.setTouchEnabled(false)
+    }
+
+    private fun loadBarChartData(barChart: BarChart){
+        val entries = ArrayList<BarEntry>()
+        entries.add(BarEntry(0f, 12f))
+        entries.add(BarEntry(1f, 23f))
+        entries.add(BarEntry(2f, 39f))
+        entries.add(BarEntry(3f, 50f))
+
+        val colors = arrayListOf<Int>()
+        colors.add(Color.parseColor("#757575"))
+        val dataset = BarDataSet(entries, "")
+        dataset.colors = colors
+        dataset.valueTextSize = 16F
+        dataset.valueFormatter = DefaultValueFormatter(0)
+        dataset.setDrawValues(false)
+        val data = BarData(dataset)
+        barChart.data = data
+        barChart.invalidate()
     }
 
     private fun setupPieChart(pieChart: PieChart) {
@@ -161,29 +199,11 @@ class HomeFragment : Fragment() {
         l.textSize = 14F
     }
 
-    private fun loadBarChartData(barChart: BarChart){
-        val entries = ArrayList<BarEntry>()
-        entries.add(BarEntry(0f, 12f))
-        entries.add(BarEntry(1f, 39f))
-        entries.add(BarEntry(2f, 23f))
-        entries.add(BarEntry(3f, 9f))
 
-        val colors = arrayListOf<Int>()
-        colors.add(Color.parseColor("#062C30"))
-        val dataset = BarDataSet(entries, "")
-        dataset.colors = colors
-        dataset.valueTextSize = 16F
-        dataset.valueFormatter = DefaultValueFormatter(0)
-        val data = BarData(dataset)
-        barChart.data = data
-
-
-        barChart.invalidate()
-    }
 
     private fun loadPieChartData(pieChart: PieChart) {
         val entries = arrayListOf<PieEntry>()
-        entries.add(PieEntry(0.2f, "Telemarketer"))
+        entries.add(PieEntry(0.2f, "Robocall"))
         entries.add(PieEntry(0.3f, "Spam"))
         entries.add(PieEntry(0.5f, "Scam"))
 

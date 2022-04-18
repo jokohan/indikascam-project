@@ -56,7 +56,9 @@ class HasilPencarianFragment : Fragment() {
     private val args: HasilPencarianFragmentArgs by navArgs()
 
     private val commentList = ArrayList<CommentItem>()
-    private val commentListAdapter = CommentAdapter(commentList)
+    private val commentListAdapter = CommentAdapter(commentList){
+
+    }
 
     private var findDevicePhoneNumber = ""
 

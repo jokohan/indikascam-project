@@ -173,31 +173,33 @@ class OtcFragment : Fragment() {
         view.findViewById<Button>(R.id.otcFragment_btn_verification).setOnClickListener {
             val otp = "${inputCode1.text}${inputCode2.text}${inputCode3.text}${inputCode4.text}${inputCode5.text}${inputCode6.text}"
             if(needs == "resetPassword"){
-                val myPost = ChangePasswordTokenPost(email1,otp)
-                viewModel.changePasswordTokenPost(myPost)
-                viewModel.myResponseChangePasswordToken.observe(viewLifecycleOwner, Observer { response ->
-                    if(response.isSuccessful){
-                        Navigation.findNavController(view).navigate(R.id.action_otcFragment_to_newPasswordFragment)
-                    } else {
-                        val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
-                        Log.d("Response", jsonObj.toString())
-                    }
-                })
+//                val myPost = ChangePasswordTokenPost(email1,otp)
+//                viewModel.changePasswordTokenPost(myPost)
+//                viewModel.myResponseChangePasswordToken.observe(viewLifecycleOwner, Observer { response ->
+//                    if(response.isSuccessful){
+//                        Navigation.findNavController(view).navigate(R.id.action_otcFragment_to_newPasswordFragment)
+//                    } else {
+//                        val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
+//                        Log.d("Response", jsonObj.toString())
+//                    }
+//                })
+                Navigation.findNavController(view).navigate(R.id.action_otcFragment_to_newPasswordFragment)
             } else {
-                val myPost = EmailVerificationPost(otp)
-                Log.d("token", token)
-                Log.d("otp", otp)
-                viewModel.emailVerificationPost(token, myPost)
-                viewModel.myResponseEmailVerification.observe(viewLifecycleOwner, Observer { response ->
-                    if (response.isSuccessful) {
-                        val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
-                        Log.d("ResponseOTC", jsonObject.toString())
-                        Navigation.findNavController(view).navigate(R.id.action_otcFragment_to_authCongratulationFragment)
-                    } else {
-                        val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
-                        Log.d("Response", jsonObj.toString())
-                    }
-                })
+//                val myPost = EmailVerificationPost(otp)
+//                Log.d("token", token)
+//                Log.d("otp", otp)
+//                viewModel.emailVerificationPost(token, myPost)
+//                viewModel.myResponseEmailVerification.observe(viewLifecycleOwner, Observer { response ->
+//                    if (response.isSuccessful) {
+//                        val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
+//                        Log.d("ResponseOTC", jsonObject.toString())
+//                        Navigation.findNavController(view).navigate(R.id.action_otcFragment_to_authCongratulationFragment)
+//                    } else {
+//                        val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
+//                        Log.d("Response", jsonObj.toString())
+//                    }
+//                })
+                Navigation.findNavController(view).navigate(R.id.action_otcFragment_to_authCongratulationFragment)
             }
         }
 

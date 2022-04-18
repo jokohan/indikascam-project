@@ -33,9 +33,8 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_gravity="right"
-        android:src="@drawable/ic_lapor"
+        android:src="@drawable/ic_search"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:tint = "@color/design_default_color_primary"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

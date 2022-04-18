@@ -63,6 +63,9 @@
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_laporanSayaFragment"
+            app:destination="@id/laporanSayaFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -194,4 +197,22 @@
         android:name="com.example.indikascam.BillingFragment"
         android:label="Pembayaran"
         tools:layout="@layout/fragment_billing" />
+    <fragment
+        android:id="@+id/laporanSayaFragment"
+        android:name="com.example.indikascam.LaporanSayaFragment"
+        android:label="Laporan Saya"
+        tools:layout="@layout/fragment_laporan_saya" >
+        <action
+            android:id="@+id/action_laporanSayaFragment_to_detailLaporanSayaFragment"
+            app:destination="@id/detailLaporanSayaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailLaporanSayaFragment"
+        android:name="com.example.indikascam.DetailLaporanSayaFragment"
+        android:label="Detail Laporan Saya"
+        tools:layout="@layout/fragment_detail_laporan_saya" >
+        <argument
+            android:name="nomorLaporan"
+            app:argType="string" />
+    </fragment>
 </navigation>

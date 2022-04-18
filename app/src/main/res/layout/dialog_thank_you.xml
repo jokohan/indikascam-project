@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textStyle="italic"
-        android:text="Terima kasih telah membuat laporan, hal ini sangat berarti bagi kami dan user lainnya dalam memblokir panggilan"/>
+        android:text="Terima kasih telah membuat laporan, laporan Anda telah membantu komunitas Indikascam dalam mencegah kejahatan"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_marginTop="8dp"
-        android:text="Mari bersama ciptakan kenyamanan bertelfon"/>
+        android:text="Mari bersama ciptakan kenyamanan bertelepon &amp; bertransaksi"/>
 
     <Button
         android:id="@+id/dialogThankYou_btn_tutup"

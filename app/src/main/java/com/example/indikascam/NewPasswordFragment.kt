@@ -55,31 +55,32 @@ class NewPasswordFragment : Fragment() {
 
         view.findViewById<Button>(R.id.newPasswordFragment_btn_resetPassword).setOnClickListener {
 
-            var emailN = ""
-            val newPassword = view.findViewById<TextInputEditText>(R.id.newPasswordFragment_et_password).text.toString()
-            val newPasswordConfirmation = view.findViewById<TextInputEditText>(R.id.newPasswordFragment_et_passwordConfirmation).text.toString()
-            sharedViewModel.email.observe(viewLifecycleOwner, {email ->
-                emailN = email
-            })
+//            var emailN = ""
+//            val newPassword = view.findViewById<TextInputEditText>(R.id.newPasswordFragment_et_password).text.toString()
+//            val newPasswordConfirmation = view.findViewById<TextInputEditText>(R.id.newPasswordFragment_et_passwordConfirmation).text.toString()
+//            sharedViewModel.email.observe(viewLifecycleOwner, {email ->
+//                emailN = email
+//            })
+//
+//            val repository = Repository()
+//            val viewModelFactory = MainViewModelFactory(repository)
+//            viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+//            val myPost = NewPasswordPost(emailN, newPassword, newPasswordConfirmation)
+//            viewModel.newPasswordPost(myPost)
+//            viewModel.myResponseNewPassword.observe(viewLifecycleOwner, Observer { response ->
+//                if (response.isSuccessful) {
+//                    val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
+//                    val action = NewPasswordFragmentDirections.actionNewPasswordFragmentToAuthCongratulationFragment("Selamat! Password Anda telah berhasil diubah. Silahkan melanjutkan ke halaman login")
+//                    Navigation.findNavController(view).navigate(action)
+//
+//                } else {
+//                    val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
+//                    Log.d("Response", jsonObj.toString())
+//                }
+//            })
 
-            val repository = Repository()
-            val viewModelFactory = MainViewModelFactory(repository)
-            viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-            val myPost = NewPasswordPost(emailN, newPassword, newPasswordConfirmation)
-            viewModel.newPasswordPost(myPost)
-            viewModel.myResponseNewPassword.observe(viewLifecycleOwner, Observer { response ->
-                if (response.isSuccessful) {
-                    val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
-                    val action = NewPasswordFragmentDirections.actionNewPasswordFragmentToAuthCongratulationFragment("Selamat! Password Anda telah berhasil diubah. Silahkan melanjutkan ke halaman login")
-                    Navigation.findNavController(view).navigate(action)
-
-                } else {
-                    val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
-                    Log.d("Response", jsonObj.toString())
-                }
-            })
-
-
+            val action = NewPasswordFragmentDirections.actionNewPasswordFragmentToAuthCongratulationFragment("Selamat! Password Anda telah berhasil diubah. Silahkan melanjutkan ke halaman login")
+            Navigation.findNavController(view).navigate(action)
         }
 
         return view

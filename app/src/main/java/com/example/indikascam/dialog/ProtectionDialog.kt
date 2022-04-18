@@ -1,5 +1,6 @@
 package com.example.indikascam.dialog
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,8 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.Navigation
 import com.example.indikascam.R
+import smartdevelop.ir.eram.showcaseviewlib.GuideView
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
 
 class ProtectionDialog: DialogFragment() {
 
@@ -25,15 +28,15 @@ class ProtectionDialog: DialogFragment() {
             when(checkedId){
                 R.id.konfigurasiProteksiFragment_rb_proteksiTinggi -> {
                     rootView.findViewById<TextView>(R.id.konfigurasiProteksiFragment_tv_caption).text = getText(R.string.proteksi_tinggi)
-                    rootView.findViewById<Button>(R.id.konfigurasiProteksiFragment_btn_terapkanProteksi).text ="Rp 14k/bulan"
+                    rootView.findViewById<Button>(R.id.konfigurasiProteksiFragment_btn_terapkanProteksi).text ="Terapkan"
                 }
                 R.id.konfigurasiProteksiFragment_rb_proteksiSedang -> {
                     rootView.findViewById<TextView>(R.id.konfigurasiProteksiFragment_tv_caption).text = getText(R.string.proteksi_sedang)
-                    rootView.findViewById<Button>(R.id.konfigurasiProteksiFragment_btn_terapkanProteksi).text = "Gratis"
+                    rootView.findViewById<Button>(R.id.konfigurasiProteksiFragment_btn_terapkanProteksi).text = "Terapkan"
                 }
                 R.id.konfigurasiProteksiFragment_rb_proteksiRendah -> {
                     rootView.findViewById<TextView>(R.id.konfigurasiProteksiFragment_tv_caption).text = getText(R.string.proteksi_rendah)
-                    rootView.findViewById<Button>(R.id.konfigurasiProteksiFragment_btn_terapkanProteksi).text = "Gratis"
+                    rootView.findViewById<Button>(R.id.konfigurasiProteksiFragment_btn_terapkanProteksi).text = "Terapkan"
                 }
             }
         }

@@ -100,6 +100,11 @@ class ProfileFragment : Fragment() {
         binding.profileFragmentBtnPengaturan.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_settingsFragment)
         }
+
+        binding.profileFragmentBtnLaporanSaya.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_laporanSayaFragment)
+        }
+
         return view
     }
 

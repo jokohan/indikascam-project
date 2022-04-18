@@ -8,6 +8,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -98,16 +100,48 @@ class LaporFragment : Fragment() {
         if(args.nomorYangAkanDilaporkan != null){
             val nomorYangAkanDilaporkan = args.nomorYangAkanDilaporkan
             if(nomorYangAkanDilaporkan!![1] == "0"){
-                binding.laporFragmentCbNomorTelepon.isChecked = true
-                binding.laporFragmentCbNomorRekening.isChecked = false
                 binding.laporFragmentEtNomorTeleponPelaku.setText(nomorYangAkanDilaporkan[0])
             } else if(nomorYangAkanDilaporkan[1] == "1"){
-                binding.laporFragmentCbNomorRekening.isChecked = true
-                binding.laporFragmentCbNomorTelepon.isChecked = false
                 binding.laporFragmentEtNomorRekeningPelaku.setText(nomorYangAkanDilaporkan[0])
+            }
+        }
+
+        binding.laporFragmentAcGangguan.addTextChangedListener(object:
+            TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (!binding.laporFragmentAcGangguan.text.isNullOrEmpty()) {
+                    if(binding.laporFragmentAcGangguan.text.toString() == "Penipuan"){
+                        binding.laporFragmentLlPilihGangguanDahulu.visibility = View.VISIBLE
+                        binding.laporFragmentLlGangguanBukanPenipuan.visibility = View.VISIBLE
+                        binding.laporFragmentLlGangguanBukanPenipuan2.visibility = View.VISIBLE
+                    } else{
+                        binding.laporFragmentLlPilihGangguanDahulu.visibility = View.VISIBLE
+                        binding.laporFragmentLlGangguanBukanPenipuan.visibility = View.GONE
+                        binding.laporFragmentLlGangguanBukanPenipuan2.visibility = View.GONE
+                        binding.laporFragmentCbNomorRekening.isChecked = false
+                    }
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+        })
+
+        binding.laporFragmentCbNomorRekening.setOnCheckedChangeListener { compoundButton, b ->
+            if(binding.laporFragmentCbNomorRekening.isChecked){
                 binding.laporFragmentClRekening.visibility = View.VISIBLE
-                binding.laporFragmentClTelepon.visibility = View.GONE
-                setLayoutRekeningMargin()
+               (binding.laporFragmentTilNamaPelaku.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                   setMargins(0,((requireContext().resources.displayMetrics.density) * 8).toInt(),0,0)
+               }
+            } else{
+                binding.laporFragmentClRekening.visibility = View.GONE
+                (binding.laporFragmentTilNamaPelaku.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                    setMargins(0,0,0,0)
+                }
             }
         }
 
@@ -115,11 +149,6 @@ class LaporFragment : Fragment() {
             binding.laporFragmentRcvBuktiLaporan.visibility = View.GONE
         }
 
-        binding.laporFragmentCbNomorTelepon.setOnCheckedChangeListener { _, _ ->  setTeleponRekeningVisibility(binding.laporFragmentCbNomorTelepon)}
-        binding.laporFragmentCbNomorRekening.setOnCheckedChangeListener{ _, _ -> setTeleponRekeningVisibility(binding.laporFragmentCbNomorRekening)}
-        binding.laporFragmentCbNomorRekening.setOnClickListener {setTeleponRekeningClickable()}
-        binding.laporFragmentCbNomorTelepon.setOnClickListener {setTeleponRekeningClickable()}
-        setTeleponRekeningClickable()
 
         binding.laporFragmentRcvBuktiLaporan.adapter = buktiLaporanListAdapter
         binding.laporFragmentRcvBuktiLaporan.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -217,37 +246,38 @@ class LaporFragment : Fragment() {
         getReportType()
 
         binding.laporFragmentBtnLapor.setOnClickListener {
-            val sessionManager = SessionManager(requireContext())
-            val accessToken = sessionManager.fetchAuthToken()
-
-            val repository = Repository()
-            val viewModelFactory = MainViewModelFactory(repository)
-            viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-            viewModel.userReportPost("Bearer ${accessToken!!}", gangguanFinal!!,
-                banksFinal!!,
-                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNomorRekeningPelaku.text.toString()),
-                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNamaPelaku.text.toString()),
-                platformFinal!!,
-                productsFinal!!,
-                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtKronologi.text.toString()),
-                buktiFinal,
-                binding.laporFragmentEtTotalKerugian.text.toString().toInt(),
-                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNomorTeleponPelaku.text.toString()))
-            viewModel.myResponseUserReport.observe(viewLifecycleOwner, Observer { response ->
-                if(response.isSuccessful && response.code() == 201){
-                    val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
-                    Log.d("SUKSES LAPOR", jsonObject.toString())
-                    val dialog = LaporDialog()
-                    dialog.show(parentFragmentManager,"")
-                    Navigation.findNavController(binding.root).navigateUp()
-                } else {
-                    Log.d("ResponseError", response.code().toString())
-                    Log.d("ResponseError", response.message())
-                    val reader = response.errorBody()?.byteStream()
-                    Log.d("ResponseError", reader.toString())
-                }
-            })
-
+//            val sessionManager = SessionManager(requireContext())
+//            val accessToken = sessionManager.fetchAuthToken()
+//
+//            val repository = Repository()
+//            val viewModelFactory = MainViewModelFactory(repository)
+//            viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+//            viewModel.userReportPost("Bearer ${accessToken!!}", gangguanFinal!!,
+//                banksFinal!!,
+//                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNomorRekeningPelaku.text.toString()),
+//                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNamaPelaku.text.toString()),
+//                platformFinal!!,
+//                productsFinal!!,
+//                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtKronologi.text.toString()),
+//                buktiFinal,
+//                binding.laporFragmentEtTotalKerugian.text.toString().toInt(),
+//                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNomorTeleponPelaku.text.toString()))
+//            viewModel.myResponseUserReport.observe(viewLifecycleOwner, Observer { response ->
+//                if(response.isSuccessful && response.code() == 201){
+//                    val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
+//                    Log.d("SUKSES LAPOR", jsonObject.toString())
+//                    val dialog = LaporDialog()
+//                    dialog.show(parentFragmentManager,"")
+//                    Navigation.findNavController(binding.root).navigateUp()
+//                } else {
+//                    Log.d("ResponseError", response.code().toString())
+//                    Log.d("ResponseError", response.message())
+//                    val reader = response.errorBody()?.byteStream()
+//                    Log.d("ResponseError", reader.toString())
+//                }
+//            })
+            val dialog = LaporDialog()
+            dialog.show(parentFragmentManager,"")
         }
     }
 
@@ -324,27 +354,34 @@ class LaporFragment : Fragment() {
     }
 
     private fun getReportType() {
-        val repository = Repository()
-        val viewModelFactory = MainViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-        viewModel.reportTypeGet()
-        viewModel.myResponseReportType.observe(viewLifecycleOwner, Observer { response ->
-            if(response.isSuccessful && response.code() == 200){
-                val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
-                var reportTypes = emptyArray<String>()
-                var reportTypeIds = emptyArray<Int>()
-                for (data in jsonObject["data"].asJsonArray){
-                    reportTypes += data.asJsonObject["name"].toString().removeSurrounding("\"")
-                    reportTypeIds += data.asJsonObject["id"].asInt
-                }
-                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, reportTypes)
-                binding.laporFragmentAcGangguan.setAdapter(adapter)
 
-                binding.laporFragmentAcGangguan.setOnItemClickListener { _, _, i, _ ->
-                    gangguanFinal = reportTypeIds[i]
-                }
-            }
-        })
+        //from string array
+        val gangguan = resources.getStringArray(R.array.jenisGangguan)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_expandable_list_item_1, gangguan)
+        binding.laporFragmentAcGangguan.setAdapter(adapter)
+
+        //from API
+//        val repository = Repository()
+//        val viewModelFactory = MainViewModelFactory(repository)
+//        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+//        viewModel.reportTypeGet()
+//        viewModel.myResponseReportType.observe(viewLifecycleOwner, Observer { response ->
+//            if(response.isSuccessful && response.code() == 200){
+//                val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
+//                var reportTypes = emptyArray<String>()
+//                var reportTypeIds = emptyArray<Int>()
+//                for (data in jsonObject["data"].asJsonArray){
+//                    reportTypes += data.asJsonObject["name"].toString().removeSurrounding("\"")
+//                    reportTypeIds += data.asJsonObject["id"].asInt
+//                }
+//                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, reportTypes)
+//                binding.laporFragmentAcGangguan.setAdapter(adapter)
+//
+//                binding.laporFragmentAcGangguan.setOnItemClickListener { _, _, i, _ ->
+//                    gangguanFinal = reportTypeIds[i]
+//                }
+//            }
+//        })
     }
 
 
@@ -372,53 +409,6 @@ class LaporFragment : Fragment() {
             }
         })
         myAlertDialog.show()
-    }
-
-
-
-    private fun setTeleponRekeningClickable() {
-        when {
-            binding.laporFragmentCbNomorTelepon.isChecked and binding.laporFragmentCbNomorRekening.isChecked -> {
-                binding.laporFragmentCbNomorRekening.isClickable = true
-                binding.laporFragmentCbNomorTelepon.isClickable = true
-            }
-            binding.laporFragmentCbNomorTelepon.isChecked and !binding.laporFragmentCbNomorRekening.isChecked -> {
-                binding.laporFragmentCbNomorTelepon.isClickable = false
-                binding.laporFragmentCbNomorRekening.isClickable = true
-            }
-            !binding.laporFragmentCbNomorTelepon.isChecked and binding.laporFragmentCbNomorRekening.isChecked -> {
-                binding.laporFragmentCbNomorTelepon.isClickable = true
-                binding.laporFragmentCbNomorRekening.isClickable = false
-            }
-        }
-    }
-
-    private fun setTeleponRekeningVisibility(view: CheckBox){
-        if(view.isChecked){
-            if (view == binding.laporFragmentCbNomorTelepon){
-                binding.laporFragmentClTelepon.visibility = View.VISIBLE
-            } else{
-                binding.laporFragmentClRekening.visibility = View.VISIBLE
-            }
-        } else {
-            if (view == binding.laporFragmentCbNomorTelepon){
-                binding.laporFragmentClTelepon.visibility = View.GONE
-            } else{
-                binding.laporFragmentClRekening.visibility = View.GONE
-            }
-        }
-
-        setLayoutRekeningMargin()
-    }
-
-    private fun setLayoutRekeningMargin() {
-        (binding.laporFragmentClRekening.layoutParams as ViewGroup.MarginLayoutParams).apply {
-            if(!binding.laporFragmentCbNomorTelepon.isChecked and binding.laporFragmentCbNomorRekening.isChecked){
-                setMargins(0,0,0,0)
-            } else {
-                setMargins(0,((requireContext().resources.displayMetrics.density) * 8).toInt(),0,0)
-            }
-        }
     }
 
     companion object {

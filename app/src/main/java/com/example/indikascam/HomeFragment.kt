@@ -1,12 +1,15 @@
 package com.example.indikascam
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -15,29 +18,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.indikascam.adapter.ScammedBannerAdapter
 import com.example.indikascam.adapter.ScammedProductAdapter
 import com.example.indikascam.databinding.FragmentHomeBinding
-import com.example.indikascam.databinding.FragmentLaporBinding
 import com.example.indikascam.dialog.StatisticsDialog
 import com.example.indikascam.sessionManager.SessionManager
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.textfield.TextInputEditText
+import smartdevelop.ir.eram.showcaseviewlib.GuideView
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType
+import smartdevelop.ir.eram.showcaseviewlib.config.Gravity
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -123,6 +126,65 @@ class HomeFragment : Fragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        sessionManager = SessionManager(requireContext())
+
+        var namaUser = ""
+        sharedViewModel.nama.observe(viewLifecycleOwner, Observer { nama ->
+            namaUser = nama
+        })
+        val prefs = requireContext().getSharedPreferences("first_time", 0)
+        if (prefs.getBoolean("first_time", true)) {
+
+            val targetView =
+                activity?.requireViewById(R.id.bottomNavigationView) as BottomNavigationView
+            val a = targetView.getChildAt(0) as BottomNavigationMenuView
+            GuideView.Builder(context)
+                .setTitle("Lapor Penipuan")
+                .setContentText("Gunakan fitur ini jika Anda mengalami penipuan sehingga user lain bisa memblokir nomor tersebut dan tidak mengalami hal yang sama")
+                .setGravity(Gravity.auto)
+                .setTargetView(a[1])
+                .setTitleTypeFace(Typeface.DEFAULT_BOLD)
+                .setContentTypeFace(Typeface.defaultFromStyle(Typeface.ITALIC))
+                .setDismissType(DismissType.anywhere)
+                .setGuideListener {
+                    GuideView.Builder(context)
+                        .setTitle("Cari Nomor Telepon/Rekening")
+                        .setContentText("Gunakan fitur ini sebelum Anda bertransaksi agar terhindar dari penipuan, blokir nomor telepon jika diperlukan")
+                        .setGravity(Gravity.auto)
+                        .setTargetView(binding.homeFragmentClGuideSearchNomor)
+                        .setTitleTypeFace(Typeface.DEFAULT_BOLD)
+                        .setContentTypeFace(Typeface.defaultFromStyle(Typeface.ITALIC))
+                        .setDismissType(DismissType.anywhere)
+                        .setGuideListener {
+                            GuideView.Builder(context)
+                                .setTitle("Lihat Statistik")
+                                .setContentText("Pelajari modus-modus yang paling sering digunakan untuk menipu")
+                                .setGravity(Gravity.auto)
+                                .setTargetView(binding.homeFragmentIvStatistics)
+                                .setTitleTypeFace(Typeface.DEFAULT_BOLD)
+                                .setContentTypeFace(Typeface.defaultFromStyle(Typeface.ITALIC))
+                                .setDismissType(DismissType.anywhere)
+                                .setGuideListener {
+                                    val statisticsDialog = StatisticsDialog("Mulai Blokir")
+                                    statisticsDialog.show(parentFragmentManager, "Statistics Dialog")
+                                }
+                                .build()
+                                .show()
+                        }
+                        .build()
+                        .show()
+                }
+                .build()
+                .show()
+
+            prefs.edit().putBoolean("first_time", false).apply()
+        }
+    }
+
+
+
     private fun setupBarChart(barChart: BarChart){
         //add animation
         barChart.animateY(1000)
@@ -168,13 +230,16 @@ class HomeFragment : Fragment() {
         entries.add(BarEntry(3f, 50f))
 
         val colors = arrayListOf<Int>()
-        colors.add(Color.parseColor("#757575"))
+        colors.add(Color.parseColor("#789bfa"))
+//        colors.add(com.google.android.material.R.color.design_default_color_primary)
         val dataset = BarDataSet(entries, "")
         dataset.colors = colors
         dataset.valueTextSize = 16F
         dataset.valueFormatter = DefaultValueFormatter(0)
         dataset.setDrawValues(false)
         val data = BarData(dataset)
+        data.barWidth = 0.8F
+
         barChart.data = data
         barChart.invalidate()
     }
@@ -182,8 +247,6 @@ class HomeFragment : Fragment() {
     private fun setupPieChart(pieChart: PieChart) {
         pieChart.isDrawHoleEnabled = true
         pieChart.setUsePercentValues(true)
-//        pieChart.setEntryLabelTextSize(12F)
-//        pieChart.setEntryLabelColor(Color.BLACK)
         pieChart.setDrawEntryLabels(false)
         pieChart.centerText = "Blokir Panggilan"
         pieChart.setCenterTextSize(14F)
@@ -228,14 +291,6 @@ class HomeFragment : Fragment() {
         pieChart.animateY(1000, Easing.EaseInQuad)
     }
 
-    override fun onResume() {
-        super.onResume()
-        sessionManager = SessionManager(requireContext())
-
-        var namaUser = ""
-        sharedViewModel.nama.observe(viewLifecycleOwner, Observer {  nama ->
-            namaUser = nama
-        })
 
 //        if(sessionManager.fetchAuthToken() != "" && namaUser == "nama"){
 //            try{
@@ -265,7 +320,6 @@ class HomeFragment : Fragment() {
 //                }
 //            }
 //        }
-    }
 
     companion object {
         /**

@@ -1,5 +1,6 @@
 package com.example.indikascam.dialog
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.indikascam.R
 import com.example.indikascam.adapter.ScammedBannerAdapter
 import com.example.indikascam.adapter.ScammedProductAdapter
+
 
 class StatisticsDialog(buttonText: String): DialogFragment() {
 

@@ -43,7 +43,7 @@ class BlockCallLogFragment : Fragment() {
                 if(i == 100){
                     break
                 } else{
-                    blockCallLog.add(NotifikasiBlockCallLogItem("081468761$i", if(i%10==0)"Blokir Pribadi" else "Terblokir"))
+                    blockCallLog.add(NotifikasiBlockCallLogItem("081468761$i", if(i%10==0)"Blokir Pribadi" else "Blokir Otomatis"))
                     i++
                 }
             }

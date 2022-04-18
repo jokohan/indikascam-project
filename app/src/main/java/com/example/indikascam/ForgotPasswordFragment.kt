@@ -59,23 +59,25 @@ class ForgotPasswordFragment : Fragment() {
 
         binding.forgotPasswordFragmentBtnResetPassword.setOnClickListener {
             if(binding.forgotPasswordFragmentEtEmail.text.toString() == ""){
-                Toast.makeText(context, "Silahkan isi email kamu :)", Toast.LENGTH_SHORT)
+                Toast.makeText(context, "Silahkan isi email kamu :)", Toast.LENGTH_SHORT).show()
             } else{
-                val repository = Repository()
-                val viewModelFactory = MainViewModelFactory(repository)
-                viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-                val myPost = ForgotPasswordPost(binding.forgotPasswordFragmentEtEmail.text.toString())
-                viewModel.forgotPasswordPost(myPost)
-                viewModel.myResponseForgotPassword.observe(viewLifecycleOwner, Observer { response ->
-                    if (response.isSuccessful) {
-                        sharedViewModel.saveEmail(binding.forgotPasswordFragmentEtEmail.text.toString())
-                        val action = ForgotPasswordFragmentDirections.actionForgotPasswordFragmentToOtcFragment("resetPassword")
-                        Navigation.findNavController(view).navigate(action)
-                    } else {
-                        val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
-                        Log.d("Response", jsonObj.toString())
-                    }
-                })
+//                val repository = Repository()
+//                val viewModelFactory = MainViewModelFactory(repository)
+//                viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+//                val myPost = ForgotPasswordPost(binding.forgotPasswordFragmentEtEmail.text.toString())
+//                viewModel.forgotPasswordPost(myPost)
+//                viewModel.myResponseForgotPassword.observe(viewLifecycleOwner, Observer { response ->
+//                    if (response.isSuccessful) {
+//                        sharedViewModel.saveEmail(binding.forgotPasswordFragmentEtEmail.text.toString())
+//                        val action = ForgotPasswordFragmentDirections.actionForgotPasswordFragmentToOtcFragment("resetPassword")
+//                        Navigation.findNavController(view).navigate(action)
+//                    } else {
+//                        val jsonObj = JSONObject(response.errorBody()!!.charStream().readText())
+//                        Log.d("Response", jsonObj.toString())
+//                    }
+//                })
+                val action = ForgotPasswordFragmentDirections.actionForgotPasswordFragmentToOtcFragment("resetPassword")
+                Navigation.findNavController(view).navigate(action)
             }
         }
 

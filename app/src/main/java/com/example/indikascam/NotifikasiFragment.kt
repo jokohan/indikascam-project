@@ -7,6 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.indikascam.adapter.NotifikasiAdapter
+import com.example.indikascam.databinding.FragmentHasilPencarianBinding
+import com.example.indikascam.databinding.FragmentNotifikasiBinding
+import com.example.indikascam.model.NotifikasiItem
+import okhttp3.internal.notify
+import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,16 +39,48 @@ class NotifikasiFragment : Fragment() {
         }
     }
 
+    private var _binding: FragmentNotifikasiBinding? = null
+    private val binding get() = _binding!!
+
+    private val notifikasiList = ArrayList<NotifikasiItem>()
+    private val notifikasiListAdapter = NotifikasiAdapter(notifikasiList)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_notifikasi, container, false)
+        _binding = FragmentNotifikasiBinding.inflate(inflater, container, false)
+        val view = binding.root
 
         view.findViewById<ConstraintLayout>(R.id.notifikasiFragment_cl_rincianBlokir).setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_notifikasiFragment_to_blockCallLogFragment)
         }
+
+        if(notifikasiList.size == 0){
+            val c: Calendar = GregorianCalendar()
+            c.time = Date()
+            for(i in 0..6){
+                val list = NotifikasiItem(
+                    c.time,
+                    when(i){
+                        0 -> "Laporan Anda terhadap nomor telepon 087711887732 telah terkirim dengan status pending"
+                        1 -> "Laporan Anda terhadap nomor rekening 100123456789 telah diterima"
+                        2 -> "Laporan Anda terhadap nomor rekening 100123456789 telah terkirim dengan status Pending"
+                        3 -> "Laporan Anda terhadap nomor telepon 08123456789 telah ditolak"
+                        4 -> "Laporan Anda terhadap nomor telepon telah terkirim dengan status Pending"
+                        5 -> "Pengajuan review ulang terhadap nomor telepon 08111111112 diterima"
+                        6 -> "Pengajuan review ulang terhadap nomor telepon 08111111112 telah terkirim"
+                        else -> "asd"
+                    }
+                )
+                c.add(Calendar.DATE, -1)
+                notifikasiList.add(list)
+            }
+        }
+
+        binding.notifikasiFragmentRcvNotif.adapter = notifikasiListAdapter
+        binding.notifikasiFragmentRcvNotif.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         return view
     }

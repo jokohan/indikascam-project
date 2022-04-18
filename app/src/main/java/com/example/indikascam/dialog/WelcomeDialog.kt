@@ -1,13 +1,12 @@
 package com.example.indikascam.dialog
 
+import android.graphics.Point
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import com.example.indikascam.R
+
 
 class WelcomeDialog() : DialogFragment() {
 
@@ -28,4 +27,18 @@ class WelcomeDialog() : DialogFragment() {
         return rootView
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val window: Window? = dialog!!.window
+        val size = Point()
+
+        val display: Display = window?.windowManager!!.defaultDisplay
+        display.getSize(size)
+
+        val width: Int = size.x
+
+        window.setLayout((width * 0.99).toInt(), WindowManager.LayoutParams.WRAP_CONTENT)
+        window.setGravity(Gravity.CENTER)
+    }
 }

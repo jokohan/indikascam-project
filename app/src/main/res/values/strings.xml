@@ -18,22 +18,9 @@
     </string-array>
 
     <string-array name="jenisGangguan">
-        <item>-</item>
-        <item>Penipuan / Fraud / Scam</item>
+        <item>Penipuan</item>
         <item>Spam</item>
-        <item>Marketer</item>
         <item>Robocall</item>
-        <item>lainnya...</item>
-    </string-array>
-
-    <string-array name="namaBank">
-        <item>-</item>
-        <item>BCA</item>
-        <item>Mandiri</item>
-        <item>BRI</item>
-        <item>BNI</item>
-        <item>CIMB Niaga</item>
-        <item>lainnya...</item>
     </string-array>
 
 
@@ -53,7 +40,7 @@
     <string name="kode_otc_dikirim_ke_email">Kode OTC dikirim ke email</string>
     <string name="belum_terima_email">Belum terima email?</string>
     <string name="lanjut">Lanjut</string>
-    <string name="terima_kasih_caption">Aplikasi ini digunakan untuk memblokir panggilan masuk pada nomor-nomor yang terindikasi pernah melakukan penipuan sebelumnya</string>
+    <string name="terima_kasih_caption">Aplikasi ini juga bisa digunakan untuk memblokir panggilan masuk pada nomor-nomor yang terindikasi pernah melakukan penipuan sebelumnya</string>
     <string name="terima_kasih_title">Terima kasih telah memakai aplikasi Indikascam</string>
     <string name="lihat_statistik">Lihat Statistik</string>
     <string name="tinggi">Tinggi</string>
@@ -77,5 +64,16 @@
     <string name="silahkan_masukkan_email_anda_agar_admin_kami_bisa_segera_review_ulang">Silahkan masukkan email Anda agar admin kami bisa segera review ulang</string>
     <string name="ok">ok</string>
     <string name="batal">batal</string>
+    <string name="nomor_telepon">Nomor Telepon</string>
+    <string name="konfirmasi_password">Konfirmasi Password</string>
+    <string name="nama_lengkap">Nama Lengkap</string>
+    <string name="nomor_rekening">Nomor Rekening</string>
+    <string name="contoh_nomor_telepon">+628123456789</string>
+    <string name="contoh_nomor_rekening">100123456789</string>
+    <string name="contoh_email">Ucok@gmail.com</string>
+    <string name="ganti_foto">Ganti Foto</string>
+    <string name="hapus_foto">Hapus Foto</string>
+    <string name="selesai">Selesai</string>
+    <string name="hari_ini">Hari ini</string>
 
 </resources>

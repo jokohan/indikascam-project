@@ -125,7 +125,7 @@ class ProfileFragment : Fragment() {
                 binding.profileFragmentTvEmailUser.text = email
             })
             binding.profileFragmentBtnLogout.isVisible = true
-//            binding.profileFragmentBtnKomentarSaya.isVisible = true
+            binding.profileFragmentBtnPengaturan.isVisible = true
             binding.profileFragmentBtnLaporanSaya.isVisible = true
 //            binding.profileFragmentBtnSignin.isVisible = false
         }

@@ -1,7 +1,10 @@
 package com.example.indikascam
 
+import android.app.role.RoleManager
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -9,6 +12,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -136,6 +140,14 @@ class HomeFragment : Fragment() {
         })
         val prefs = requireContext().getSharedPreferences("first_time", 0)
         if (prefs.getBoolean("first_time", true)) {
+            //permission for blocking number
+            val REQUEST_ID = 1
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val roleManager = requireActivity().getSystemService(AppCompatActivity.ROLE_SERVICE) as RoleManager
+                val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING)
+                startActivityForResult(intent, REQUEST_ID)
+            }
 
             val targetView =
                 activity?.requireViewById(R.id.bottomNavigationView) as BottomNavigationView
@@ -182,8 +194,6 @@ class HomeFragment : Fragment() {
             prefs.edit().putBoolean("first_time", false).apply()
         }
     }
-
-
 
     private fun setupBarChart(barChart: BarChart){
         //add animation

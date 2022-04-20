@@ -27,17 +27,12 @@ import smartdevelop.ir.eram.showcaseviewlib.config.Gravity
 
 class MainActivity : AppCompatActivity() {
 
-    val REQUEST_ID = 1
     private var idLaporView: View? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val roleManager = getSystemService(ROLE_SERVICE) as RoleManager
-            val intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING)
-            startActivityForResult(intent, REQUEST_ID)
-        }
+
 
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)

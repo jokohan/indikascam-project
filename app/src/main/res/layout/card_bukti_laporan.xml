@@ -24,7 +24,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:scaleType="fitCenter"
-            app:tint="#DD5246"/>
+            app:tint="#8380A2"/>
 
         <ImageView
             android:id="@+id/item_bukti_image"

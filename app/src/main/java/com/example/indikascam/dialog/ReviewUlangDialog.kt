@@ -1,11 +1,10 @@
 package com.example.indikascam.dialog
 
 import android.content.DialogInterface
+import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Button
@@ -33,7 +32,7 @@ class ReviewUlangDialog(
 
         val list = emptyList<String>().toMutableList()
         for(lapor in laporan){
-            list += arrayOf("${lapor.title}, Tuduhan: ${lapor.description}, Status ${lapor.status}")
+            list += arrayOf("${lapor.title}, Tuduhan: ${lapor.description}, Status: ${lapor.status}")
         }
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, list)
         view.findViewById<AutoCompleteTextView>(R.id.dialogReviewUlang_ac_laporan).setAdapter(adapter)
@@ -55,4 +54,17 @@ class ReviewUlangDialog(
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+        val window: Window? = dialog!!.window
+        val size = Point()
+
+        val display: Display = window?.windowManager!!.defaultDisplay
+        display.getSize(size)
+
+        val width: Int = size.x
+
+        window.setLayout((width * 1), WindowManager.LayoutParams.WRAP_CONTENT)
+        window.setGravity(Gravity.CENTER)
+    }
 }

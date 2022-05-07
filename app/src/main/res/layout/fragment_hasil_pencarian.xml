@@ -17,16 +17,41 @@
         app:tint="@color/design_default_color_primary"
         android:contentDescription="@string/request_review_kembali" />
 
-    <TextView
-        android:id="@+id/hasilPencarianFragment_tv_captionNomor"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="@string/nomor"
-        android:textStyle="bold"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
         app:layout_constraintStart_toStartOf="@id/hasilPencarianFragment_tv_nomor"
         app:layout_constraintEnd_toEndOf="@id/hasilPencarianFragment_tv_nomor"
-        app:layout_constraintBottom_toTopOf="@id/hasilPencarianFragment_tv_nomor"/>
+        app:layout_constraintBottom_toTopOf="@id/hasilPencarianFragment_tv_nomor"
+        app:layout_constraintTop_toBottomOf="@id/hasilPencarianFragment_iv_reviewUlang">
+        <TextView
+            android:id="@+id/hasilPencarianFragment_tv_captionNomor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/nomor"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/hasilPencarianFragment_til_pilihBank"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/pilih_bank"
+            android:layout_marginStart="8dp">
+            <AutoCompleteTextView
+                android:id="@+id/hasilPencarianFragment_ac_pilihBank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="none"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/hasilPencarianFragment_tv_nomor"
@@ -36,7 +61,7 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="80dp"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

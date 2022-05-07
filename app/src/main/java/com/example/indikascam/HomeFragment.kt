@@ -1,17 +1,13 @@
 package com.example.indikascam
 
 import android.app.role.RoleManager
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
@@ -93,6 +89,14 @@ class HomeFragment : Fragment() {
 //        val textView = view.findViewById<TextInputEditText>(R.id.signUpFragment_et_searchNomor)
 //        val extras = activity?.intent?.extras
 //        textView.setText(extras?.getString("a"))
+
+        binding.homeFragmentIvBlockInfo.setOnClickListener{
+            val window: Window = requireActivity().window
+            val windowParams = window.attributes
+            windowParams.dimAmount = 0.90f
+            windowParams.flags = windowParams.flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND
+            window.attributes = windowParams
+        }
 
         view.findViewById<Button>(R.id.homeFragment_btn_searchNomor).setOnClickListener{
             val someText = arrayOf<String>(view.findViewById<TextInputEditText>(R.id.homeFragment_et_searchNomor).text.toString(), view.findViewById<TabLayout>(R.id.homeFragment_tl_teleponRekening).selectedTabPosition.toString())
@@ -276,17 +280,14 @@ class HomeFragment : Fragment() {
 
     private fun loadPieChartData(pieChart: PieChart) {
         val entries = arrayListOf<PieEntry>()
-        entries.add(PieEntry(0.2f, "Robocall"))
-        entries.add(PieEntry(0.3f, "Spam"))
-        entries.add(PieEntry(0.5f, "Scam"))
+        entries.add(PieEntry(1f, "Penipuan"))
 
         val colors = arrayListOf<Int>()
         for (color in ColorTemplate.MATERIAL_COLORS){
             colors.add(color)
         }
-
         val dataset = PieDataSet(entries, "")
-        dataset.colors = colors
+        dataset.colors = arrayListOf<Int>(ColorTemplate.MATERIAL_COLORS[2])
 
         val data = PieData(dataset)
         data.setDrawValues(true)

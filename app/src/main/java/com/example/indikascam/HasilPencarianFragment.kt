@@ -60,8 +60,6 @@ class HasilPencarianFragment : Fragment() {
 
     }
 
-    private var findDevicePhoneNumber = ""
-
     private var titles = arrayOf("Ucok", "Anonim", "Doe", "Butet")
 
     private var description= arrayOf("Scam", "Scam", "Spam", "Robocall")
@@ -92,65 +90,6 @@ class HasilPencarianFragment : Fragment() {
         return binding.root
     }
 
-
-    private fun getNumber() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                READ_SMS
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                READ_PHONE_NUMBERS
-            ) !=
-            PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                READ_PHONE_STATE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermission()
-        } else {
-            val telephonyManager = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            val phoneNumber = telephonyManager.line1Number
-            findDevicePhoneNumber = phoneNumber
-            return
-        }
-    }
-
-    private fun requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(arrayOf(READ_SMS, READ_PHONE_NUMBERS, READ_PHONE_STATE), 100)
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        when (requestCode) {
-            100 -> {
-                Log.d("TAGc", findDevicePhoneNumber)
-
-                val telephonyManager = requireContext().getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-                if (ActivityCompat.checkSelfPermission(requireContext(), READ_SMS) !=
-                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        requireContext(),
-                        READ_PHONE_NUMBERS
-                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        requireContext(),
-                        READ_PHONE_STATE
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    return
-                }else{
-
-                    val phoneNumber = telephonyManager.line1Number
-                    findDevicePhoneNumber = phoneNumber
-                }
-            }
-            else -> throw IllegalStateException("Unexpected value: $requestCode")
-        }
-    }
-
     private fun setupHasilPencarianFragment(searchNumber: Array<String>) {
         //searchNumber[0] == nomor yang dicari, searchNumber[1] == jenis nomor
         if (searchNumber[0].isNotBlank()) {
@@ -161,6 +100,7 @@ class HasilPencarianFragment : Fragment() {
 
         if (searchNumber[1] == "0") {
             binding.hasilPencarianFragmentTvCaptionNomor.text = "Nomor Telepon"
+            binding.hasilPencarianFragmentTilPilihBank.visibility = View.GONE
         } else {
             binding.hasilPencarianFragmentTvCaptionNomor.text = "Nomor Rekening"
             binding.hasilPencarianFragmentBtnBlokir.visibility = View.GONE
@@ -178,19 +118,14 @@ class HasilPencarianFragment : Fragment() {
         binding.hasilPencarianFragmentRcvRiwayat.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         binding.hasilPencarianFragmentIvReviewUlang.setOnClickListener {
-            getNumber()
-            if(findDevicePhoneNumber == searchNumber[0]){
-                val laporan = ArrayList<CommentItem>()
-                for (item in commentList){
-                    if (item.status == "Pending" || item.status == "Diterima") {
-                        laporan.add(item)
-                    }
+            val laporan = ArrayList<CommentItem>()
+            for (item in commentList){
+                if (item.status == "Pending" || item.status == "Diterima") {
+                    laporan.add(item)
                 }
-                val reviewUlangDialog = ReviewUlangDialog(searchNumber[0], searchNumber[1], laporan)
-                reviewUlangDialog.show(requireActivity().supportFragmentManager, "Review Ulang Dialog")
-            } else{
-                Toast.makeText(context, "Maaf Anda tidak bisa melakukan review ulang terhadap nomor ini karena nomor telepon yang digunakan berbeda", Toast.LENGTH_LONG).show()
             }
+            val reviewUlangDialog = ReviewUlangDialog(searchNumber[0], searchNumber[1], laporan)
+            reviewUlangDialog.show(requireActivity().supportFragmentManager, "Review Ulang Dialog")
         }
 
         binding.hasilPencarianFragmentBtnBlokir.setOnClickListener {

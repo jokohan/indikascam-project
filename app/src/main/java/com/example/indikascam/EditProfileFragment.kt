@@ -35,6 +35,14 @@ class EditProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentEditProfileBinding.inflate(inflater, container, false)
 
+        setupEditProfile()
+
+
+
+        return binding.root
+    }
+
+    private fun setupEditProfile() {
         binding.editProfileFragmentIvDone.setOnClickListener {
             Navigation.findNavController(binding.root).navigateUp()
         }
@@ -49,8 +57,6 @@ class EditProfileFragment : Fragment() {
             pickFromGallery.type = "image/*"
             startActivityForResult(pickFromGallery, 1)
         }
-
-        return binding.root
     }
 
     @SuppressLint("Range")

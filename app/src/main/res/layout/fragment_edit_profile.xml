@@ -55,11 +55,14 @@
     </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editProfileFragment_til_namaLengkap"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/nama_lengkap"
         android:layout_marginTop="8dp">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editProfileFragment_ac_namaLengkap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -68,12 +71,15 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editProfileFragment_til_email"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/email"
         android:layout_marginTop="8dp"
         android:enabled="false">
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editProfileFragment_ac_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -83,33 +89,80 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editProfileFragment_til_nomorTelepon"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/nomor_telepon"
         android:layout_marginTop="8dp"
         android:enabled="false">
+
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editProfileFragment_ac_nomorTelepon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:text="@string/contoh_nomor_telepon"/>
+
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/editProfileFragment_cl_rekening"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/nomor_rekening"
         android:layout_marginTop="8dp"
-        android:enabled="false">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
+        >
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editProfileFragment_til_pilihBank"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:text="@string/contoh_nomor_rekening"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="@string/pilih_bank"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/editProfileFragment_til_nomorRekening"
+            android:layout_marginEnd="4dp"
+            android:enabled="false">
+            <AutoCompleteTextView
+                android:id="@+id/hasilPencarianFragment_ac_pilihBank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
+                android:inputType="none"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editProfileFragment_til_nomorRekening"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/nomor_rekening"
+            android:enabled="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/editProfileFragment_til_pilihBank"
+            android:layout_marginStart="4dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editProfileFragment_ac_nomorRekening"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/contoh_nomor_rekening"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </LinearLayout>

@@ -105,6 +105,10 @@ class ProfileFragment : Fragment() {
             Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_laporanSayaFragment)
         }
 
+        binding.profileFragmentBtnReviewUlang.setOnClickListener{
+            Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_reviewUlangFragment)
+        }
+
         return view
     }
 

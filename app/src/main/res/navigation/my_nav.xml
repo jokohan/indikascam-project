@@ -66,6 +66,9 @@
         <action
             android:id="@+id/action_profileFragment_to_laporanSayaFragment"
             app:destination="@id/laporanSayaFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_reviewUlangFragment"
+            app:destination="@id/reviewUlangFragment" />
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
@@ -215,4 +218,9 @@
             android:name="nomorLaporan"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/reviewUlangFragment"
+        android:name="com.example.indikascam.ReviewUlangFragment"
+        android:label="Review Ulang Saya"
+        tools:layout="@layout/fragment_review_ulang" />
 </navigation>

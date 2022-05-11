@@ -26,6 +26,7 @@ class MainViewModel(private val repository: Repository): ViewModel() {
     val myResponseBanks: MutableLiveData<Response<Any>> = MutableLiveData()
     val myResponseProducts: MutableLiveData<Response<Any>> = MutableLiveData()
     val myResponseUserReport: MutableLiveData<Response<Any>> = MutableLiveData()
+    val myResponseBlockCall: MutableLiveData<Response<Any>> = MutableLiveData()
 
     fun pushPost(post: Post){
         viewModelScope.launch {
@@ -124,4 +125,6 @@ class MainViewModel(private val repository: Repository): ViewModel() {
             myResponseUserReport.value = response
         }
     }
+
+
 }

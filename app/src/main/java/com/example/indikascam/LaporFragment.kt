@@ -113,7 +113,7 @@ class LaporFragment : Fragment() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (!binding.laporFragmentAcGangguan.text.isNullOrEmpty()) {
-                    if(binding.laporFragmentAcGangguan.text.toString() == "Penipuan"){
+                    if(binding.laporFragmentAcGangguan.text.toString() == "Penipu"){
                         binding.laporFragmentLlPilihGangguanDahulu.visibility = View.VISIBLE
                         binding.laporFragmentLlGangguanBukanPenipuan.visibility = View.VISIBLE
                         binding.laporFragmentLlGangguanBukanPenipuan2.visibility = View.VISIBLE
@@ -246,38 +246,36 @@ class LaporFragment : Fragment() {
         getReportType()
 
         binding.laporFragmentBtnLapor.setOnClickListener {
-//            val sessionManager = SessionManager(requireContext())
-//            val accessToken = sessionManager.fetchAuthToken()
-//
-//            val repository = Repository()
-//            val viewModelFactory = MainViewModelFactory(repository)
-//            viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-//            viewModel.userReportPost("Bearer ${accessToken!!}", gangguanFinal!!,
-//                banksFinal!!,
-//                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNomorRekeningPelaku.text.toString()),
-//                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNamaPelaku.text.toString()),
-//                platformFinal!!,
-//                productsFinal!!,
-//                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtKronologi.text.toString()),
-//                buktiFinal,
-//                binding.laporFragmentEtTotalKerugian.text.toString().toInt(),
-//                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNomorTeleponPelaku.text.toString()))
-//            viewModel.myResponseUserReport.observe(viewLifecycleOwner, Observer { response ->
-//                if(response.isSuccessful && response.code() == 201){
-//                    val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
-//                    Log.d("SUKSES LAPOR", jsonObject.toString())
-//                    val dialog = LaporDialog()
-//                    dialog.show(parentFragmentManager,"")
-//                    Navigation.findNavController(binding.root).navigateUp()
-//                } else {
-//                    Log.d("ResponseError", response.code().toString())
-//                    Log.d("ResponseError", response.message())
-//                    val reader = response.errorBody()?.byteStream()
-//                    Log.d("ResponseError", reader.toString())
-//                }
-//            })
-            val dialog = LaporDialog()
-            dialog.show(parentFragmentManager,"")
+            val sessionManager = SessionManager(requireContext())
+            val accessToken = sessionManager.fetchAuthToken()
+
+            val repository = Repository()
+            val viewModelFactory = MainViewModelFactory(repository)
+            viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+            viewModel.userReportPost("Bearer ${accessToken!!}", gangguanFinal!!,
+                banksFinal!!,
+                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNomorRekeningPelaku.text.toString()),
+                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNamaPelaku.text.toString()),
+                platformFinal!!,
+                productsFinal!!,
+                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtKronologi.text.toString()),
+                buktiFinal,
+                binding.laporFragmentEtTotalKerugian.text.toString().toInt(),
+                RequestBody.create("text/plain".toMediaTypeOrNull(), binding.laporFragmentEtNomorTeleponPelaku.text.toString()))
+            viewModel.myResponseUserReport.observe(viewLifecycleOwner, Observer { response ->
+                if(response.isSuccessful && response.code() == 201){
+                    val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
+                    Log.d("SUKSES LAPOR", jsonObject.toString())
+                    val dialog = LaporDialog()
+                    dialog.show(parentFragmentManager,"")
+                    Navigation.findNavController(binding.root).navigateUp()
+                } else {
+                    Log.d("ResponseError", response.code().toString())
+                    Log.d("ResponseError", response.message())
+                    val reader = response.errorBody()?.byteStream()
+                    Log.d("ResponseError", reader.toString())
+                }
+            })
         }
     }
 
@@ -361,27 +359,27 @@ class LaporFragment : Fragment() {
         binding.laporFragmentAcGangguan.setAdapter(adapter)
 
         //from API
-//        val repository = Repository()
-//        val viewModelFactory = MainViewModelFactory(repository)
-//        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
-//        viewModel.reportTypeGet()
-//        viewModel.myResponseReportType.observe(viewLifecycleOwner, Observer { response ->
-//            if(response.isSuccessful && response.code() == 200){
-//                val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
-//                var reportTypes = emptyArray<String>()
-//                var reportTypeIds = emptyArray<Int>()
-//                for (data in jsonObject["data"].asJsonArray){
-//                    reportTypes += data.asJsonObject["name"].toString().removeSurrounding("\"")
-//                    reportTypeIds += data.asJsonObject["id"].asInt
-//                }
-//                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, reportTypes)
-//                binding.laporFragmentAcGangguan.setAdapter(adapter)
-//
-//                binding.laporFragmentAcGangguan.setOnItemClickListener { _, _, i, _ ->
-//                    gangguanFinal = reportTypeIds[i]
-//                }
-//            }
-//        })
+        val repository = Repository()
+        val viewModelFactory = MainViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java)
+        viewModel.reportTypeGet()
+        viewModel.myResponseReportType.observe(viewLifecycleOwner, Observer { response ->
+            if(response.isSuccessful && response.code() == 200){
+                val jsonObject = Gson().toJsonTree(response.body()).asJsonObject
+                var reportTypes = emptyArray<String>()
+                var reportTypeIds = emptyArray<Int>()
+                for (data in jsonObject["data"].asJsonArray){
+                    reportTypes += data.asJsonObject["name"].toString().removeSurrounding("\"")
+                    reportTypeIds += data.asJsonObject["id"].asInt
+                }
+                val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, reportTypes)
+                binding.laporFragmentAcGangguan.setAdapter(adapter)
+
+                binding.laporFragmentAcGangguan.setOnItemClickListener { _, _, i, _ ->
+                    gangguanFinal = reportTypeIds[i]
+                }
+            }
+        })
     }
 
 

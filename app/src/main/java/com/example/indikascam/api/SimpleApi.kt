@@ -82,6 +82,21 @@ interface SimpleApi {
         @Part ("scammer_phone_number") noTelPenipu: RequestBody
     ):Response<Any>
 
-    @GET("fact?max_length=140")
-    fun getCatFacts(): Call<testing>
+    @GET("api/call/check-call/{phoneNumber}")
+    fun blockCallGet(
+        @Header("Authorization") token: String,
+        @Path("phoneNumber") phonenumber: String
+    ):Call<BlockCall>
+
+    @POST("api/auth/refresh")
+    fun refreshTokenPost(
+        @Header("Authorization") token: String
+    ):Call<RefreshToken>
+
+    @POST("api/detected-call-history")
+    fun insertBlockCall(
+        @Header("Authorization") token: String,
+        @Body insertBlockCall : insertBlockCallPost
+    ):Call<Any>
+
 }

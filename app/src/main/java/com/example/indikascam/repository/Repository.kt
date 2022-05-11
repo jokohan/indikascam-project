@@ -61,4 +61,5 @@ class Repository {
     suspend fun reportTypeGet(): Response<Any>{
         return RetrofitInstance.api.reportTypeGet()
     }
+
 }

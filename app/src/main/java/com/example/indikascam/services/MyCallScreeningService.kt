@@ -1,134 +1,122 @@
 package com.example.indikascam.services
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.telecom.Call
 import android.telecom.CallScreeningService
 import android.util.Log
-import android.widget.Toast
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import com.example.indikascam.MainActivity
-import com.example.indikascam.MainViewModel
-import com.example.indikascam.R
 import com.example.indikascam.api.SimpleApi
+import com.example.indikascam.model.insertBlockCallPost
+import com.example.indikascam.sessionManager.SessionManager
 import com.example.indikascam.util.Constants.Companion.BASE_URL
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.awaitResponse
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
+import java.util.concurrent.TimeUnit
 
-private val CHANNEL_ID = "channel_id_scammer"
-private val notificationId = 101
 
 class MyCallScreeningService : CallScreeningService() {
 
+    private val TAG = "CallScreeningService"
+
+    val client = OkHttpClient.Builder()
+        .connectTimeout(10, TimeUnit.MINUTES)
+        .readTimeout(10, TimeUnit.MINUTES)
+        .writeTimeout(10, TimeUnit.MINUTES)
+        .build()
+
+    val api = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(client)
+        .build()
+        .create(SimpleApi::class.java)
+
     override fun onScreenCall(p0: Call.Details) {
-        val phoneNumber = getPhoneNumber(p0)
-        callApi(p0, phoneNumber)
-    }
-
-    private fun callApi(p0: Call.Details, phoneNumber: String) {
-        val api = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(SimpleApi::class.java)
-
-        GlobalScope.launch(Dispatchers.IO) {
-            try {
-                val response = api.getCatFacts().awaitResponse()
-                if (response.isSuccessful){
-                    val data = response.body()!!
-                    Log.d("TAG", data.fact)
-
-                    withContext(Dispatchers.Main){
-                        Toast.makeText(applicationContext, data.fact, Toast.LENGTH_LONG).show()
-                    }
-                    var responseForCall = CallResponse.Builder()
-                    responseForCall = handlePhoneCall(responseForCall, phoneNumber)
-                    respondToCall(p0, responseForCall.build())
-                }
-            } catch (e: Exception){
-                withContext(Dispatchers.Main){
-                    Toast.makeText(applicationContext, "ada yg salah", Toast.LENGTH_LONG).show()
-                }
-            }
-
-        }
-
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "Notification Title"
-            val descriptionText = "Notification Description"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
-            }
-            val notificationManager: NotificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+        val startTime = p0.creationTimeMillis
+        //0 == panggilan masuk, 1 ==  panggilan keluar
+        if (p0.callDirection == 0) {
+            val phoneNumber = getPhoneNumber(p0)
+            callApi(p0, phoneNumber, startTime)
         }
     }
 
-    private fun sendNotification(phoneNumber: String) {
-        val intent = Intent(applicationContext, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        }
-        intent.putExtra("a", phoneNumber)
-        val pendingIntent = PendingIntent.getActivity(applicationContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("IndikaScam")
-            .setContentText("Awas Penipu: $phoneNumber")
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-        with(NotificationManagerCompat.from(applicationContext)){
-            notify(notificationId, builder.build())
-        }
-    }
+    private fun callApi(p0: Call.Details, phoneNumber: String, startTime: Long) {
+        val sessionManager = SessionManager(applicationContext)
+        var accessToken = sessionManager.fetchAuthToken()
+        var timeout: Long = System.currentTimeMillis() - startTime
 
-    private fun handlePhoneCall(
-        response: CallResponse.Builder,
-        phoneNumber: String
-    ): CallResponse.Builder {
-        val scammer = "+6282129993401"
-
-//        val alert = Toast.makeText(applicationContext, "Awas Penipu!", Toast.LENGTH_LONG)
-//        alert.setGravity(Gravity.CENTER, 0, 0)
-//        createNotificationChannel()
-
-        if (scammer == phoneNumber) {
-            response.apply {
-                //end call scammer
-                setRejectCall(true)
-
-                //user tidak mendapatkan panggilan masuk
-                setDisallowCall(true)
-            }
-
-//            sendNotification(phoneNumber)
-//            alert.show()
-
+        Log.d(TAG, "Waktu: ${(timeout)}ms")
+        if (accessToken == null) {
+            //blm pernah login
+            respondToCall(p0, CallResponse.Builder().build())
         } else {
-//            alert.setText("Telepon masuk: $phoneNumber")
-//            alert.show()
-        }
-        return response
-    }
+            //sudah pernah login
+            Log.d(TAG, "Token lama: $accessToken")
 
+            GlobalScope.launch(Dispatchers.IO) {
+                //refresh token
+                timeout = System.currentTimeMillis() - startTime
+                Log.d(TAG, "Waktu: ${(timeout)}ms")
+                val responseRefreshToken =
+                    api.refreshTokenPost("Bearer $accessToken").awaitResponse()
+                if (responseRefreshToken.isSuccessful) {
+                    val data = responseRefreshToken.body()!!
+                    sessionManager.saveAuthToken(
+                        data.access_token!!
+                    )
+                    accessToken = sessionManager.fetchAuthToken()
+                    Log.d(TAG, "Token Baru: $accessToken!!")
+                    timeout = System.currentTimeMillis() - startTime
+                    Log.d(TAG, "Waktu: ${(timeout)}ms")
+                    //Block Call
+                    val responseToBlockCall =
+                        api.blockCallGet("Bearer $accessToken", phoneNumber).awaitResponse()
+                    if (responseToBlockCall.isSuccessful) {
+                        val data = responseToBlockCall.body()!!
+                        Log.d(TAG, "Keputusan: ${data.block.toString()}")
+                        if (data.block!!) {
+                            timeout = System.currentTimeMillis() - startTime
+                            Log.d(TAG, "Waktu: ${timeout.toString()}")
+                            if (timeout >= 5000) {
+                                Log.d(TAG, "timeout gak sempat blokir")
+                            } else {
+                                Log.d(TAG, "Lanjut blokir")
+                                respondToCall(p0, CallResponse.Builder().apply {
+                                    //end call scammer
+                                    setRejectCall(true)
+                                    //user tidak mendapatkan panggilan masuk
+                                    setDisallowCall(true)
+                                }.build())
+                                val insertBlockCallPost = insertBlockCallPost(phoneNumber, 1)
+                                val responseInsertBlockCall =
+                                    api.insertBlockCall("Bearer $accessToken", insertBlockCallPost)
+                                        .awaitResponse()
+                                if (responseInsertBlockCall.isSuccessful) {
+                                    Log.d(TAG, "tercatat")
+                                }
+                            }
+                        } else {
+                            respondToCall(p0, CallResponse.Builder().build())
+                        }
+
+                    } else {
+                        Log.d(TAG, responseToBlockCall.code().toString())
+                        val reader = responseToBlockCall.errorBody()?.byteStream()
+                        Log.d(TAG, reader.toString())
+                    }
+                } else {
+                    Log.d(TAG, responseRefreshToken.code().toString())
+                    val reader = responseRefreshToken.errorBody()?.byteStream()
+                    Log.d(TAG, reader.toString())
+                }
+
+            }
+        }
+    }
 
     private fun getPhoneNumber(p0: Call.Details): String {
         val removeTelPrefix = p0.handle.toString().replace("tel:", "")

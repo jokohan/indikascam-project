@@ -90,14 +90,6 @@ class HomeFragment : Fragment() {
 //        val extras = activity?.intent?.extras
 //        textView.setText(extras?.getString("a"))
 
-        binding.homeFragmentIvBlockInfo.setOnClickListener{
-            val window: Window = requireActivity().window
-            val windowParams = window.attributes
-            windowParams.dimAmount = 0.90f
-            windowParams.flags = windowParams.flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND
-            window.attributes = windowParams
-        }
-
         view.findViewById<Button>(R.id.homeFragment_btn_searchNomor).setOnClickListener{
             val someText = arrayOf<String>(view.findViewById<TextInputEditText>(R.id.homeFragment_et_searchNomor).text.toString(), view.findViewById<TabLayout>(R.id.homeFragment_tl_teleponRekening).selectedTabPosition.toString())
             val action = HomeFragmentDirections.actionHomeFragmentToHasilPencarianFragment(someText)
@@ -280,14 +272,16 @@ class HomeFragment : Fragment() {
 
     private fun loadPieChartData(pieChart: PieChart) {
         val entries = arrayListOf<PieEntry>()
-        entries.add(PieEntry(1f, "Penipuan"))
+        entries.add(PieEntry(0.2f, "Robocall"))
+        entries.add(PieEntry(0.3f, "Spam"))
+        entries.add(PieEntry(0.5f, "Penipuan"))
 
         val colors = arrayListOf<Int>()
         for (color in ColorTemplate.MATERIAL_COLORS){
             colors.add(color)
         }
         val dataset = PieDataSet(entries, "")
-        dataset.colors = arrayListOf<Int>(ColorTemplate.MATERIAL_COLORS[2])
+        dataset.colors = colors
 
         val data = PieData(dataset)
         data.setDrawValues(true)

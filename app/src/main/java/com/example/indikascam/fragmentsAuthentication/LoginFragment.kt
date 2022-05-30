@@ -64,7 +64,7 @@ class LoginFragment : Fragment() {
                     }
                 } else {
                     try{
-                        val jObjError = JSONObject(response.errorBody()!!.string())
+                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
                         val errorMessage = jObjError.getJSONObject("error").getString("message")
                         Log.e("loginError", errorMessage)
                         Log.e("loginError", response.code().toString())

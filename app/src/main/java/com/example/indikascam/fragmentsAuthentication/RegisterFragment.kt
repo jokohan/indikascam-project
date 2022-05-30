@@ -72,7 +72,7 @@ class RegisterFragment : Fragment() {
                         Navigation.findNavController(view).navigate(action)
                     } else {
                         try{
-                            val jObjError = JSONObject(responseToLogin.errorBody()!!.string())
+                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(responseToLogin.errorBody()!!.string())
                             val errorMessage = jObjError.getJSONObject("error").getString("message")
                             Log.e("loginError", errorMessage)
                             Log.e("loginError", responseToLogin.code().toString())
@@ -83,7 +83,7 @@ class RegisterFragment : Fragment() {
                     }
                 } else {
                     try{
-                        val jObjError = JSONObject(response.errorBody()!!.string())
+                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
                         val errorMessage = jObjError.getJSONObject("error").getString("message")
                         Log.e("registerError", errorMessage)
                         Log.e("registerError", response.code().toString())

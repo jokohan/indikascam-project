@@ -118,5 +118,6 @@
     <string name="silahkan_isi_data_dibawah">Silahkan isi data dibawah</string>
     <string name="pilih_laporan">Pilih Laporan</string>
     <string name="progress_bar">Harap Tunggu…</string>
+    <string name="dalam_kurung">(%1$s)</string>
 
 </resources>

@@ -31,7 +31,7 @@ class OtpFragment : Fragment() {
 
     private val start = 61000L
     var timer = start
-    lateinit var countDownTimer: CountDownTimer
+    private lateinit var countDownTimer: CountDownTimer
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,8 +50,9 @@ class OtpFragment : Fragment() {
         binding.otpFragmentTvResendOtpCode.setOnClickListener {
             binding.otpFragmentTvResendOtpCode.isEnabled = false
             binding.otpFragmentTvDelayTime.visibility = View.VISIBLE
-            startTimer(binding.otpFragmentTvDelayTime)
+            startTimer()
 
+            @Suppress("BlockingMethodInNonBlockingContext")
             if(args.needs == "register"){
                 //request api
                 lifecycleScope.launchWhenCreated {
@@ -69,7 +70,7 @@ class OtpFragment : Fragment() {
                         Log.i("resend otp berhasil", response.body()!!.message)
                     }else{
                         try{
-                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
                             val errorMessage = jObjError.getJSONObject("error").getString("message")
                             Log.e("otpResendError", errorMessage)
                             Log.e("otpResendError", response.code().toString())
@@ -108,7 +109,7 @@ class OtpFragment : Fragment() {
                         Navigation.findNavController(view).navigate(action)
                     }else{
                         try{
-                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
                             val errorMessage = jObjError.getJSONObject("error").getString("message")
                             Log.e("otpError", errorMessage)
                             Log.e("otpError", response.code().toString())
@@ -128,11 +129,11 @@ class OtpFragment : Fragment() {
         return view
 
     }
-    private fun startTimer(view: View) {
+    private fun startTimer() {
         countDownTimer = object : CountDownTimer(timer,1000){
             override fun onTick(millisUntilFinished: Long) {
                 timer = millisUntilFinished
-                setTextTimer(view)
+                setTextTimer()
             }
 
             override fun onFinish() {
@@ -144,12 +145,12 @@ class OtpFragment : Fragment() {
         }.start()
     }
 
-    private fun setTextTimer(view: View) {
+    private fun setTextTimer() {
         val m = (timer / 1000) / 60
         val s = (timer / 1000) % 60
 
         val format = String.format("%02d:%02d", m, s)
 
-        binding.otpFragmentTvDelayTime.text = " ($format)"
+        binding.otpFragmentTvDelayTime.text = String.format(resources.getString(R.string.dalam_kurung),format)
     }
 }

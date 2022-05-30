@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragmentsProfile.MyReportFragment"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="@dimen/dimen_20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/daftar_laporan"
+        android:textStyle="bold"
+        android:textSize="@dimen/title_20sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myReportFragment_rcv_reportList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimen_8dp"/>
+
+</LinearLayout>

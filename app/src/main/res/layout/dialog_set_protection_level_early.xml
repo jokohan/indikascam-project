@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:text="@string/terapkan_tingkat_proteksi_yang_anda_inginkan"/>
+
+    <ImageView
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:src="@drawable/image_protection_level"
+        android:contentDescription="@null" />
+
+    <RadioGroup
+        android:id="@+id/dialogSetProtectionLevelEarly_rg_protection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        >
+
+        <RadioButton
+            android:id="@+id/dialogSetProtectionLevelEarly_rb_proteksiTinggi"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="?android:attr/listChoiceIndicatorSingle"
+            android:gravity="center_horizontal|bottom"
+            android:text="@string/proteksi_tinggi" />
+
+        <RadioButton
+            android:id="@+id/dialogSetProtectionLevelEarly_rb_proteksiSedang"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="?android:attr/listChoiceIndicatorSingle"
+            android:gravity="center_horizontal|bottom"
+            android:text="@string/proteksi_sedang"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/dialogSetProtectionLevelEarly_rb_proteksiRendah"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="?android:attr/listChoiceIndicatorSingle"
+            android:gravity="center_horizontal|bottom"
+            android:text="@string/proteksi_rendah" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/dialogSetProtectionLevelEarly_tv_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:text="@string/proteksi_sedang_caption"/>
+
+    <Button
+        android:id="@+id/dialogSetProtectionLevelEarly_btn_applyProtection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/terapkan"
+        android:textAllCaps="false"
+        android:layout_marginVertical="8dp"/>
+
+</LinearLayout>

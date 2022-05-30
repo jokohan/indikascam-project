@@ -1,80 +1,122 @@
 <resources>
+
+    <string-array name="typeReport">
+        <item>Penipu</item>
+        <item>Panggilan Spam</item>
+        <item>Panggilan Robot</item>
+    </string-array>
+
     <string name="app_name">Indikascam</string>
-
-    <string-array name="platforms">
-
-    </string-array>
-
-    <string-array name="products">
-        <item>-</item>
-        <item id="1">Fashion</item>
-        <item>Makanan</item>
-        <item>Perabotan</item>
-        <item>Elektronik</item>
-        <item>Gadget</item>
-        <item>Obat</item>
-        <item>Jasa</item>
-        <item>lainnya...</item>
-    </string-array>
-
-    <string-array name="jenisGangguan">
-        <item>Penipuan</item>
-        <item>Spam</item>
-        <item>Robocall</item>
-    </string-array>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="indikascam">Indikascam</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="forgot_password">Forgot Password?</string>
-    <string name="masuk">Masuk</string>
-    <string name="belum_punya_akun_klik_disini">Belum punya akun? Klik disini</string>
-    <string name="daftar_akun">Daftar Akun</string>
-    <string name="daftar">Daftar</string>
-    <string name="confirm_password">Confirm Password</string>
-    <string name="kode_otc_pada_email">Kode OTC pada email</string>
-    <string name="verifikasi_otc">Verifikasi OTC</string>
-    <string name="kode_otc_dikirim_ke_email">Kode OTC dikirim ke email</string>
-    <string name="belum_terima_email">Belum terima email?</string>
-    <string name="lanjut">Lanjut</string>
-    <string name="terima_kasih_caption">Aplikasi ini juga bisa digunakan untuk memblokir panggilan masuk pada nomor-nomor yang terindikasi pernah melakukan penipuan sebelumnya</string>
-    <string name="terima_kasih_title">Terima kasih telah memakai aplikasi Indikascam</string>
-    <string name="lihat_statistik">Lihat Statistik</string>
-    <string name="tinggi">Tinggi</string>
-    <string name="sedang">Sedang</string>
-    <string name="rendah">Rendah</string>
-    <string name="terapkan">Terapkan</string>
-    <string name="proteksi_tinggi">Indikascam akan melakukan blokir otomatis untuk semua nomor telepon yang sudah pernah dilaporkan oleh pengguna lain</string>
-    <string name="proteksi_sedang">Indikascam akan melakukan blokir otomatis untuk semua nomor telepon yang sudah pernah dilaporkan atas <b><i>kasus penipuan</i></b> oleh pengguna lain</string>
-    <string name="proteksi_rendah">Indikascam tidak akan melakukan blokir otomatis terhadap nomor telepon apapun</string>
-    <string name="gangguan">Gangguan</string>
-    <string name="request_review_kembali">Request review kembali</string>
-    <string name="nomor">Nomor</string>
-    <string name="nomor_tidak_ditemukan">Nomor tidak ditemukan</string>
-    <string name="blokir">Blokir</string>
+    <string name="beranda">Beranda</string>
     <string name="lapor">Lapor</string>
-    <string name="riwayat_laporan">Riwayat Laporan</string>
-    <string name="ajukan_permohonan_review_ulang">Ajukan Permohonan Review Ulang</string>
-    <string name="review_ulang">Review Ulang</string>
-    <string name="silahkan_masukkan_email_anda">Silahkan masukkan email Anda</string>
-    <string name="kirim">Kirim</string>
-    <string name="silahkan_masukkan_email_anda_agar_admin_kami_bisa_segera_review_ulang">Silahkan masukkan email Anda agar admin kami bisa segera review ulang</string>
-    <string name="ok">ok</string>
-    <string name="batal">batal</string>
-    <string name="nomor_telepon">Nomor Telepon</string>
-    <string name="konfirmasi_password">Konfirmasi Password</string>
-    <string name="nama_lengkap">Nama Lengkap</string>
-    <string name="nomor_rekening">Nomor Rekening</string>
-    <string name="contoh_nomor_telepon">+628123456789</string>
-    <string name="contoh_nomor_rekening">100123456789</string>
-    <string name="contoh_email">Ucok@gmail.com</string>
-    <string name="ganti_foto">Ganti Foto</string>
-    <string name="hapus_foto">Hapus Foto</string>
+    <string name="notifikasi">Notifikasi</string>
+    <string name="profil">Profil</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="indikascam">Indikascam</string>
+    <string name="masuk">Masuk</string>
+    <string name="belum_punya_akun_klik_disini">Belum punya akun? <font color='#B10322'><b>Klik disini</b></font></string>
+    <string name="kata_sandi">Kata Sandi</string>
+    <string name="ganti_kata_sandi">Ganti Kata Sandi</string>
+    <string name="nama">Nama</string>
+    <string name="laporan_saya">Laporan Saya</string>
+    <string name="review_ulang_saya">Review Ulang Saya</string>
+    <string name="pengaturan">Pengaturan</string>
+    <string name="daftar_akun">Daftar Akun</string>
+    <string name="konfirmasi_kata_sandi">Konfirmasi Kata Sandi</string>
+    <string name="daftar">Daftar</string>
+    <string name="verifikasi_otp">Verifikasi OTP</string>
+    <string name="kode_otp_dikirim_ke_email">Kode OTP dikirim ke email</string>
+    <string name="confidential">******</string>
+    <string name="verifikasi">VERIFIKASI</string>
+    <string name="kirim_ulang">KIRIM ULANG</string>
+    <string name="belum_terima_email">Belum terima email?</string>
+    <string name="ubah_kata_sandi">Ubah Kata Sandi</string>
+    <string name="masukkan_email_akun_anda_untuk_mengatur_ulang_kata_sandi">Masukkan email akun Anda untuk mengatur ulang kata sandi</string>
+    <string name="atur_ulang_kata_sandi">Atur Ulang Kata Sandi</string>
+    <string name="silahkan_masukkan_kata_sandi_baru">Silahkan masukkan kata sandi baru</string>
     <string name="selesai">Selesai</string>
-    <string name="hari_ini">Hari ini</string>
+    <string name="hapus_foto">Hapus Foto</string>
+    <string name="ganti_foto">Ganti Foto</string>
+    <string name="nama_lengkap">Nama Lengkap</string>
+    <string name="nomor_telepon">Nomor Telepon</string>
     <string name="pilih_bank">Pilih Bank</string>
+    <string name="nomor_rekening">Nomor Rekening</string>
+    <string name="daftar_laporan">Daftar Laporan</string>
+    <string name="nomor_laporan">Nomor Laporan</string>
+    <string name="penipuan">Penipuan</string>
+    <string name="tanggal">Tanggal</string>
+    <string name="diterima">Diterima</string>
+    <string name="daftar_review">Daftar Review</string>
+    <string name="data_laporan">Data Laporan</string>
+    <string name="data_pelaku">Data Pelaku</string>
+    <string name="peristiwa">Peristiwa</string>
+    <string name="bukti_bukti">Bukti-Bukti</string>
+    <string name="titik_dua">:</string>
+    <string name="tipe_gangguan">Tipe Gangguan</string>
+    <string name="tanggal_amp_waktu"><![CDATA[Tanggal & Waktu]]></string>
+    <string name="status">Status</string>
+    <string name="nama_bank">Nama Bank</string>
+    <string name="platform">Platform</string>
+    <string name="product">Produk</string>
+    <string name="total_kerugian">Total Kerugian</string>
+    <string name="kronologi">Kronologi</string>
+    <string name="delete_proof">Delete Proof</string>
+    <string name="proof_image">Proof Image</string>
+    <string name="tingkat_proteksi">Tingkat Proteksi</string>
+    <string name="proteksi_tinggi">Tinggi</string>
+    <string name="proteksi_sedang">Sedang</string>
+    <string name="proteksi_rendah">Rendah</string>
+    <string name="proteksi_tinggi_caption">Indikascam akan melakukan blokir otomatis pada semua nomor telepon yang sudah pernah dilaporkan atas semua jenis gangguan oleh pengguna lain</string>
+    <string name="proteksi_sedang_caption">Indikascam akan melakukan blokir otomatis pada semua nomor telepon yang sudah pernah dilaporkan atas kasus penipuan oleh pengguna lain</string>
+    <string name="proteksi_rendah_caption">Indikascam tidak akan melakukan blokir otomatis</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="your_profile_picture">Your Profile Picture</string>
+    <string name="keluar">Keluar</string>
+    <string name="terapkan_tingkat_proteksi_yang_anda_inginkan">Terapkan tingkat proteksi yang Anda inginkan</string>
+    <string name="terapkan">Terapkan</string>
+    <string name="anonim_pada_hasil_pencarian">Anonim pada Hasil Pencarian</string>
+    <string name="lihat_rincian_blokir_anda">Lihat Rincian Blokir Anda</string>
+    <string name="pemberitahuan">Pemberitahuan</string>
+    <string name="pilih_jenis_gangguan_yang_anda_alami">Pilih Jenis Gangguan yang Anda Alami</string>
+    <string name="lapor_nomor_rekening">Lapor Nomor Rekening</string>
+    <string name="nama_terduga_pelaku">Nama Terduga Pelaku</string>
+    <string name="sertakan_bukti">Sertakan Bukti</string>
+    <string name="tambah_bukti">+ Tambah Bukti</string>
+    <string name="lihat_statistik">Lihat Statistik</string>
+    <string name="cek_telepon_rekening">Cek Telepon / Rekening</string>
+    <string name="identifikasi_nomor_telepon_atau_rekening_seseorang_yang_berpotensi_melakukan_penipuan_sebelum_bertransaksi_blokir_nomor_telepon_apabila_diperlukan">Identifikasi nomor telepon atau rekening seseorang yang berpotensi melakukan penipuan sebelum bertransaksi. Blokir nomor telepon apabila diperlukan</string>
+    <string name="telepon">Telepon</string>
+    <string name="rekening">Rekening</string>
+    <string name="cari_nomor">Cari Nomor %1$s</string>
+    <string name="cari">Cari</string>
+    <string name="numberExample">Contoh: %1$s</string>
+    <string name="performa_blokir">Performa Blokir</string>
+    <string name="total">Total</string>
+    <string name="bulan_ini">Bulan Ini</string>
+    <string name="minggu_ini">Minggu Ini</string>
+    <string name="blokir_panggilan_4_bulan_terakhir">Blokir Panggilan 4 Bulan terakhir</string>
+    <string name="logo">logo</string>
+    <string name="berikut_statistik_dari_seluruh_laporan_yang_masuk">Berikut statistik dari seluruh laporan yang masuk</string>
+    <string name="platform_dengan_kasus_penipuan_terbanyak">Platform dengan kasus penipuan terbanyak</string>
+    <string name="produk_yang_paling_sering_digunakan_sebagai_modus">Produk yang paling sering digunakan sebagai modus</string>
+    <string name="mulai_blokir">Mulai Blokir</string>
+    <string name="format_rupiah">Rp.%1$s</string>
+    <string name="cari_nomor_ini">Cari Nomor Ini</string>
+    <string name="hari_ini">Hari Ini</string>
+    <string name="review_ulang_laporan">Review Ulang Laporan</string>
+    <string name="nomor_tidak_ditemukan">Nomor Tidak Ditemukan</string>
+    <string name="blokir">Blokir</string>
+    <string name="buka_blokir">Buka Blokir</string>
+    <string name="riwayat_laporan">Riwayat Laporan</string>
+    <string name="thank_you_for_reporting_title">Terima kasih telah membuat laporan, laporan Anda telah membantu komunitas Indikascam dalam mencegah kejahatan</string>
+    <string name="slogan_indikascam"><![CDATA[Mari bersama ciptakan kenyamanan bertelepon & bertransaksi]]></string>
+    <string name="tutup">Tutup</string>
+    <string name="ajukan_permohonan_review_ulang">Ajukan Permohonan Review Ulang</string>
+    <string name="kirim">Kirim</string>
+    <string name="silahkan_isi_data_dibawah">Silahkan isi data dibawah</string>
+    <string name="pilih_laporan">Pilih Laporan</string>
+    <string name="progress_bar">Harap Tunggu…</string>
 
 </resources>

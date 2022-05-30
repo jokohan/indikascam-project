@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragmentsAuthentication.CongratulationFragment"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingHorizontal="@dimen/dimen_20dp">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/ic_verified"
+        android:layout_marginTop="@dimen/dimen_80dp"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/congratulationFragment_tv_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:text=""/>
+
+    <Button
+        android:id="@+id/congratulationFragment_btn_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/masuk"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:textAllCaps="false"/>
+
+</LinearLayout>

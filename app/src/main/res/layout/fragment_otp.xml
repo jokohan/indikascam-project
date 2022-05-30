@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragmentsAuthentication.OtpFragment"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingHorizontal="@dimen/dimen_40dp">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="@dimen/dimen_80dp"
+        android:src="@drawable/ic_email_unread"
+        android:contentDescription="@string/kode_otp_dikirim_ke_email" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/verifikasi_otp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/title_40sp"
+        android:layout_gravity="center"/>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:text="@string/kode_otp_dikirim_ke_email"/>
+    
+    <TextView
+        android:id="@+id/otpFragment_tv_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:text="@string/email"
+        android:textColor="@color/black"/>
+
+    <EditText
+        android:id="@+id/otpFragment_et_otpCode"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:gravity="center"
+        android:hint="@string/confidential"
+        android:importantForAutofill="no"
+        android:inputType="number|textNoSuggestions"
+        android:letterSpacing="1.2"
+        android:minHeight="48dp"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/dimen_8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/belum_terima_email"/>
+
+        <TextView
+            android:id="@+id/otpFragment_tv_resendOtpCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/kirim_ulang"
+            android:textStyle="bold"
+            android:textColor="@color/design_default_color_error"
+            android:layout_marginStart="8dp"/>
+
+        <TextView
+            android:id="@+id/otpFragment_tv_delayTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+    
+    <Button
+        android:id="@+id/otpFragment_btn_verification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/verifikasi"/>
+
+</LinearLayout>

@@ -9,25 +9,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:paddingHorizontal="20dp"
         tools:context=".HomeFragment">
 
         <ImageView
-            android:id="@+id/homeFragment_iv_statistics"
+            android:id="@+id/homeFragment_iv_statistic"
             android:layout_width="30dp"
             android:layout_height="25dp"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginTop="16dp"
-            android:src="@drawable/ic_statistics"
-            app:tint="@color/design_default_color_primary" />
+            android:src="@drawable/ic_statistic"
+            app:tint="@color/design_default_color_primary"
+            android:contentDescription="@string/lihat_statistik" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cek Telepon / Rekening"
+            android:text="@string/cek_telepon_rekening"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -35,16 +36,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Identifikasi nomor telepon atau rekening seseorang yang berpotensi melakukan penipuan sebelum bertransaksi. Blokir nomor telepon apabila diperlukan" />
+            android:text="@string/identifikasi_nomor_telepon_atau_rekening_seseorang_yang_berpotensi_melakukan_penipuan_sebelum_bertransaksi_blokir_nomor_telepon_apabila_diperlukan" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/homeFragment_cl_guideSearchNomor"
+            android:id="@+id/homeFragment_cl_guideSearchNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp">
 
             <com.google.android.material.tabs.TabLayout
-                android:id="@+id/homeFragment_tl_teleponRekening"
+                android:id="@+id/homeFragment_tl_chooseNumberType"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,37 +57,37 @@
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Telepon" />
+                    android:text="@string/telepon" />
 
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rekening" />
+                    android:text="@string/rekening" />
             </com.google.android.material.tabs.TabLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/homeFragment_cl_searchNomor"
+                android:id="@+id/homeFragment_cl_searchNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/homeFragment_tl_teleponRekening">
+                app:layout_constraintTop_toBottomOf="@id/homeFragment_tl_chooseNumberType">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/homeFragment_til_searchNomor"
+                    android:id="@+id/homeFragment_til_searchNumber"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-1dp"
                     android:layout_marginBottom="8dp"
-                    android:hint="Cari Nomor Telepon"
-                    app:layout_constraintEnd_toStartOf="@id/homeFragment_btn_searchNomor"
+                    android:hint="@string/cari_nomor"
+                    app:layout_constraintEnd_toStartOf="@id/homeFragment_btn_searchNumber"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:startIconDrawable="@drawable/ic_search">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/homeFragment_et_searchNomor"
+                        android:id="@+id/homeFragment_et_searchNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:digits="0123456789+"
@@ -97,34 +98,34 @@
 
 
                 <Button
-                    android:id="@+id/homeFragment_btn_searchNomor"
+                    android:id="@+id/homeFragment_btn_searchNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
                     android:layout_marginEnd="16dp"
-                    android:text="Cari"
+                    android:text="@string/cari"
                     android:textAllCaps="false"
-                    app:layout_constraintBottom_toBottomOf="@id/homeFragment_til_searchNomor"
+                    app:layout_constraintBottom_toBottomOf="@id/homeFragment_til_searchNumber"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/homeFragment_til_searchNomor" />
+                    app:layout_constraintTop_toTopOf="@id/homeFragment_til_searchNumber" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/homeFragment_tv_contoh"
+                android:id="@+id/homeFragment_tv_numberExample"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Contoh: 081234567890"
-                app:layout_constraintEnd_toEndOf="@id/homeFragment_cl_searchNomor"
-                app:layout_constraintStart_toStartOf="@id/homeFragment_cl_searchNomor"
-                app:layout_constraintTop_toBottomOf="@id/homeFragment_cl_searchNomor" />
+                android:text="@string/numberExample"
+                app:layout_constraintEnd_toEndOf="@id/homeFragment_cl_searchNumber"
+                app:layout_constraintStart_toStartOf="@id/homeFragment_cl_searchNumber"
+                app:layout_constraintTop_toBottomOf="@id/homeFragment_cl_searchNumber" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Performa Blokir"
+            android:text="@string/performa_blokir"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -156,15 +157,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total"
+                        android:text="@string/total"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/homeFragment_tv_totalBlockInAllTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="100" />
+                        android:text="" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -191,15 +193,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Bulan Ini"
+                        android:text="@string/bulan_ini"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/homeFragment_tv_totalBlockInAMonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="12" />
+                        android:text="" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -224,15 +227,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Minggu Ini"
+                        android:text="@string/minggu_ini"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/homeFragment_tv_totalBlockInAWeek"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="2" />
+                        android:text="" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -248,7 +252,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Blokir Panggilan 4 Bulan terakhir"
+            android:text="@string/blokir_panggilan_4_bulan_terakhir"
             android:textColor="#789bfa"
             android:textStyle="bold" />
 

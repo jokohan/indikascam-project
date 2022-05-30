@@ -7,220 +7,203 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.indikascam.HomeFragment"
-        android:label="Home"
+        android:name="com.example.indikascam.fragmentsHome.HomeFragment"
+        android:label="Beranda"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_hasilPencarianFragment"
-            app:destination="@id/hasilPencarianFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/hasilPencarianFragment"
-        android:name="com.example.indikascam.HasilPencarianFragment"
-        android:label="Hasil Pencarian"
-        tools:layout="@layout/fragment_hasil_pencarian" >
-        <argument
-            android:name="searchNumber"
-            app:argType="string[]" />
+            android:id="@+id/action_homeFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment" />
         <action
-            android:id="@+id/action_hasilPencarianFragment_to_laporFragment"
-            app:destination="@id/laporFragment" />
+            android:id="@+id/action_homeFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/laporFragment"
-        android:name="com.example.indikascam.LaporFragment"
+        android:id="@+id/reportFragment"
+        android:name="com.example.indikascam.fragmentsReport.ReportFragment"
         android:label="Lapor"
-        tools:layout="@layout/fragment_lapor" >
+        tools:layout="@layout/fragment_report" >
         <argument
-            android:name="nomorYangAkanDilaporkan"
+            android:name="numberToReport"
             app:argType="string[]"
             app:nullable="true"
             android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_reportFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/notifikasiFragment"
-        android:name="com.example.indikascam.NotifikasiFragment"
+        android:id="@+id/inboxFragment"
+        android:name="com.example.indikascam.fragmentsNotification.InboxFragment"
         android:label="Notifikasi"
-        tools:layout="@layout/fragment_notifikasi" >
+        tools:layout="@layout/fragment_inbox" >
         <action
-            android:id="@+id/action_notifikasiFragment_to_blockCallLogFragment"
-            app:destination="@id/blockCallLogFragment" />
+            android:id="@+id/action_inboxFragment_to_blockListFragment"
+            app:destination="@id/blockListFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.indikascam.ProfileFragment"
+        android:name="com.example.indikascam.fragmentsProfile.ProfileFragment"
         android:label="Profil"
         tools:layout="@layout/fragment_profile" >
         <action
-            android:id="@+id/action_profileFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
-        <action
-            android:id="@+id/action_profileFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
-        <action
-            android:id="@+id/action_profileFragment_to_profilUsahaFragment"
-            app:destination="@id/profilUsahaFragment" />
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@anim/slide_up"
+            app:exitAnim="@anim/slide_down"
+            app:popEnterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
         <action
-            android:id="@+id/action_profileFragment_to_laporanSayaFragment"
-            app:destination="@id/laporanSayaFragment" />
+            android:id="@+id/action_profileFragment_to_myReportFragment"
+            app:destination="@id/myReportFragment" />
         <action
-            android:id="@+id/action_profileFragment_to_reviewUlangFragment"
-            app:destination="@id/reviewUlangFragment" />
+            android:id="@+id/action_profileFragment_to_myReviewFragment"
+            app:destination="@id/myReviewFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/signInFragment"
-        android:name="com.example.indikascam.SignInFragment"
-        android:label="Sign In"
-        tools:layout="@layout/fragment_sign_in" >
+        android:id="@+id/loginFragment"
+        android:name="com.example.indikascam.fragmentsAuthentication.LoginFragment"
+        android:label="Akun"
+        tools:layout="@layout/fragment_login" >
         <action
-            android:id="@+id/action_signInFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
         <action
-            android:id="@+id/action_signInFragment_to_otcFragment"
-            app:destination="@id/otcFragment" />
+            android:id="@+id/action_loginFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
         <action
-            android:id="@+id/action_signInFragment_to_forgotPasswordFragment"
-            app:destination="@id/forgotPasswordFragment" />
+            android:id="@+id/action_loginFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_otpFragment"
+            app:destination="@id/otpFragment" />
     </fragment>
     <fragment
-        android:id="@+id/signUpFragment"
-        android:name="com.example.indikascam.SignUpFragment"
-        android:label="Sign Up"
-        tools:layout="@layout/fragment_sign_up" >
+        android:id="@+id/registerFragment"
+        android:name="com.example.indikascam.fragmentsAuthentication.RegisterFragment"
+        android:label="Daftar Akun"
+        tools:layout="@layout/fragment_register" >
         <action
-            android:id="@+id/action_signUpFragment_to_otcFragment"
-            app:destination="@id/otcFragment" />
+            android:id="@+id/action_registerFragment_to_otpFragment"
+            app:destination="@id/otpFragment" />
     </fragment>
-
     <fragment
-        android:id="@+id/otcFragment"
-        android:name="com.example.indikascam.OtcFragment"
-        android:label="OTC"
-        tools:layout="@layout/fragment_otc" >
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.indikascam.fragmentsAuthentication.ChangePasswordFragment"
+        android:label="Ganti Kata Sandi"
+        tools:layout="@layout/fragment_change_password" >
         <action
-            android:id="@+id/action_otcFragment_to_newPasswordFragment"
+            android:id="@+id/action_changePasswordFragment_to_otpFragment"
+            app:destination="@id/otpFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/otpFragment"
+        android:name="com.example.indikascam.fragmentsAuthentication.OtpFragment"
+        android:label="OTP"
+        tools:layout="@layout/fragment_otp" >
+        <action
+            android:id="@+id/action_otpFragment_to_newPasswordFragment"
             app:destination="@id/newPasswordFragment" />
+        <action
+            android:id="@+id/action_otpFragment_to_congratulationFragment"
+            app:destination="@id/congratulationFragment"/>
         <argument
             android:name="needs"
-            app:argType="string"
-            android:defaultValue="signUpConfirmation" />
-        <action
-            android:id="@+id/action_otcFragment_to_authCongratulationFragment"
-            app:destination="@id/authCongratulationFragment" />
+            app:argType="string" />
+        <argument
+            android:name="email"
+            app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/forgotPasswordFragment"
-        android:name="com.example.indikascam.ForgotPasswordFragment"
-        android:label="Lupa Password"
-        tools:layout="@layout/fragment_forgot_password" >
-        <action
-            android:id="@+id/action_forgotPasswordFragment_to_otcFragment"
-            app:destination="@id/otcFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/newPasswordFragment"
-        android:name="com.example.indikascam.NewPasswordFragment"
-        android:label="Password Baru"
-        tools:layout="@layout/fragment_new_password" >
-        <action
-            android:id="@+id/action_newPasswordFragment_to_authCongratulationFragment"
-            app:destination="@id/authCongratulationFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/authCongratulationFragment"
-        android:name="com.example.indikascam.AuthCongratulationFragment"
+        android:id="@+id/congratulationFragment"
+        android:name="com.example.indikascam.fragmentsAuthentication.CongratulationFragment"
         android:label=""
-        tools:layout="@layout/fragment_auth_congratulation" >
+        tools:layout="@layout/fragment_congratulation" >
         <argument
             android:name="caption"
-            app:argType="string"
-            android:defaultValue="Selamat! Email Anda sudah terverifikasi. Silahkan melanjutkan ke halaman login" />
+            app:argType="string" />
         <action
-            android:id="@+id/action_authCongratulationFragment_to_signInFragment"
-            app:destination="@id/signInFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/signInFragment"
+            android:id="@+id/action_congratulationFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/DetailUsahaFragment"
-        android:name="com.example.indikascam.DetailUsahaFragment"
-        android:label="Detail Usaha"
-        tools:layout="@layout/fragment_detail_usaha" >
-        <argument
-            android:name="usaha"
-            app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.indikascam.SettingsFragment"
-        android:label="Pengaturan"
-        tools:layout="@layout/fragment_settings" >
+        android:id="@+id/newPasswordFragment"
+        android:name="com.example.indikascam.fragmentsAuthentication.NewPasswordFragment"
+        android:label="Kata Sandi Baru"
+        tools:layout="@layout/fragment_new_password" >
         <action
-            android:id="@+id/action_settingsFragment_to_pengaturanTingkatProteksiFragment"
-            app:destination="@id/pengaturanTingkatProteksiFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/pengaturanTingkatProteksiFragment"
-        android:name="com.example.indikascam.PengaturanTingkatProteksiFragment"
-        android:label="Tingkat Proteksi"
-        tools:layout="@layout/fragment_pengaturan_tingkat_proteksi" >
-        <action
-            android:id="@+id/action_pengaturanTingkatProteksiFragment_to_billingFragment"
-            app:destination="@id/billingFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/profilUsahaFragment"
-        android:name="com.example.indikascam.ProfilUsahaFragment"
-        android:label="Profil Usaha"
-        tools:layout="@layout/fragment_profil_usaha" >
-        <action
-            android:id="@+id/action_profilUsahaFragment_to_detailUsahaFragment"
-            app:destination="@id/DetailUsahaFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/blockCallLogFragment"
-        android:name="com.example.indikascam.BlockCallLogFragment"
-        android:label="Daftar Blokir"
-        tools:layout="@layout/fragment_block_call_log" >
-        <action
-            android:id="@+id/action_blockCallLogFragment_to_laporFragment"
-            app:destination="@id/laporFragment" />
+            android:id="@+id/action_newPasswordFragment_to_congratulationFragment"
+            app:destination="@id/congratulationFragment"/>
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.example.indikascam.EditProfileFragment"
-        android:label="Edit Profil"
+        android:name="com.example.indikascam.fragmentsProfile.EditProfileFragment"
+        android:label="Ubah Profil Akun"
         tools:layout="@layout/fragment_edit_profile" />
     <fragment
-        android:id="@+id/billingFragment"
-        android:name="com.example.indikascam.BillingFragment"
-        android:label="Pembayaran"
-        tools:layout="@layout/fragment_billing" />
-    <fragment
-        android:id="@+id/laporanSayaFragment"
-        android:name="com.example.indikascam.LaporanSayaFragment"
-        android:label="Laporan Saya"
-        tools:layout="@layout/fragment_laporan_saya" >
+        android:id="@+id/myReportFragment"
+        android:name="com.example.indikascam.fragmentsProfile.MyReportFragment"
+        android:label="Daftar Laporan Saya"
+        tools:layout="@layout/fragment_my_report" >
         <action
-            android:id="@+id/action_laporanSayaFragment_to_detailLaporanSayaFragment"
-            app:destination="@id/detailLaporanSayaFragment" />
+            android:id="@+id/action_myReportFragment_to_myReportDetailFragment"
+            app:destination="@id/myReportDetailFragment" />
     </fragment>
     <fragment
-        android:id="@+id/detailLaporanSayaFragment"
-        android:name="com.example.indikascam.DetailLaporanSayaFragment"
-        android:label="Detail Laporan Saya"
-        tools:layout="@layout/fragment_detail_laporan_saya" >
+        android:id="@+id/myReviewFragment"
+        android:name="com.example.indikascam.fragmentsProfile.MyReviewFragment"
+        android:label="Daftar Review Ulang Saya"
+        tools:layout="@layout/fragment_my_review" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.indikascam.fragmentsProfile.SettingsFragment"
+        android:label="Pengaturan"
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_protectionLevelFragment"
+            app:destination="@id/protectionLevelFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myReportDetailFragment"
+        android:name="com.example.indikascam.fragmentsProfile.MyReportDetailFragment"
+        android:label="Detail Laporan"
+        tools:layout="@layout/fragment_my_report_detail" >
         <argument
-            android:name="nomorLaporan"
+            android:name="reportNumber"
             app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/reviewUlangFragment"
-        android:name="com.example.indikascam.ReviewUlangFragment"
-        android:label="Review Ulang Saya"
-        tools:layout="@layout/fragment_review_ulang" />
+        android:id="@+id/protectionLevelFragment"
+        android:name="com.example.indikascam.fragmentsProfile.ProtectionLevelFragment"
+        android:label="Atur Tingkat Proteksi"
+        tools:layout="@layout/fragment_protection_level" />
+    <fragment
+        android:id="@+id/blockListFragment"
+        android:name="com.example.indikascam.fragmentsNotification.BlockListFragment"
+        android:label="Nomor Telepon Terblokir"
+        tools:layout="@layout/fragment_block_list" >
+        <action
+            android:id="@+id/action_blockListFragment_to_searchResultFragment"
+            app:destination="@id/searchResultFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchResultFragment"
+        android:name="com.example.indikascam.fragmentsHome.SearchResultFragment"
+        android:label="Hasil Pencarian"
+        tools:layout="@layout/fragment_search_result" >
+        <argument
+            android:name="searchNumber"
+            app:argType="string[]" />
+    </fragment>
 </navigation>

@@ -10,8 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        jcenter() // Warning: this repository is going to shut down soon
+        maven { url 'https://jitpack.io' } //Add this line in your settings.gradle
     }
 }
-rootProject.name = "IndikaScam"
+rootProject.name = "Indikascam"
 include ':app'

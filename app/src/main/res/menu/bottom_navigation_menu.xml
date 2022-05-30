@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_home"
-        android:title="Home" />
+        android:title="@string/beranda" />
+
     <item
-        android:id="@+id/laporFragment"
-        android:icon="@drawable/ic_lapor_alt1"
-        android:title="Lapor"/>
+        android:id="@+id/reportFragment"
+        android:icon="@drawable/ic_report"
+        android:title="@string/lapor" />
+
     <item
-        android:id="@+id/notifikasiFragment"
-        android:icon="@drawable/ic_notifikasi"
-        android:title="Notifikasi" />
+        android:id="@+id/inboxFragment"
+        android:icon="@drawable/ic_inbox"
+        android:title="@string/notifikasi" />
+
     <item
         android:id="@+id/profileFragment"
-        android:icon="@drawable/ic_profil"
-        android:title="Profile" />
+        android:icon="@drawable/ic_profile"
+        android:title="@string/profil" />
 </menu>

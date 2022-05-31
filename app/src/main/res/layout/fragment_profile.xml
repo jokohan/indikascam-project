@@ -9,104 +9,113 @@
     tools:context=".fragmentsHome.HomeFragment"
     android:paddingVertical="@dimen/dimen_20dp">
 
-    <androidx.constraintlayout.utils.widget.ImageFilterView
-        android:id="@+id/profileFragment_iv_editProfile"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/profileFragment_ll_shouldIHide"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_edit"
-        android:layout_marginEnd="20dp"
-        android:layout_gravity="end"/>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="@dimen/dimen_120dp"
-        android:layout_height="@dimen/dimen_120dp"
-        android:layout_gravity="center"
-        app:cardCornerRadius="@dimen/dimen_120dp">
+        android:orientation="vertical">
         <ImageView
-            android:id="@+id/profileFragment_iv_profilePicture"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_profile"
+            android:id="@+id/profileFragment_iv_editProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="end"
+            android:contentDescription="@string/edit_profil" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="@dimen/dimen_120dp"
+            android:layout_height="@dimen/dimen_120dp"
             android:layout_gravity="center"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/your_profile_picture" />
-    </androidx.cardview.widget.CardView>
+            app:cardCornerRadius="@dimen/dimen_120dp">
+            <ImageView
+                android:id="@+id/profileFragment_iv_profilePicture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_profile"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:contentDescription="@string/your_profile_picture" />
+        </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/profileFragment_tv_nama"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_8dp"
-        android:text="@string/nama"/>
+        <TextView
+            android:id="@+id/profileFragment_tv_nama"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:text="@string/nama"
+            android:layout_gravity="center"/>
 
-    <TextView
-        android:id="@+id/profileFragment_tv_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_8dp"
-        android:text="@string/email"/>
+        <TextView
+            android:id="@+id/profileFragment_tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:text="@string/email"
+            android:layout_gravity="center"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#757575"
-        android:layout_marginTop="@dimen/dimen_8dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#757575"
+            android:layout_marginTop="@dimen/dimen_8dp"/>
 
-    <Button
-        android:id="@+id/profileFragment_btn_laporanSaya"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:outlineSpotShadowColor="@color/white"
-        android:outlineAmbientShadowColor="@color/white"
-        android:textColor="#757575"
-        android:drawableLeft="@drawable/ic_report"
-        android:textAllCaps="false"
-        android:text="@string/laporan_saya"
-        android:gravity="center_vertical"
-        tools:ignore="RtlHardcoded" />
+        <Button
+            android:id="@+id/profileFragment_btn_laporanSaya"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:outlineSpotShadowColor="@color/white"
+            android:outlineAmbientShadowColor="@color/white"
+            android:textColor="#757575"
+            android:drawableLeft="@drawable/ic_report"
+            android:textAllCaps="false"
+            android:text="@string/laporan_saya"
+            android:gravity="center_vertical"
+            tools:ignore="RtlHardcoded" />
 
-    <Button
-        android:id="@+id/profileFragment_btn_reviewUlangSaya"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:outlineSpotShadowColor="@color/white"
-        android:outlineAmbientShadowColor="@color/white"
-        android:textColor="#757575"
-        android:drawableLeft="@drawable/ic_flag"
-        android:textAllCaps="false"
-        android:text="@string/review_ulang_saya"
-        android:gravity="center_vertical"
-        tools:ignore="RtlHardcoded" />
+        <Button
+            android:id="@+id/profileFragment_btn_reviewUlangSaya"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:outlineSpotShadowColor="@color/white"
+            android:outlineAmbientShadowColor="@color/white"
+            android:textColor="#757575"
+            android:drawableLeft="@drawable/ic_flag"
+            android:textAllCaps="false"
+            android:text="@string/review_ulang_saya"
+            android:gravity="center_vertical"
+            tools:ignore="RtlHardcoded" />
 
-    <Button
-        android:id="@+id/profileFragment_btn_settings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:outlineSpotShadowColor="@color/white"
-        android:outlineAmbientShadowColor="@color/white"
-        android:textColor="#757575"
-        android:drawableLeft="@drawable/ic_settings"
-        android:textAllCaps="false"
-        android:text="@string/pengaturan"
-        android:gravity="center_vertical"
-        tools:ignore="RtlHardcoded" />
+        <Button
+            android:id="@+id/profileFragment_btn_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:outlineSpotShadowColor="@color/white"
+            android:outlineAmbientShadowColor="@color/white"
+            android:textColor="#757575"
+            android:drawableLeft="@drawable/ic_settings"
+            android:textAllCaps="false"
+            android:text="@string/pengaturan"
+            android:gravity="center_vertical"
+            tools:ignore="RtlHardcoded" />
 
-    <Button
-        android:id="@+id/profileFragment_btn_logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
-        android:outlineSpotShadowColor="@color/white"
-        android:outlineAmbientShadowColor="@color/white"
-        android:textColor="#757575"
-        android:drawableLeft="@drawable/ic_logout"
-        android:textAllCaps="false"
-        android:text="@string/keluar"
-        android:gravity="center_vertical"
-        tools:ignore="RtlHardcoded" />
+        <Button
+            android:id="@+id/profileFragment_btn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:outlineSpotShadowColor="@color/white"
+            android:outlineAmbientShadowColor="@color/white"
+            android:textColor="#757575"
+            android:drawableLeft="@drawable/ic_logout"
+            android:textAllCaps="false"
+            android:text="@string/keluar"
+            android:gravity="center_vertical"
+            tools:ignore="RtlHardcoded" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/profileFragment_btn_login"

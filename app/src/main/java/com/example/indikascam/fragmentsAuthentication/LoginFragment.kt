@@ -36,7 +36,7 @@ class LoginFragment : Fragment() {
         setupLoginFragment()
 
         binding.loginFragmentBtnLogin.setOnClickListener {
-            val dialog = DialogProgressBar.progressDialog(requireContext())
+            val loadingDialog = DialogProgressBar.progressDialog(requireContext())
             val snackBar = SnackBarWarningError()
 
             val sessionManager = SessionManager(requireContext())
@@ -45,7 +45,7 @@ class LoginFragment : Fragment() {
             val password = binding.loginFragmentEtPassword.text.toString()
 
             lifecycleScope.launchWhenCreated {
-                dialog.show()
+                loadingDialog.show()
                 val response = try {
                     RetroInstance.apiAuth.postLogin(PostLoginRequest(email, password))
                 } catch (e: IOException) {
@@ -61,6 +61,8 @@ class LoginFragment : Fragment() {
                     if (emailVerifiedAt == null){
                         val action = LoginFragmentDirections.actionLoginFragmentToOtpFragment("register", email)
                         Navigation.findNavController(view).navigate(action)
+                    }else{
+                        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment)
                     }
                 } else {
                     try{
@@ -74,7 +76,7 @@ class LoginFragment : Fragment() {
                     }
 
                 }
-                dialog.dismiss()
+                loadingDialog.dismiss()
             }
         }
 

@@ -1,8 +1,6 @@
 package com.example.indikascam.api.endpoint
 
-import com.example.indikascam.api.requests.PostEmailVerificationRequest
-import com.example.indikascam.api.requests.PostLoginRequest
-import com.example.indikascam.api.requests.PostRegisterRequest
+import com.example.indikascam.api.requests.*
 import com.example.indikascam.api.responses.ResponseWithOnlyOneMessage
 import com.example.indikascam.api.responses.PostLoginResponse
 import com.example.indikascam.api.responses.PostRegisterResponse
@@ -41,22 +39,22 @@ interface ApiAuth {
 
     @POST("api/auth/forget-password")
     suspend fun postForgetPassword(
-        @Body email: String
-    ): Response<Any>
+        @Body postForgetPassword: PostForgetPassword
+    ): Response<ResponseWithOnlyOneMessage>
 
-//    @POST("api/auth/change-password-verification")
-//    suspend fun postChangePasswordVerification(
-//        @Body postChangePasswordVerificationRequest: PostChangePasswordVerificationRequest
-//    ): Response<Any>
+    @POST("api/auth/change-password-verification")
+    suspend fun postChangePasswordVerification(
+        @Body postChangePasswordVerificationRequest: PostChangePasswordVerificationRequest
+    ): Response<ResponseWithOnlyOneMessage>
 
-//    @POST("api/auth/change-password")
-//    suspend fun postChangePassword(
-//        @Body postChangePasswordRequest: PostChangePasswordRequest
-//    ): Response<Any>
+    @POST("api/auth/change-password")
+    suspend fun postChangePassword(
+        @Body postChangePasswordRequest: PostChangePasswordRequest
+    ): Response<ResponseWithOnlyOneMessage>
 
     @POST("api/auth/logout")
     suspend fun postLogout(
-        @Header("Authorization") token: String
-    ): Response<Any>
+        @Header("Authorization") postLogoutRequest: PostLogoutRequest
+    ): Response<ResponseWithOnlyOneMessage>
 
 }

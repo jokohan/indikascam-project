@@ -12,7 +12,9 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.indikascam.R
 import com.example.indikascam.api.RetroInstance
+import com.example.indikascam.api.requests.PostChangePasswordVerificationRequest
 import com.example.indikascam.api.requests.PostEmailVerificationRequest
+import com.example.indikascam.api.requests.PostForgetPassword
 import com.example.indikascam.databinding.FragmentOtpBinding
 import com.example.indikascam.dialog.DialogProgressBar
 import com.example.indikascam.dialog.SnackBarWarningError
@@ -54,16 +56,15 @@ class OtpFragment : Fragment() {
 
             @Suppress("BlockingMethodInNonBlockingContext")
             if(args.needs == "register"){
-                //request api
                 lifecycleScope.launchWhenCreated {
                     loadingDialog.show()
                     val response = try{
                         RetroInstance.apiAuth.postResendEmailToken("Bearer $accessToken")
                     }catch (e: IOException) {
-                        Log.e("otpResendErrorIO", e.message!!)
+                        Log.e("otpResendRegisterErrorIO", e.message!!)
                         return@launchWhenCreated
                     } catch (e: HttpException) {
-                        Log.e("otpResendErrorHttp", e.message!!)
+                        Log.e("otpResendRegisterErrorHttp", e.message!!)
                         return@launchWhenCreated
                     }
                     if(response.isSuccessful && response.body() != null){
@@ -72,21 +73,48 @@ class OtpFragment : Fragment() {
                         try{
                             @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
                             val errorMessage = jObjError.getJSONObject("error").getString("message")
-                            Log.e("otpResendError", errorMessage)
-                            Log.e("otpResendError", response.code().toString())
+                            Log.e("otpResendRegisterError", errorMessage)
+                            Log.e("otpResendRegisterError", response.code().toString())
                             snackBar.showSnackBar(errorMessage, requireActivity())
                         }catch (e: Exception){
-                            Log.e("otpResendError", e.toString())
+                            Log.e("otpResendRegisterError", e.toString())
                         }
                     }
                     loadingDialog.dismiss()
                 }
             } else{
-
+                lifecycleScope.launchWhenCreated {
+                    loadingDialog.show()
+                    val response = try{
+                        RetroInstance.apiAuth.postForgetPassword(PostForgetPassword(args.email))
+                    }catch (e: IOException) {
+                        Log.e("otpResendForgetPasswordErrorIO", e.message!!)
+                        return@launchWhenCreated
+                    } catch (e: HttpException) {
+                        Log.e("otpResendForgetPasswordErrorHttp", e.message!!)
+                        return@launchWhenCreated
+                    }
+                    if(response.isSuccessful && response.body() != null){
+                        Log.i("otp resend berhasil", response.body()!!.message)
+                    } else{
+                        try{
+                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = jObjError.getJSONObject("error").getString("message")
+                            Log.e("otpResendForgetPasswordError", errorMessage)
+                            Log.e("otpResendForgetPasswordError", response.code().toString())
+                            snackBar.showSnackBar(errorMessage, requireActivity())
+                        }catch (e: Exception){
+                            Log.e("otpResendForgetPasswordError", e.toString())
+                        }
+                    }
+                    loadingDialog.dismiss()
+                }
             }
         }
 
         binding.otpFragmentBtnVerification.setOnClickListener {
+            val email = binding.otpFragmentTvEmail.text.toString()
+            val otpToken = binding.otpFragmentEtOtpCode.text.toString()
             if(args.needs == "register"){
                 lifecycleScope.launchWhenCreated {
                     loadingDialog.show()
@@ -94,7 +122,7 @@ class OtpFragment : Fragment() {
                     val response = try{
                         RetroInstance.apiAuth.postEmailVerification(
                             "Bearer $accessToken",
-                            PostEmailVerificationRequest(binding.otpFragmentEtOtpCode.text.toString())
+                            PostEmailVerificationRequest(otpToken)
                         )
                     }catch (e: IOException) {
                         Log.e("otpErrorIO", e.message!!)
@@ -122,7 +150,37 @@ class OtpFragment : Fragment() {
                 }
 
             }else{
-                Navigation.findNavController(view).navigate(R.id.action_otpFragment_to_newPasswordFragment)
+                lifecycleScope.launchWhenCreated {
+                    loadingDialog.show()
+                    val response = try{
+                        RetroInstance.apiAuth.postChangePasswordVerification(
+                            PostChangePasswordVerificationRequest(email, otpToken)
+                        )
+                    }catch (e: IOException) {
+                        Log.e("changePasswordVerificationErrorIO", e.message!!)
+                        return@launchWhenCreated
+                    } catch (e: HttpException) {
+                        Log.e("changePasswordVerificationErrorHttp", e.message!!)
+                        return@launchWhenCreated
+                    }
+                    if(response.isSuccessful && response.body() != null){
+                        Log.i("change password verification berhasil", response.body()!!.message)
+                        val action = OtpFragmentDirections.actionOtpFragmentToNewPasswordFragment(args.email)
+                        Navigation.findNavController(view).navigate(action)
+                    }else{
+                        try{
+                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = jObjError.getJSONObject("error").getString("message")
+                            Log.e("changePasswordVerificationError", errorMessage)
+                            Log.e("changePasswordVerificationError", response.code().toString())
+                            snackBar.showSnackBar(errorMessage, requireActivity())
+                        }catch (e: Exception){
+                            Log.e("changePasswordVerificationError", e.toString())
+                        }
+                    }
+                    loadingDialog.dismiss()
+                }
+
             }
         }
 

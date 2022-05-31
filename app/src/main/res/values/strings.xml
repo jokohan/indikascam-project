@@ -119,5 +119,6 @@
     <string name="pilih_laporan">Pilih Laporan</string>
     <string name="progress_bar">Harap Tunggu…</string>
     <string name="dalam_kurung">(%1$s)</string>
+    <string name="edit_profil">Edit Profil</string>
 
 </resources>

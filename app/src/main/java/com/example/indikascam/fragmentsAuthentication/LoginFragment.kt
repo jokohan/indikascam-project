@@ -15,6 +15,8 @@ import com.example.indikascam.databinding.FragmentLoginBinding
 import com.example.indikascam.dialog.DialogProgressBar
 import com.example.indikascam.dialog.SnackBarWarningError
 import com.example.indikascam.sessionManager.SessionManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
@@ -50,9 +52,13 @@ class LoginFragment : Fragment() {
                     RetroInstance.apiAuth.postLogin(PostLoginRequest(email, password))
                 } catch (e: IOException) {
                     Log.e("loginErrorIO", e.message!!)
+                    snackBar.showSnackBar("Melampaui batas waktu, silahkan coba lagi", requireActivity())
+                    loadingDialog.dismiss()
                     return@launchWhenCreated
                 } catch (e: HttpException) {
                     Log.e("loginErrorHttp", e.message!!)
+                    snackBar.showSnackBar("Ada yang salah, silahkan coba lagi", requireActivity())
+                    loadingDialog.dismiss()
                     return@launchWhenCreated
                 }
                 if (response.isSuccessful && response.body() != null) {
@@ -71,8 +77,9 @@ class LoginFragment : Fragment() {
                         Log.e("loginError", errorMessage)
                         Log.e("loginError", response.code().toString())
                         snackBar.showSnackBar(errorMessage, requireActivity())
+
                     }catch (e: Exception){
-                        Log.e("loginError", e.toString())
+                        Log.e("loginError", e.stackTraceToString())
                     }
 
                 }

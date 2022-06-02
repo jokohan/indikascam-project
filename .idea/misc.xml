@@ -3,7 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_edit_profile.xml" value="0.18802083333333333" />
+        <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_login.xml" value="0.358695652173913" />
         <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_otp.xml" value="0.17831813576494426" />
+        <entry key="..\:/TugasAkhir/IndikaScam/app/src/main/res/layout/fragment_profile.xml" value="0.24818840579710144" />
         <entry key="..\:/project/Indikascam/app/src/main/res/drawable/ic_indikascam_logo.xml" value="0.2175" />
         <entry key="..\:/project/Indikascam/app/src/main/res/drawable/ic_phone_disabled.xml" value="0.2115" />
         <entry key="..\:/project/Indikascam/app/src/main/res/drawable/ic_web.xml" value="0.157" />

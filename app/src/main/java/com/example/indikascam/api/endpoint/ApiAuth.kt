@@ -1,13 +1,12 @@
 package com.example.indikascam.api.endpoint
 
 import com.example.indikascam.api.requests.*
+import com.example.indikascam.api.responses.GetMeResponse
 import com.example.indikascam.api.responses.ResponseWithOnlyOneMessage
 import com.example.indikascam.api.responses.PostLoginResponse
 import com.example.indikascam.api.responses.PostRegisterResponse
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiAuth {
 
@@ -54,7 +53,12 @@ interface ApiAuth {
 
     @POST("api/auth/logout")
     suspend fun postLogout(
-        @Header("Authorization") postLogoutRequest: PostLogoutRequest
+        @Header("Authorization") postLogoutRequest: PostTokenRequest
     ): Response<ResponseWithOnlyOneMessage>
+
+    @GET("api/auth/me")
+    suspend fun getMe(
+        @Header("Authorization") getMeRequest: GetMeRequest
+    ): Response<GetMeResponse>
 
 }

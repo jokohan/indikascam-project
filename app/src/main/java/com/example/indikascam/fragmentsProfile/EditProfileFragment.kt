@@ -2,8 +2,8 @@ package com.example.indikascam.fragmentsProfile
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
@@ -33,7 +33,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.lang.Exception
 
 @Suppress("DEPRECATION")
 class EditProfileFragment : Fragment() {
@@ -49,6 +48,9 @@ class EditProfileFragment : Fragment() {
 
     private var banksFinal: Int? = null
 
+    private var initialName: String? = null
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,47 +62,69 @@ class EditProfileFragment : Fragment() {
 
         setupEditProfile(sessionManager)
 
-
-
         binding.editProfileFragmentTvEditDone.setOnClickListener {
-            val snackBar = SnackBarWarningError()
-            val sessionManager = SessionManager(requireContext())
-            lifecycleScope.launchWhenCreated {
-                val response = try{
-                    RetroInstance.apiProfile.postEditProfile(
-                        PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
-                        binding.editProfileFragmentEtName.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
-                        0,
-                        binding.editProfileFragmentEtAccountNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
-                        1,
-                        binding.editProfileFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
-                        profilePic
-                    )
-                }catch (e: IOException) {
-                    Log.e("meErrorIO", e.message!!)
-                    return@launchWhenCreated
-                } catch (e: HttpException) {
-                    Log.e("meErrorHttp", e.message!!)
-                    return@launchWhenCreated
+            val phoneNumberChanges = binding.editProfileFragmentEtPhoneNumber.isEnabled && !binding.editProfileFragmentEtPhoneNumber.text.isNullOrEmpty()
+            val bankIdChanges = binding.hasilPencarianFragmentAcPilihBank.isEnabled && !binding.hasilPencarianFragmentAcPilihBank.text.isNullOrEmpty()
+            val accountNumberChanges = binding.editProfileFragmentEtAccountNumber.isEnabled && !binding.editProfileFragmentEtAccountNumber.text.isNullOrEmpty()
+            if((phoneNumberChanges || bankIdChanges || accountNumberChanges) || (initialName != binding.editProfileFragmentEtName.text.toString()) || binding.editProfileFragmentIvProfilePicture.tag != "initial"){
+                var warningCaption = "Anda yakin ingin mengubah profil?"
+                val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Pemberitahuan")
+                if(phoneNumberChanges || bankIdChanges || accountNumberChanges){
+                    warningCaption = "Anda hanya bisa mengatur "
+                    if(phoneNumberChanges) warningCaption += if(bankIdChanges && accountNumberChanges) "NOMOR TELEPON, " else "NOMOR TELEPON "
+                    if(bankIdChanges) warningCaption += if(accountNumberChanges)"NAMA BANK, " else "NAMA BANK "
+                    if(accountNumberChanges) warningCaption += "NOMOR REKENING "
+                    warningCaption += "1 kali"
                 }
-                if(response.isSuccessful && response.body() != null){
-                    Navigation.findNavController(view).navigateUp()
-                }else{
-                    try{
-                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                        val errorMessage = jObjError.getJSONObject("error").getString("message")
-                        Log.e("meError", errorMessage)
-                        Log.e("meError", response.code().toString())
-                        snackBar.showSnackBar(errorMessage, requireActivity())
-                    }catch (e: Exception){
-                        Log.e("meError", e.toString())
+                builder.setMessage(warningCaption)
+                builder.setPositiveButton("Ya"){dialogInterface, _ ->
+                    val snackBar = SnackBarWarningError()
+                    val sessionManager = SessionManager(requireContext())
+                    lifecycleScope.launchWhenCreated {
+                        val response = try{
+                            RetroInstance.apiProfile.postEditProfile(
+                                PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
+                                binding.editProfileFragmentEtName.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                if(binding.editProfileFragmentIvProfilePicture.tag == "ic profile") 0 else 1,
+                                if(binding.editProfileFragmentEtAccountNumber.text.toString() == "") null else binding.editProfileFragmentEtAccountNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                banksFinal,
+                                if(binding.editProfileFragmentEtPhoneNumber.text.toString() == "") null else binding.editProfileFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                profilePic
+                            )
+                        }catch (e: IOException) {
+                            Log.e("meErrorIO", e.message!!)
+                            return@launchWhenCreated
+                        } catch (e: HttpException) {
+                            Log.e("meErrorHttp", e.message!!)
+                            return@launchWhenCreated
+                        }
+                        if(response.isSuccessful && response.body() != null){
+                            Navigation.findNavController(view).navigateUp()
+                        }else{
+                            try{
+                                @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
+                                val errorMessage = jObjError.getJSONObject("error").getString("message")
+                                Log.e("meError", errorMessage)
+                                Log.e("meError", response.code().toString())
+                                snackBar.showSnackBar(errorMessage, requireActivity())
+                            }catch (e: Exception){
+                                Log.e("meError", e.toString())
+                            }
+                        }
                     }
+                    dialogInterface.dismiss()
                 }
+                builder.setNegativeButton("Tidak"){dialogInterface,_->
+                    dialogInterface.dismiss()
+                }
+                builder.show()
             }
         }
 
         binding.editProfileFragmentBtnDeleteProfilePicture.setOnClickListener {
             binding.editProfileFragmentIvProfilePicture.setImageResource(R.drawable.ic_profile)
+            binding.editProfileFragmentIvProfilePicture.tag = R.drawable.ic_profile
         }
 
         binding.editProfileFragmentBtnPickProfilePicture.setOnClickListener {
@@ -119,12 +143,14 @@ class EditProfileFragment : Fragment() {
             if(it == null){
                 binding.editProfileFragmentIvProfilePicture.setImageResource(R.drawable.ic_profile)
             }else{
-                binding.editProfileFragmentIvProfilePicture.setImageURI(Uri.parse(it))
+                binding.editProfileFragmentIvProfilePicture.setImageBitmap(it)
             }
+            binding.editProfileFragmentIvProfilePicture.tag = "initial"
         }
 
         sharedViewModelUser.name.observe(viewLifecycleOwner){
             binding.editProfileFragmentEtName.setText(it)
+            initialName = it
         }
 
         sharedViewModelUser.phoneNumber.observe(viewLifecycleOwner){
@@ -190,6 +216,7 @@ class EditProfileFragment : Fragment() {
                         bankNames +=  response.body()!!.data.name
                         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, bankNames)
                         binding.hasilPencarianFragmentAcPilihBank.setAdapter(adapter)
+                        binding.hasilPencarianFragmentAcPilihBank.setText(binding.hasilPencarianFragmentAcPilihBank.adapter.getItem(0).toString())
                     }else{
                         try{
                             @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
@@ -217,6 +244,8 @@ class EditProfileFragment : Fragment() {
             binding.editProfileFragmentTilEmail.isEnabled = false
             binding.editProfileFragmentEtEmail.setText(it)
         }
+
+
     }
 
     @Deprecated("Deprecated in Java")
@@ -232,6 +261,7 @@ class EditProfileFragment : Fragment() {
                 fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                 cursor?.close()
                 binding.editProfileFragmentIvProfilePicture.setImageURI(imageUri)
+                binding.editProfileFragmentIvProfilePicture.tag = ""
 
                 val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(imageUri!!,"r", null) ?: return
                 val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
@@ -240,7 +270,7 @@ class EditProfileFragment : Fragment() {
                 inputStream.copyTo(outputStream)
 
                 val requestBody: RequestBody = fileOld!!.asRequestBody("Image/*".toMediaTypeOrNull())
-                val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("files[]", fileName, requestBody)
+                val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("profile_picture", fileName, requestBody)
                 profilePic = multipartBody
             }
         }

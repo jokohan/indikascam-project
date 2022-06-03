@@ -4,10 +4,16 @@ import com.example.indikascam.api.BaseUrl.Companion.BASE_URL
 import com.example.indikascam.api.endpoint.ApiAuth
 import com.example.indikascam.api.endpoint.ApiReport
 import com.example.indikascam.api.endpoint.ApiUser
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetroInstance {
+
+    private val gson: Gson = GsonBuilder()
+        .setLenient()
+        .create()
 
     val apiAuth: ApiAuth by lazy{
         Retrofit.Builder()
@@ -28,7 +34,7 @@ object RetroInstance {
     val apiReport: ApiReport by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiReport::class.java)
     }

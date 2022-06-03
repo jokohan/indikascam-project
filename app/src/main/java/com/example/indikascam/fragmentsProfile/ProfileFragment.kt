@@ -1,18 +1,19 @@
 package com.example.indikascam.fragmentsProfile
 
-import android.net.Uri
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.example.indikascam.R
 import com.example.indikascam.api.RetroInstance
 import com.example.indikascam.api.requests.GetMeRequest
+import com.example.indikascam.api.requests.PostFileRequest
 import com.example.indikascam.api.requests.PostTokenRequest
 import com.example.indikascam.databinding.FragmentProfileBinding
 import com.example.indikascam.dialog.DialogProgressBar
@@ -22,7 +23,6 @@ import com.example.indikascam.viewModel.SharedViewModelUser
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
-import java.lang.Exception
 
 class ProfileFragment : Fragment() {
 
@@ -54,8 +54,7 @@ class ProfileFragment : Fragment() {
                 if(it == null){
                     binding.profileFragmentIvProfilePicture.setImageResource(R.drawable.ic_profile)
                 }else{
-                    binding.profileFragmentIvProfilePicture.setImageURI(Uri.parse(it))
-                    Log.i("setProfilePicture", it)
+                    binding.profileFragmentIvProfilePicture.setImageBitmap(it)
                 }
             }
 
@@ -140,14 +139,37 @@ class ProfileFragment : Fragment() {
                 sharedViewModelUser.savePhoneNumber(response.body()?.phone_number)
                 sharedViewModelUser.saveBankAccountNumber(response.body()?.bank_account_number)
                 sharedViewModelUser.saveBankId(response.body()?.bank_id)
-                sharedViewModelUser.saveProfilePicture(response.body()?.profile_picture)
                 sharedViewModelUser.saveIsAnonymous(response.body()!!.is_anonymous)
                 sharedViewModelUser.saveProtectionLevel(response.body()!!.protection_level)
                 try{
-                    val profilePic = response.body()?.profile_picture
-//                    val profilePicBitmap = BitmapFactory.decodeFile(profilePic)
-//                    binding.profileFragmentIvProfilePicture.setImageBitmap(profilePicBitmap)
-
+                    val profilePicName = response.body()?.profile_picture.toString()
+                    val responseFile = try {
+                        RetroInstance.apiProfile.postFile(
+                            PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
+                            PostFileRequest("profile_pictures", profilePicName)
+                        )
+                    }catch (e: IOException) {
+                        Log.e("loginErrorIO", e.message!!)
+                        return@launchWhenCreated
+                    } catch (e: HttpException) {
+                        Log.e("loginErrorHttp", e.message!!)
+                        return@launchWhenCreated
+                    }
+                    if(responseFile.isSuccessful && response.body() != null){
+                        val bitmap = BitmapFactory.decodeStream(responseFile.body()?.byteStream())
+                        binding.profileFragmentIvProfilePicture.setImageBitmap(bitmap)
+                        sharedViewModelUser.saveProfilePicture(bitmap)
+                    }else{
+                        try{
+                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = jObjError.getJSONObject("error").getString("message")
+                            Log.e("meError", errorMessage)
+                            Log.e("meError", response.code().toString())
+                            snackBar.showSnackBar(errorMessage, requireActivity())
+                        }catch (e: Exception){
+                            Log.e("meError", e.toString())
+                        }
+                    }
                 }catch (e: Exception){
                     Log.e("meProfilePicError", e.toString())
                 }
@@ -170,7 +192,7 @@ class ProfileFragment : Fragment() {
         if(sessionManager.fetchAuthToken().isNullOrEmpty()){
             Navigation.findNavController(binding.root).navigate(R.id.action_profileFragment_to_loginFragment)
         }else{
-//            binding.profileFragmentBtnLogin.visibility = View.GONE
+            binding.profileFragmentBtnLogin.visibility = View.GONE
         }
     }
 

@@ -1,9 +1,5 @@
 package com.example.indikascam.api.responses
 
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import retrofit2.http.Part
-
 data class GetMeResponse(
     val id: Int,
     val name: String,

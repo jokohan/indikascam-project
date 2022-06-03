@@ -1,9 +1,9 @@
 package com.example.indikascam.viewModel
 
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import okhttp3.MultipartBody
 
 class SharedViewModelUser: ViewModel() {
 
@@ -12,7 +12,7 @@ class SharedViewModelUser: ViewModel() {
     private var _phoneNumber = MutableLiveData<String?>()
     private var _bankAccountNumber = MutableLiveData<String?>()
     private var _bankId = MutableLiveData<Int?>()
-    private var _profilePicture = MutableLiveData<String?>()
+    private var _profilePicture = MutableLiveData<Bitmap?>()
     private var _isAnonymous = MutableLiveData(0)
     private var _protectionLevel = MutableLiveData(2)
 
@@ -21,7 +21,7 @@ class SharedViewModelUser: ViewModel() {
     var phoneNumber: LiveData<String?> = _phoneNumber
     var bankAccountNumber: LiveData<String?> = _bankAccountNumber
     var bankId: LiveData<Int?> = _bankId
-    var profilePicture: LiveData<String?> = _profilePicture
+    var profilePicture: LiveData<Bitmap?> = _profilePicture
     var isAnonymous: LiveData<Int> = _isAnonymous
     var protectionLevel: LiveData<Int> = _protectionLevel
 
@@ -45,7 +45,7 @@ class SharedViewModelUser: ViewModel() {
         _bankId.value = newBankId
     }
 
-    fun saveProfilePicture(newProfilePicture: String?){
+    fun saveProfilePicture(newProfilePicture: Bitmap?){
         _profilePicture.value = newProfilePicture
     }
 

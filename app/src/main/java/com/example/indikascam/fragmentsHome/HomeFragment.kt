@@ -67,6 +67,7 @@ class HomeFragment : Fragment() {
         if(token.isNullOrEmpty()){
             Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_loginFragment)
         } else{
+
             val prefs = requireContext().getSharedPreferences("first_time", 0)
             if (prefs.getBoolean("first_time", true)) {
                 val targetView = activity?.requireViewById(R.id.mainActivity_bnv_mainNavigation) as BottomNavigationView

@@ -155,7 +155,7 @@ class ProfileFragment : Fragment() {
                         Log.e("loginErrorHttp", e.message!!)
                         return@launchWhenCreated
                     }
-                    if(responseFile.isSuccessful && response.body() != null){
+                    if(responseFile.isSuccessful && responseFile.body() != null){
                         val bitmap = BitmapFactory.decodeStream(responseFile.body()?.byteStream())
                         binding.profileFragmentIvProfilePicture.setImageBitmap(bitmap)
                         sharedViewModelUser.saveProfilePicture(bitmap)
@@ -192,7 +192,7 @@ class ProfileFragment : Fragment() {
         if(sessionManager.fetchAuthToken().isNullOrEmpty()){
             Navigation.findNavController(binding.root).navigate(R.id.action_profileFragment_to_loginFragment)
         }else{
-            binding.profileFragmentBtnLogin.visibility = View.GONE
+//            binding.profileFragmentBtnLogin.visibility = View.GONE
         }
     }
 

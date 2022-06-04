@@ -43,7 +43,7 @@ class SettingsFragment : Fragment() {
         sessionManager = SessionManager(requireContext())
 
         sharedViewModelUser.isAnonymous.observe(viewLifecycleOwner) {
-            binding.settingsFragmentSwAnonymous.isChecked = it == 0
+            binding.settingsFragmentSwAnonymous.isChecked = it == 1
         }
 
         binding.settingsFragmentClTingkatProteksi.setOnClickListener {
@@ -54,9 +54,9 @@ class SettingsFragment : Fragment() {
         binding.settingsFragmentSwAnonymous.setOnClickListener {
             val anonymous =
                 if (binding.settingsFragmentSwAnonymous.isChecked) {
-                    0
-                } else {
                     1
+                } else {
+                    0
                 }
             val loadingDialog = DialogProgressBar.progressDialog(requireContext())
             val snackBar = SnackBarWarningError()

@@ -30,11 +30,13 @@ class ReportHistoryAdapter(private val reportHistoryList: List<ReportHistory>): 
     override fun onBindViewHolder(holder: ReportHistoryViewHolder, position: Int) {
         val currentItem = reportHistoryList[position]
         val sdf = SimpleDateFormat("d MMM yyyy", Locale("in", "ID"))
-        val c: Calendar = GregorianCalendar()
-        c.time = Date()
 
         holder.date.text = sdf.format(currentItem.date)
-        holder.image.setImageResource(currentItem.image)
+        if(currentItem.image == null){
+            holder.image.setImageResource(R.drawable.ic_profile)
+        }else{
+            holder.image.setImageBitmap(currentItem.image)
+        }
         holder.reportType.text = currentItem.reportType
         when (currentItem.reportStatus) {
             "Diterima" -> {

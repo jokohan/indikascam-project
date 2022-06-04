@@ -35,4 +35,20 @@ interface ApiUser {
         @Header("Authorization") token: PostTokenRequest,
         @Body postFile: PostFileRequest
     ): Response<ResponseBody>
+
+    @GET("api/user-report/my-reports")
+    suspend fun getMyReports(
+        @Header("Authorization") token: PostTokenRequest
+    ): Response<Any>
+
+    @GET("api/user-report/my-reports/{report_id}")
+    suspend fun getMyReportDetail(
+        @Header("Authorization") token: PostTokenRequest,
+        @Path("report_id") reportId: String
+    ): Response<Any>
+
+    @GET("api/review-request/my-request")
+    suspend fun getMyReview(
+        @Header("Authorization") token: PostTokenRequest,
+    ): Response<Any>
 }

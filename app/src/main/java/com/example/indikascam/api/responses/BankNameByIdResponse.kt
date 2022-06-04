@@ -1,6 +1,6 @@
 package com.example.indikascam.api.responses
 
-data class BankNameById(
+data class BankNameByIdResponse(
     val data: Data
 ) {
     data class Data(

@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ajukan_permohonan_review_ulang"
+        android:text="@string/permohonan_review_ulang"
         android:textStyle="bold"
         android:textSize="22sp"
         android:gravity="center"/>
@@ -19,7 +19,7 @@
         android:layout_width="260dp"
         android:layout_height="200dp"
         android:src="@drawable/review"
-        android:contentDescription="@string/ajukan_permohonan_review_ulang"
+        android:contentDescription="@string/permohonan_review_ulang"
         android:layout_marginTop="8dp"/>
 
     <LinearLayout
@@ -44,29 +44,18 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/silahkan_isi_data_dibawah"
+        android:text="@string/atas_laporan"
         android:gravity="center"
         android:textStyle="italic"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dialogReview_Til_report"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+    <TextView
+        android:id="@+id/dialogReview_tv_laporan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/pilih_laporan"
-        android:layout_marginTop="8dp">
-
-        <AutoCompleteTextView
-            android:id="@+id/dialogReview_ac_report"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="none"
-            android:maxLines="1"
-            android:singleLine="true"
-            android:imeOptions="actionNext"
-            tools:ignore="LabelFor" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:text="@string/laporan_review"
+        android:gravity="center"
+        android:textStyle="italic"/>
 
     <Button
         android:id="@+id/dialogReview_btn_send"

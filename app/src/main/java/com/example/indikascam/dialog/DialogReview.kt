@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 import com.example.indikascam.R
 import com.example.indikascam.modelsRcv.ReportHistory
 
-class DialogReview(private val reportHistoryList: ArrayList<ReportHistory>, private val numberType: String, private val number: String) : DialogFragment() {
+class DialogReview(private val reportHistoryList: ReportHistory, private val numberType: String, private val number: String) : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -19,15 +19,10 @@ class DialogReview(private val reportHistoryList: ArrayList<ReportHistory>, priv
     ): View {
         val rootView: View = inflater.inflate(R.layout.dialog_review, container, false)
 
-        rootView.findViewById<TextView>(R.id.dialogReview_tv_numberType).text = numberType
+        rootView.findViewById<TextView>(R.id.dialogReview_tv_numberType).text = if(numberType == "accountNumber") "Nomor Rekening" else "Nomor Telepon"
         rootView.findViewById<TextView>(R.id.dialogReview_tv_number).text = number
 
-        val list = emptyList<String>().toMutableList()
-        for(report in reportHistoryList){
-            list+= arrayOf("${report.username}, tuduhan ${report.reportType}")
-        }
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_expandable_list_item_1, list)
-        rootView.findViewById<AutoCompleteTextView>(R.id.dialogReview_ac_report).setAdapter(adapter)
+        rootView.findViewById<TextView>(R.id.dialogReview_tv_laporan).text = String.format(resources.getString(R.string.laporan_review), reportHistoryList.username, reportHistoryList.reportType)
         rootView.findViewById<Button>(R.id.dialogReview_btn_send).setOnClickListener {
             dismiss()
         }

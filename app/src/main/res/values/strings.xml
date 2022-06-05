@@ -113,12 +113,14 @@
     <string name="thank_you_for_reporting_title">Terima kasih telah membuat laporan, laporan Anda telah membantu komunitas Indikascam dalam mencegah kejahatan</string>
     <string name="slogan_indikascam"><![CDATA[Mari bersama ciptakan kenyamanan bertelepon & bertransaksi]]></string>
     <string name="tutup">Tutup</string>
-    <string name="ajukan_permohonan_review_ulang">Ajukan Permohonan Review Ulang</string>
+    <string name="permohonan_review_ulang">Permohonan Review Ulang</string>
     <string name="kirim">Kirim</string>
-    <string name="silahkan_isi_data_dibawah">Silahkan isi data dibawah</string>
+    <string name="atas_laporan">Atas laporan</string>
+    <string name="laporan_review">%1$s, dengan tuduhan %2$s</string>
     <string name="pilih_laporan">Pilih Laporan</string>
     <string name="progress_bar">Harap Tunggu…</string>
     <string name="dalam_kurung">(%1$s)</string>
     <string name="edit_profil">Edit Profil</string>
+    <string name="nomor_ini_tidak_pernah_dilaporkan_sebelumnya">Nomor ini tidak pernah dilaporkan sebelumnya</string>
 
 </resources>

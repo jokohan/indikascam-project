@@ -8,17 +8,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.indikascam.R
+import com.example.indikascam.dialog.DialogReview
 import com.example.indikascam.modelsRcv.ReportHistory
+import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ReportHistoryAdapter(private val reportHistoryList: List<ReportHistory>): RecyclerView.Adapter<ReportHistoryAdapter.ReportHistoryViewHolder>() {
+class ReportHistoryAdapter(private val reportHistoryList: List<ReportHistory>, val listener: (Int) -> Unit): RecyclerView.Adapter<ReportHistoryAdapter.ReportHistoryViewHolder>() {
+
+
     class ReportHistoryViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val image: ImageView = itemView.findViewById(R.id.cardListReportHistory_iv_userImage)
         val username: TextView = itemView.findViewById(R.id.cardListReportHistory_tv_username)
         val reportType: TextView = itemView.findViewById(R.id.cardListReportHistory_tv_reportType)
         val date: TextView = itemView.findViewById(R.id.cardListReportHistory_tv_date)
         val status: TextView = itemView.findViewById(R.id.cardListReportHistory_tv_reportStatus)
+        val cardView: MaterialCardView = itemView.findViewById(R.id.cardListReportHistory_cv_layout)
+        val flag: ImageView = itemView.findViewById(R.id.cardListReportHistory_iv_flag)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReportHistoryViewHolder {
@@ -41,12 +47,19 @@ class ReportHistoryAdapter(private val reportHistoryList: List<ReportHistory>): 
         when (currentItem.reportStatus) {
             "Diterima" -> {
                 holder.status.setTextColor(Color.parseColor("#19A15F"))
+                holder.cardView.strokeWidth = 12
+                holder.flag.visibility = View.VISIBLE
+                holder.cardView.setOnClickListener {
+                    listener(position)
+                }
             }
             "Ditolak" -> {
                 holder.status.setTextColor(Color.parseColor("#DD5246"))
             }
             else -> {
                 holder.status.setTextColor(Color.parseColor("#FFCD44"))
+                holder.cardView.strokeWidth = 0
+                holder.flag.visibility = View.GONE
             }
         }
         holder.status.text = currentItem.reportStatus

@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import java.util.*
 
 data class ReportHistory(
+    val id: Int,
     val image: Bitmap?,
     val username: String,
     val reportType: String,

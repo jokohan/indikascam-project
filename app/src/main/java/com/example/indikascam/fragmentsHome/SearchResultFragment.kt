@@ -2,7 +2,6 @@ package com.example.indikascam.fragmentsHome
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -33,8 +32,6 @@ import com.example.indikascam.util.Util
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
-import java.lang.Exception
-import kotlin.collections.ArrayList
 
 
 class SearchResultFragment : Fragment() {
@@ -45,10 +42,15 @@ class SearchResultFragment : Fragment() {
     private val args: SearchResultFragmentArgs by navArgs()
 
     private val reportHistoryList = ArrayList<ReportHistory>()
-    private val reportHistoryAdapter = ReportHistoryAdapter(reportHistoryList)
+    private val reportHistoryAdapter = ReportHistoryAdapter(reportHistoryList){
+        val position = it
+        val reviewDialog = DialogReview(reportHistoryList[position], args.searchNumber[0], args.searchNumber[1])
+        reviewDialog.show(parentFragmentManager, "Dialog Review")
+    }
 
     private lateinit var sessionManager: SessionManager
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,22 +60,20 @@ class SearchResultFragment : Fragment() {
 
         sessionManager = SessionManager(requireContext())
 
-        binding.searchResultFragmentTilChooseBankFirstIfAccountNumberAppearInTwoDifferentBanksOrMore.visibility =
-            View.GONE
+        binding.searchResultFragmentTvCaptionNoReport.visibility = View.GONE
+        binding.searchResultFragmentSpinnerBankName.visibility = View.GONE
 
         val numberType = args.searchNumber[0]
         val number = args.searchNumber[1]
 
         if (number.isEmpty()) {
-            binding.searchResultFragmentTvNumber.text =
-                resources.getString(R.string.nomor_tidak_ditemukan)
+            binding.searchResultFragmentTvNumber.text = resources.getString(R.string.nomor_tidak_ditemukan)
         } else {
             binding.searchResultFragmentTvNumber.text = number
             val loadingDialog = DialogProgressBar.progressDialog(requireContext())
             loadingDialog.show()
 
             lifecycleScope.launchWhenCreated {
-                val timeout = System.currentTimeMillis()
                 val snackBar = SnackBarWarningError()
                 if (numberType == "phoneNumber") {
                     val response = try {
@@ -91,11 +91,8 @@ class SearchResultFragment : Fragment() {
                         return@launchWhenCreated
                     }
                     if (response.isSuccessful && response.body() != null) {
-
                         binding.searchResultFragmentRcvHistory.adapter = reportHistoryAdapter
                         binding.searchResultFragmentRcvHistory.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-
-
                         setupBlockPhoneNumber(number, response.body()!!.data.is_blocked)
                         val reportHistoryData = response.body()!!.data.user_reports
 
@@ -120,6 +117,7 @@ class SearchResultFragment : Fragment() {
                                     val bitmap = BitmapFactory.decodeStream(responseOfProfilePicture.body()?.byteStream())
                                     reportHistoryList.add(
                                         ReportHistory(
+                                            data.id,
                                             bitmap,
                                             data.reporter_name,
                                             data.report_type,
@@ -142,6 +140,7 @@ class SearchResultFragment : Fragment() {
                             } else{
                                 reportHistoryList.add(
                                     ReportHistory(
+                                        data.id,
                                         null,
                                         data.reporter_name,
                                         data.report_type,
@@ -152,8 +151,6 @@ class SearchResultFragment : Fragment() {
                             }
                         }
                         reportHistoryAdapter.notifyDataSetChanged()
-
-                        Log.i("Hasil Pencarian", (System.currentTimeMillis() - timeout).toString())
                     } else {
                         try {
                             @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
@@ -168,9 +165,102 @@ class SearchResultFragment : Fragment() {
                         }
                     }
                 } else if (numberType == "accountNumber") {
+                    binding.searchResultFragmentSpinnerBankName.visibility = View.VISIBLE
+                    val response = try {
+                        RetroInstance.apiHome.getSearchAccountNumber(
+                            PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
+                            number
+                        )
+                    } catch (e: IOException) {
+                        Log.e("loginErrorIO", e.message!!)
+                        loadingDialog.dismiss()
+                        return@launchWhenCreated
+                    } catch (e: HttpException) {
+                        Log.e("loginErrorHttp", e.message!!)
+                        loadingDialog.dismiss()
+                        return@launchWhenCreated
+                    }
+                    if (response.isSuccessful && response.body() != null) {
+                        binding.searchResultFragmentRcvHistory.adapter = reportHistoryAdapter
+                        binding.searchResultFragmentRcvHistory.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                        val reportHistoryData = response.body()!!.data
+                        for (data in reportHistoryData) {
+                            val profilePictureName = data.profile_picture.toString()
+                            if(data.profile_picture != null){
+                                val responseOfProfilePicture = try{
+                                    RetroInstance.apiProfile.postFile(
+                                        PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
+                                        PostFileRequest("profile_pictures", profilePictureName)
+                                    )
+                                } catch (e: IOException) {
+                                    Log.e("loginErrorIO", e.message!!)
+                                    loadingDialog.dismiss()
+                                    return@launchWhenCreated
+                                } catch (e: HttpException) {
+                                    Log.e("loginErrorHttp", e.message!!)
+                                    loadingDialog.dismiss()
+                                    return@launchWhenCreated
+                                }
+                                if(responseOfProfilePicture.isSuccessful && responseOfProfilePicture.body() != null){
+                                    val bitmap = BitmapFactory.decodeStream(responseOfProfilePicture.body()?.byteStream())
+                                    reportHistoryList.add(
+                                        ReportHistory(
+                                            data.id,
+                                            bitmap,
+                                            data.reporter_name,
+                                            data.report_type,
+                                            Util().stringToDate(data.created_at),
+                                            data.status
+                                        )
+                                    )
+                                    reportHistoryAdapter.notifyDataSetChanged()
+                                } else{
+                                    try {
+                                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
+                                            JSONObject(response.errorBody()!!.string())
+                                        val errorMessage = jObjError.getJSONObject("error").getString("message")
+                                        Log.e("reportTypeError", errorMessage)
+                                        Log.e("reportTypeError", response.code().toString())
+                                    } catch (e: Exception) {
+                                        Log.e("reportTypeError", e.toString())
+                                    }
+                                }
+                            } else{
+                                reportHistoryList.add(
+                                    ReportHistory(
+                                        data.id,
+                                        null,
+                                        data.reporter_name,
+                                        data.report_type,
+                                        Util().stringToDate(data.created_at),
+                                        data.status
+                                    )
+                                )
+                            }
+                        }
+                        reportHistoryAdapter.notifyDataSetChanged()
+                    } else {
+                        try {
+                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
+                                JSONObject(response.errorBody()!!.string())
+                            val errorMessage = jObjError.getJSONObject("error").getString("message")
+                            Log.e("userBlockError", errorMessage)
+                            Log.e("userBlockError", response.code().toString())
+                            snackBar.showSnackBar(errorMessage, requireActivity())
 
+                        } catch (e: Exception) {
+                            Log.e("userBlockError", e.stackTraceToString())
+                        }
+                    }
                 }
                 loadingDialog.dismiss()
+                if(reportHistoryList.size < 1){
+                    binding.searchResultFragmentTvCaptionNoReport.visibility = View.VISIBLE
+                    binding.searchResultFragmentRcvHistory.visibility = View.GONE
+                }else{
+                    binding.searchResultFragmentTvCaptionNoReport.visibility = View.GONE
+                    binding.searchResultFragmentRcvHistory.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -183,10 +273,6 @@ class SearchResultFragment : Fragment() {
             binding.searchResultFragmentBtnBlock.visibility = View.GONE
         }
 
-
-
-
-
         binding.searchResultFragmentIvReview.setOnClickListener {
             val reportToReview = ArrayList<ReportHistory>()
             for (report in reportHistoryList) {
@@ -194,8 +280,7 @@ class SearchResultFragment : Fragment() {
                     reportToReview.add(report)
                 }
             }
-            val reviewDialog = DialogReview(reportToReview, numberType, number)
-            reviewDialog.show(parentFragmentManager, "Dialog Review")
+
         }
 
         return view

@@ -2,6 +2,7 @@ package com.example.indikascam.api.endpoint
 
 import com.example.indikascam.api.requests.PostTokenRequest
 import com.example.indikascam.api.requests.PostUserBlockRequest
+import com.example.indikascam.api.responses.GetScamStatisticsResponse
 import com.example.indikascam.api.responses.GetSearchAccountNumberResponse
 import com.example.indikascam.api.responses.GetSearchPhoneNumberResponse
 import com.example.indikascam.api.responses.PostUserBlockResponse
@@ -27,5 +28,10 @@ interface ApiHome {
         @Header("Authorization") token:PostTokenRequest,
         @Body postUserBlockRequest: PostUserBlockRequest
     ): Response<PostUserBlockResponse>
+
+    @GET("api/user-report/scam-statistics")
+    suspend fun getScamStatistics(
+        @Header("Authorization") token: PostTokenRequest
+    ): Response<GetScamStatisticsResponse>
 
 }

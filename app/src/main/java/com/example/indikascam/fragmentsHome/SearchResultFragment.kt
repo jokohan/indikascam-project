@@ -9,6 +9,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -42,11 +44,7 @@ class SearchResultFragment : Fragment() {
     private val args: SearchResultFragmentArgs by navArgs()
 
     private val reportHistoryList = ArrayList<ReportHistory>()
-    private val reportHistoryAdapter = ReportHistoryAdapter(reportHistoryList){
-        val position = it
-        val reviewDialog = DialogReview(reportHistoryList[position], args.searchNumber[0], args.searchNumber[1])
-        reviewDialog.show(parentFragmentManager, "Dialog Review")
-    }
+    private var reportHistoryAdapter: ReportHistoryAdapter? = null
 
     private lateinit var sessionManager: SessionManager
 
@@ -61,7 +59,7 @@ class SearchResultFragment : Fragment() {
         sessionManager = SessionManager(requireContext())
 
         binding.searchResultFragmentTvCaptionNoReport.visibility = View.GONE
-        binding.searchResultFragmentSpinnerBankName.visibility = View.GONE
+        binding.searchResultFragmentTilBankName.visibility = View.GONE
 
         val numberType = args.searchNumber[0]
         val number = args.searchNumber[1]
@@ -122,10 +120,11 @@ class SearchResultFragment : Fragment() {
                                             data.reporter_name,
                                             data.report_type,
                                             Util().stringToDate(data.created_at),
-                                            data.status
+                                            data.status,
+                                            null,
+                                            null
                                         )
                                     )
-                                    reportHistoryAdapter.notifyDataSetChanged()
                                 } else{
                                     try {
                                         @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
@@ -145,12 +144,20 @@ class SearchResultFragment : Fragment() {
                                         data.reporter_name,
                                         data.report_type,
                                         Util().stringToDate(data.created_at),
-                                        data.status
+                                        data.status,
+                                        null,
+                                        null
                                     )
                                 )
                             }
                         }
-                        reportHistoryAdapter.notifyDataSetChanged()
+                        reportHistoryAdapter = ReportHistoryAdapter(reportHistoryList){
+                            val position = it
+                            val reviewDialog = DialogReview(reportHistoryList[position], args.searchNumber[0], args.searchNumber[1])
+                            reviewDialog.show(parentFragmentManager, "Dialog Review")
+                        }
+                        binding.searchResultFragmentRcvHistory.adapter = reportHistoryAdapter
+                        binding.searchResultFragmentAcBankName.setSelection(0)
                     } else {
                         try {
                             @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
@@ -165,7 +172,6 @@ class SearchResultFragment : Fragment() {
                         }
                     }
                 } else if (numberType == "accountNumber") {
-                    binding.searchResultFragmentSpinnerBankName.visibility = View.VISIBLE
                     val response = try {
                         RetroInstance.apiHome.getSearchAccountNumber(
                             PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
@@ -210,10 +216,11 @@ class SearchResultFragment : Fragment() {
                                             data.reporter_name,
                                             data.report_type,
                                             Util().stringToDate(data.created_at),
-                                            data.status
+                                            data.status,
+                                            data.bank_id,
+                                            data.bank_name
                                         )
                                     )
-                                    reportHistoryAdapter.notifyDataSetChanged()
                                 } else{
                                     try {
                                         @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
@@ -233,12 +240,13 @@ class SearchResultFragment : Fragment() {
                                         data.reporter_name,
                                         data.report_type,
                                         Util().stringToDate(data.created_at),
-                                        data.status
+                                        data.status,
+                                        data.bank_id,
+                                        data.bank_name
                                     )
                                 )
                             }
                         }
-                        reportHistoryAdapter.notifyDataSetChanged()
                     } else {
                         try {
                             @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
@@ -251,6 +259,47 @@ class SearchResultFragment : Fragment() {
                         } catch (e: Exception) {
                             Log.e("userBlockError", e.stackTraceToString())
                         }
+                    }
+                    if(reportHistoryList.size > 0){
+                        var bankArray = emptyArray<String>()
+                        for(report in reportHistoryList){
+                            bankArray += report.bankName!!
+                        }
+                        if(bankArray.isNotEmpty()){
+                           binding.searchResultFragmentTilBankName.visibility = View.VISIBLE
+                        }
+                        val bankNameAdapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            bankArray.distinct()
+                        )
+                        binding.searchResultFragmentAcBankName.setAdapter(bankNameAdapter)
+                        binding.searchResultFragmentAcBankName.setOnItemClickListener { _, _, i, _ ->
+                            val tmp = ArrayList<ReportHistory>()
+                            for(report in reportHistoryList){
+                                if(report.bankName == bankArray[i]){
+                                    tmp += report
+                                }
+                            }
+                            binding.searchResultFragmentRcvHistory.adapter = null
+                            reportHistoryAdapter = null
+                            reportHistoryAdapter = ReportHistoryAdapter(tmp){
+                                val position = it
+                                val reviewDialog = DialogReview(tmp[position], args.searchNumber[0], args.searchNumber[1])
+                                reviewDialog.show(parentFragmentManager, "Dialog Review")
+                            }
+                            binding.searchResultFragmentRcvHistory.adapter = reportHistoryAdapter
+                        }
+
+                        binding.searchResultFragmentAcBankName.setText(bankArray[0],false)
+                        val tmp = ArrayList<ReportHistory>()
+                        tmp += reportHistoryList[0]
+                        reportHistoryAdapter = ReportHistoryAdapter(tmp){
+                            val position = it
+                            val reviewDialog = DialogReview(tmp[position], args.searchNumber[0], args.searchNumber[1])
+                            reviewDialog.show(parentFragmentManager, "Dialog Review")
+                        }
+                        binding.searchResultFragmentRcvHistory.adapter = reportHistoryAdapter
                     }
                 }
                 loadingDialog.dismiss()
@@ -271,16 +320,6 @@ class SearchResultFragment : Fragment() {
             binding.searchResultFragmentTvNumberCaption.text =
                 resources.getString(R.string.nomor_rekening)
             binding.searchResultFragmentBtnBlock.visibility = View.GONE
-        }
-
-        binding.searchResultFragmentIvReview.setOnClickListener {
-            val reportToReview = ArrayList<ReportHistory>()
-            for (report in reportHistoryList) {
-                if (report.reportStatus == "Diterima") {
-                    reportToReview.add(report)
-                }
-            }
-
         }
 
         return view

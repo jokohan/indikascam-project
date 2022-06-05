@@ -9,5 +9,7 @@ data class ReportHistory(
     val username: String,
     val reportType: String,
     val date: Date,
-    val reportStatus: String
+    val reportStatus: String,
+    val bankId: Int?,
+    val bankName: String?
 )

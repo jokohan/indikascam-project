@@ -102,7 +102,7 @@
     <string name="platform_dengan_kasus_penipuan_terbanyak">Platform dengan kasus penipuan terbanyak</string>
     <string name="produk_yang_paling_sering_digunakan_sebagai_modus">Produk yang paling sering digunakan sebagai modus</string>
     <string name="mulai_blokir">Mulai Blokir</string>
-    <string name="format_rupiah">Rp.%1$s</string>
+    <string name="format_rupiah">%1$s %2$s</string>
     <string name="cari_nomor_ini">Cari Nomor Ini</string>
     <string name="hari_ini">Hari Ini</string>
     <string name="review_ulang_laporan">Review Ulang Laporan</string>
@@ -121,6 +121,7 @@
     <string name="progress_bar">Harap Tunggu…</string>
     <string name="dalam_kurung">(%1$s)</string>
     <string name="edit_profil">Edit Profil</string>
-    <string name="nomor_ini_tidak_pernah_dilaporkan_sebelumnya">Nomor ini tidak pernah dilaporkan sebelumnya</string>
+    <string name="nomor_ini_tidak_pernah_dilaporkan_sebelumnya">Tidak ada laporan\nSilahkan berhubungan dengan nomor ini\n\n<b>Tetaplah berhati-hati !</b></string>
+    <string name="total_kasus">%1$s</string>
 
 </resources>

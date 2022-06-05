@@ -12,7 +12,6 @@ import androidx.navigation.Navigation
 import com.example.indikascam.R
 import com.example.indikascam.databinding.FragmentHomeBinding
 import com.example.indikascam.dialog.DialogStatistic
-import com.example.indikascam.modelsRcv.StatisticPlatformProduct
 import com.example.indikascam.sessionManager.SessionManager
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
@@ -38,9 +37,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private var listPlatform = ArrayList<StatisticPlatformProduct>()
-    private var listProduct = ArrayList<StatisticPlatformProduct>()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,6 +53,10 @@ class HomeFragment : Fragment() {
         super.onResume()
 
         loginOrNot()
+
+        binding.homeFragmentTilSearchNumber.hint = String.format(resources.getString(R.string.cari_nomor),"Telepon")
+        binding.homeFragmentTvNumberExample.text = String.format(resources.getString(R.string.numberExample),"08123456789")
+        binding.homeFragmentEtSearchNumber.text = null
 
     }
 
@@ -99,7 +99,7 @@ class HomeFragment : Fragment() {
                                     .setContentTypeFace(Typeface.defaultFromStyle(Typeface.ITALIC))
                                     .setDismissType(DismissType.anywhere)
                                     .setGuideListener {
-                                        val statisticsDialog = DialogStatistic("Mulai Blokir", 123456789, listPlatform, listProduct)
+                                        val statisticsDialog = DialogStatistic("Mulai Blokir")
                                         statisticsDialog.show(parentFragmentManager, "Statistics Dialog")
                                     }
                                     .build()
@@ -118,13 +118,8 @@ class HomeFragment : Fragment() {
 
     private fun setupHomeFragment() {
 
-        for(i in 0..19){
-            listPlatform.add(StatisticPlatformProduct("lainnya","Kaskus", i))
-            listProduct.add(StatisticPlatformProduct("lainnya","Kaskus", i))
-        }
-
         binding.homeFragmentIvStatistic.setOnClickListener {
-            val statisticDialog = DialogStatistic("Tutup", 130000000, listPlatform, listProduct)
+            val statisticDialog = DialogStatistic("Tutup")
             statisticDialog.show(parentFragmentManager,"Dialog Statistik")
         }
 

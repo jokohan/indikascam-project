@@ -10,6 +10,8 @@ data class GetSearchAccountNumberResponse(
         val profile_picture: String?,
         val report_type: String,
         val created_at: String,
-        val status: String
+        val status: String,
+        val bank_id: Int,
+        val bank_name: String
     )
 }

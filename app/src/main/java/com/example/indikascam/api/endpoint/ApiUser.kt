@@ -3,6 +3,8 @@ package com.example.indikascam.api.endpoint
 import com.example.indikascam.api.requests.PostFileRequest
 import com.example.indikascam.api.requests.PostTokenRequest
 import com.example.indikascam.api.requests.PostUserConfiguration
+import com.example.indikascam.api.responses.GetMyReportsResponse
+import com.example.indikascam.api.responses.GetMyReviewResponse
 import com.example.indikascam.api.responses.ResponseWithOnlyOneMessage
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -39,7 +41,7 @@ interface ApiUser {
     @GET("api/user-report/my-reports")
     suspend fun getMyReports(
         @Header("Authorization") token: PostTokenRequest
-    ): Response<Any>
+    ): Response<GetMyReportsResponse>
 
     @GET("api/user-report/my-reports/{report_id}")
     suspend fun getMyReportDetail(
@@ -50,5 +52,5 @@ interface ApiUser {
     @GET("api/review-request/my-request")
     suspend fun getMyReview(
         @Header("Authorization") token: PostTokenRequest,
-    ): Response<Any>
+    ): Response<GetMyReviewResponse>
 }

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.indikascam.R
 import com.example.indikascam.modelsRcv.MyReport
 
-class ReportListAdapter(private val myReportList: List<MyReport>, val listener: (String) -> Unit):
+class ReportListAdapter(private val myReportList: List<MyReport>, val listener: (Int) -> Unit):
     RecyclerView.Adapter<ReportListAdapter.ReportListViewHolder>(){
 
         class ReportListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -40,7 +40,7 @@ class ReportListAdapter(private val myReportList: List<MyReport>, val listener: 
             else -> holder.status.setTextColor(Color.parseColor("#FFCD44"))
         }
         holder.card.setOnClickListener {
-            listener(currentItem.title)
+            listener(currentItem.id)
         }
     }
 

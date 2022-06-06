@@ -48,7 +48,7 @@ class MyReportDetailFragment : Fragment() {
         _binding = FragmentMyReportDetailBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        binding.myReportDetailFragmentTvReportNumber.text = args.reportNumber
+        binding.myReportDetailFragmentTvReportNumber.text = args.reportNumber.toString()
 
         for(i in 0..5){
             val imageUri: Uri = Uri.Builder()

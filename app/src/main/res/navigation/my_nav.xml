@@ -189,7 +189,7 @@
         tools:layout="@layout/fragment_my_report_detail" >
         <argument
             android:name="reportNumber"
-            app:argType="string" />
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/protectionLevelFragment"

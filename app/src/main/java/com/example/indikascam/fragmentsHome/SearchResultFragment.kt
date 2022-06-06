@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +32,7 @@ import com.example.indikascam.dialog.SnackBarWarningError
 import com.example.indikascam.modelsRcv.ReportHistory
 import com.example.indikascam.sessionManager.SessionManager
 import com.example.indikascam.util.Util
+import com.example.indikascam.viewModel.SharedViewModelUser
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
@@ -47,6 +49,10 @@ class SearchResultFragment : Fragment() {
     private var reportHistoryAdapter: ReportHistoryAdapter? = null
 
     private lateinit var sessionManager: SessionManager
+    private val sharedViewModelUser: SharedViewModelUser by activityViewModels()
+    private var myPhoneNumber: String? = null
+    private var myBankId: Int? = null
+    private var myAccountNumber: String? = null
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
@@ -74,6 +80,9 @@ class SearchResultFragment : Fragment() {
             lifecycleScope.launchWhenCreated {
                 val snackBar = SnackBarWarningError()
                 if (numberType == "phoneNumber") {
+                    sharedViewModelUser.phoneNumber.observe(viewLifecycleOwner){
+                        myPhoneNumber = it
+                    }
                     val response = try {
                         RetroInstance.apiHome.getSearchPhoneNumber(
                             PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
@@ -153,7 +162,7 @@ class SearchResultFragment : Fragment() {
                         }
                         reportHistoryAdapter = ReportHistoryAdapter(reportHistoryList){
                             val position = it
-                            val reviewDialog = DialogReview(reportHistoryList[position], args.searchNumber[0], args.searchNumber[1])
+                            val reviewDialog = DialogReview(reportHistoryList[position], args.searchNumber[0], args.searchNumber[1], myPhoneNumber, null, null)
                             reviewDialog.show(parentFragmentManager, "Dialog Review")
                         }
                         binding.searchResultFragmentRcvHistory.adapter = reportHistoryAdapter
@@ -172,6 +181,12 @@ class SearchResultFragment : Fragment() {
                         }
                     }
                 } else if (numberType == "accountNumber") {
+                    sharedViewModelUser.bankId.observe(viewLifecycleOwner){
+                        myBankId = it
+                    }
+                    sharedViewModelUser.bankAccountNumber.observe(viewLifecycleOwner){
+                        myAccountNumber = it
+                    }
                     val response = try {
                         RetroInstance.apiHome.getSearchAccountNumber(
                             PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
@@ -285,7 +300,7 @@ class SearchResultFragment : Fragment() {
                             reportHistoryAdapter = null
                             reportHistoryAdapter = ReportHistoryAdapter(tmp){
                                 val position = it
-                                val reviewDialog = DialogReview(tmp[position], args.searchNumber[0], args.searchNumber[1])
+                                val reviewDialog = DialogReview(tmp[position], args.searchNumber[0], args.searchNumber[1], myPhoneNumber, myAccountNumber, myBankId)
                                 reviewDialog.show(parentFragmentManager, "Dialog Review")
                             }
                             binding.searchResultFragmentRcvHistory.adapter = reportHistoryAdapter
@@ -296,7 +311,7 @@ class SearchResultFragment : Fragment() {
                         tmp += reportHistoryList[0]
                         reportHistoryAdapter = ReportHistoryAdapter(tmp){
                             val position = it
-                            val reviewDialog = DialogReview(tmp[position], args.searchNumber[0], args.searchNumber[1])
+                            val reviewDialog = DialogReview(tmp[position], args.searchNumber[0], args.searchNumber[1], myPhoneNumber, myAccountNumber, myBankId)
                             reviewDialog.show(parentFragmentManager, "Dialog Review")
                         }
                         binding.searchResultFragmentRcvHistory.adapter = reportHistoryAdapter

@@ -1,11 +1,9 @@
 package com.example.indikascam.api.endpoint
 
+import com.example.indikascam.api.requests.PostReviewRequestRequest
 import com.example.indikascam.api.requests.PostTokenRequest
 import com.example.indikascam.api.requests.PostUserBlockRequest
-import com.example.indikascam.api.responses.GetScamStatisticsResponse
-import com.example.indikascam.api.responses.GetSearchAccountNumberResponse
-import com.example.indikascam.api.responses.GetSearchPhoneNumberResponse
-import com.example.indikascam.api.responses.PostUserBlockResponse
+import com.example.indikascam.api.responses.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -33,5 +31,11 @@ interface ApiHome {
     suspend fun getScamStatistics(
         @Header("Authorization") token: PostTokenRequest
     ): Response<GetScamStatisticsResponse>
+
+    @POST("api/review-request")
+    suspend fun postReviewRequest(
+        @Header("Authorization") token: PostTokenRequest,
+        @Body postReviewRequestRequest: PostReviewRequestRequest
+    ): Response<PostReviewRequestResponse>
 
 }

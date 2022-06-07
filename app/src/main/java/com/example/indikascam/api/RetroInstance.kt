@@ -1,10 +1,7 @@
 package com.example.indikascam.api
 
 import com.example.indikascam.api.BaseUrl.Companion.BASE_URL
-import com.example.indikascam.api.endpoint.ApiAuth
-import com.example.indikascam.api.endpoint.ApiHome
-import com.example.indikascam.api.endpoint.ApiReport
-import com.example.indikascam.api.endpoint.ApiUser
+import com.example.indikascam.api.endpoint.*
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
@@ -47,6 +44,22 @@ object RetroInstance {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiHome::class.java)
+    }
+
+    val apiBlockingCall: ApiBlockingCall by lazy{
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiBlockingCall::class.java)
+    }
+
+    val apiNotification: ApiNotification by lazy{
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ApiNotification::class.java)
     }
 
 }

@@ -18,6 +18,7 @@ import com.example.indikascam.api.RetroInstance
 import com.example.indikascam.api.requests.GetMeRequest
 import com.example.indikascam.api.requests.PostFileRequest
 import com.example.indikascam.api.requests.PostTokenRequest
+import com.example.indikascam.api.responses.GetBlockStatisticsResponse
 import com.example.indikascam.databinding.FragmentHomeBinding
 import com.example.indikascam.dialog.DialogStatistic
 import com.example.indikascam.sessionManager.SessionManager
@@ -68,9 +69,11 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        me()
+
         loginOrNot()
 
-        me()
+        setupBlokingStatistics()
 
         binding.homeFragmentTilSearchNumber.hint = String.format(resources.getString(R.string.cari_nomor),"Telepon")
         binding.homeFragmentTvNumberExample.text = String.format(resources.getString(R.string.numberExample),"08123456789")
@@ -78,14 +81,14 @@ class HomeFragment : Fragment() {
 
     }
 
+
+
     private fun loginOrNot() {
-        val sessionManager = SessionManager(requireContext())
         val token = sessionManager.fetchAuthToken()
 
         if(token.isNullOrEmpty()){
             Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_loginFragment)
         } else{
-
             val prefs = requireContext().getSharedPreferences("first_time", 0)
             if (prefs.getBoolean("first_time", true)) {
                 val targetView = activity?.requireViewById(R.id.mainActivity_bnv_mainNavigation) as BottomNavigationView
@@ -168,75 +171,100 @@ class HomeFragment : Fragment() {
                 }
             }
         })
-
-        setupPieChart(binding.homeFragmentPcBlokingPerformance)
-        setupBarChart(binding.homeFragmentBcBlokingPerformance)
     }
 
-    private fun me(){
-        lifecycleScope.launchWhenCreated {
-            val response = try{
-                RetroInstance.apiAuth.getMe(GetMeRequest("Bearer ${sessionManager.fetchAuthToken()}"))
-            } catch (e: IOException) {
-                Log.e("meErrorIO", e.message!!)
-                return@launchWhenCreated
-            } catch (e: HttpException) {
-                Log.e("meErrorHttp", e.message!!)
-                return@launchWhenCreated
-            }
-            if(response.isSuccessful && response.body() != null){
-                sharedViewModelUser.saveName(response.body()!!.name)
-                sharedViewModelUser.saveEmail(response.body()!!.email)
-                sharedViewModelUser.savePhoneNumber(response.body()?.phone_number)
-                sharedViewModelUser.saveBankAccountNumber(response.body()?.bank_account_number)
-                sharedViewModelUser.saveBankId(response.body()?.bank_id)
-                sharedViewModelUser.saveIsAnonymous(response.body()!!.is_anonymous)
-                sharedViewModelUser.saveProtectionLevel(response.body()!!.protection_level)
-                try{
-                    val profilePicName = response.body()?.profile_picture.toString()
-                    val responseFile = try {
-                        RetroInstance.apiProfile.postFile(
-                            PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
-                            PostFileRequest("profile_pictures", profilePicName)
-                        )
-                    }catch (e: IOException) {
-                        Log.e("loginErrorIO", e.message!!)
-                        return@launchWhenCreated
-                    } catch (e: HttpException) {
-                        Log.e("loginErrorHttp", e.message!!)
-                        return@launchWhenCreated
-                    }
-                    if(responseFile.isSuccessful && responseFile.body() != null){
-                        val bitmap = BitmapFactory.decodeStream(responseFile.body()?.byteStream())
-                        sharedViewModelUser.saveProfilePicture(bitmap)
-                    }else{
-                        try{
-                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                            val errorMessage = jObjError.getJSONObject("error").getString("message")
-                            Log.e("meError", errorMessage)
-                            Log.e("meError", response.code().toString())
-                        }catch (e: Exception){
-                            Log.e("meError", e.toString())
-                        }
-                    }
-                }catch (e: Exception){
-                    Log.e("meProfilePicError", e.toString())
+    private fun setupBlokingStatistics() {
+        if(!sessionManager.fetchAuthToken().isNullOrEmpty()){
+            lifecycleScope.launchWhenCreated {
+                val response = try{
+                    RetroInstance.apiHome.getBlockStatistic(PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"))
+                } catch (e: IOException) {
+                    Log.e("meErrorIO", e.message!!)
+                    return@launchWhenCreated
+                } catch (e: HttpException) {
+                    Log.e("meErrorHttp", e.message!!)
+                    return@launchWhenCreated
                 }
-            }else{
-                try{
-                    @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                    val errorMessage = jObjError.getJSONObject("error").getString("message")
-                    Log.e("meError", errorMessage)
-                    Log.e("meError", response.code().toString())
-                }catch (e: Exception){
-                    Log.e("meError", e.toString())
+                if(response.isSuccessful && response.body() != null){
+                    binding.homeFragmentTvTotalBlockInAllTime.text = response.body()!!.data.total.toString()
+                    binding.homeFragmentTvTotalBlockInAMonth.text = response.body()!!.data.this_month.toString()
+                    binding.homeFragmentTvTotalBlockInAWeek.text = response.body()!!.data.this_week.toString()
+                    setupPieChart(binding.homeFragmentPcBlokingPerformance, response.body()!!.data.pie_chart)
+                    setupBarChart(binding.homeFragmentBcBlokingPerformance, response.body()!!.data.last_4_months)
                 }
-                sessionManager.saveAuthToken("")
             }
         }
     }
 
-    private fun setupBarChart(barChart: BarChart) {
+    private fun me(){
+        if(!sessionManager.fetchAuthToken().isNullOrEmpty()){
+            lifecycleScope.launchWhenCreated {
+                val response = try{
+                    RetroInstance.apiAuth.getMe(GetMeRequest("Bearer ${sessionManager.fetchAuthToken()}"))
+                } catch (e: IOException) {
+                    Log.e("meErrorIO", e.message!!)
+                    return@launchWhenCreated
+                } catch (e: HttpException) {
+                    Log.e("meErrorHttp", e.message!!)
+                    return@launchWhenCreated
+                }
+                if(response.isSuccessful && response.body() != null){
+                    sharedViewModelUser.saveName(response.body()!!.name)
+                    sharedViewModelUser.saveEmail(response.body()!!.email)
+                    sharedViewModelUser.savePhoneNumber(response.body()?.phone_number)
+                    sharedViewModelUser.saveBankAccountNumber(response.body()?.bank_account_number)
+                    sharedViewModelUser.saveBankId(response.body()?.bank_id)
+                    sharedViewModelUser.saveIsAnonymous(response.body()!!.is_anonymous)
+                    sharedViewModelUser.saveProtectionLevel(response.body()!!.protection_level)
+                    try{
+                        val profilePicName = response.body()?.profile_picture.toString()
+                        val responseFile = try {
+                            RetroInstance.apiProfile.postFile(
+                                PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
+                                PostFileRequest("profile_pictures", profilePicName)
+                            )
+                        }catch (e: IOException) {
+                            Log.e("loginErrorIO", e.message!!)
+                            return@launchWhenCreated
+                        } catch (e: HttpException) {
+                            Log.e("loginErrorHttp", e.message!!)
+                            return@launchWhenCreated
+                        }
+                        if(responseFile.isSuccessful && responseFile.body() != null){
+                            val bitmap = BitmapFactory.decodeStream(responseFile.body()?.byteStream())
+                            sharedViewModelUser.saveProfilePicture(bitmap)
+                        }else{
+                            try{
+                                @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
+                                val errorMessage = jObjError.getJSONObject("error").getString("message")
+                                Log.e("meError", errorMessage)
+                                Log.e("meError", response.code().toString())
+                            }catch (e: Exception){
+                                Log.e("meError", e.toString())
+                            }
+                        }
+                    }catch (e: Exception){
+                        Log.e("meProfilePicError", e.toString())
+                    }
+                }else{
+                    try{
+                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
+                        val errorMessage = jObjError.getJSONObject("error").getString("message")
+                        Log.e("meError", errorMessage)
+                        Log.e("meError", response.code().toString())
+                    }catch (e: Exception){
+                        Log.e("meError", e.toString())
+                    }
+                    sessionManager.saveAuthToken("")
+                }
+            }
+        }
+    }
+
+    private fun setupBarChart(
+        barChart: BarChart,
+        last4Months: List<Float>
+    ) {
         barChart.animateY(1000)
         val labels = ArrayList<String>()
         val c: Calendar = GregorianCalendar()
@@ -272,10 +300,10 @@ class HomeFragment : Fragment() {
         barChart.setTouchEnabled(false)
 
         val entries = ArrayList<BarEntry>()
-        entries.add(BarEntry(0f, 12f))
-        entries.add(BarEntry(1f, 23f))
-        entries.add(BarEntry(2f, 39f))
-        entries.add(BarEntry(3f, 50f))
+        entries.add(BarEntry(0f, last4Months[3]))
+        entries.add(BarEntry(1f, last4Months[2]))
+        entries.add(BarEntry(2f, last4Months[1]))
+        entries.add(BarEntry(3f, last4Months[0]))
 
         val colors = arrayListOf<Int>()
         colors.add(Color.parseColor("#789bfa"))
@@ -291,7 +319,10 @@ class HomeFragment : Fragment() {
         barChart.invalidate()
     }
 
-    private fun setupPieChart(pieChart: PieChart) {
+    private fun setupPieChart(
+        pieChart: PieChart,
+        pieChart1: GetBlockStatisticsResponse.Data.PieChart
+    ) {
         pieChart.isDrawHoleEnabled = true
         pieChart.setUsePercentValues(true)
         pieChart.setDrawEntryLabels(false)
@@ -309,14 +340,22 @@ class HomeFragment : Fragment() {
         l.textSize = 14F
 
         val entries = arrayListOf<PieEntry>()
-        entries.add(PieEntry(0.2f, "Panggilan Robot"))
-        entries.add(PieEntry(0.3f, "Panggilan Spam"))
-        entries.add(PieEntry(0.5f, "Penipu"))
+        if(pieChart1.penipuan > 0f){
+            entries.add(PieEntry(pieChart1.penipuan, "Penipuan"))
+        }
+        if(pieChart1.panggilan_spam > 0f){
+            entries.add(PieEntry(pieChart1.panggilan_spam, "Panggilan Spam"))
+        }
+        if (pieChart1.panggilan_robot > 0f){
+            entries.add(PieEntry(pieChart1.panggilan_robot, "Panggilan Robot"))
+        }
+
+
 
         val colors = arrayListOf<Int>()
-        for (color in ColorTemplate.MATERIAL_COLORS){
-            colors.add(color)
-        }
+        colors.add(ColorTemplate.MATERIAL_COLORS[2])
+        colors.add(ColorTemplate.MATERIAL_COLORS[1])
+        colors.add(ColorTemplate.MATERIAL_COLORS[0])
         val dataset = PieDataSet(entries, "")
         dataset.colors = colors
 

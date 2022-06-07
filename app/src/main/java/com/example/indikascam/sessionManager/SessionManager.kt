@@ -10,6 +10,7 @@ class SessionManager(context: Context) {
 
     companion object {
         const val USER_TOKEN = "user_token"
+        const val USER_TOKEN_EXPIRES = "user_token_expires"
     }
 
     fun saveAuthToken(token: String) {
@@ -22,4 +23,13 @@ class SessionManager(context: Context) {
         return prefs.getString(USER_TOKEN, null)
     }
 
+    fun saveExpireToken(expiresIn: Long){
+        val editor = prefs.edit()
+        editor.putLong(USER_TOKEN_EXPIRES, expiresIn)
+        editor.apply()
+    }
+
+    fun fetchExpireToken(): Long{
+        return prefs.getLong(USER_TOKEN_EXPIRES, 0)
+    }
 }

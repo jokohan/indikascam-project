@@ -38,4 +38,9 @@ interface ApiHome {
         @Body postReviewRequestRequest: PostReviewRequestRequest
     ): Response<PostReviewRequestResponse>
 
+    @GET("api/detected-call-history/block-statistic")
+    suspend fun getBlockStatistic(
+        @Header("Authorization") token: PostTokenRequest,
+    ): Response<GetBlockStatisticsResponse>
+
 }

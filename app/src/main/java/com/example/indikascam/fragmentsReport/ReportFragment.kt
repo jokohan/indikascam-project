@@ -126,12 +126,12 @@ class ReportFragment : Fragment() {
             val snackBar = SnackBarWarningError()
             lifecycleScope.launchWhenCreated {
                 val response = try{
-                    if(binding.reportFragmentAcTypeReport.text.toString() == "Penipu"){
+                    if(binding.reportFragmentAcTypeReport.text.toString() == "Penipuan"){
                         RetroInstance.apiReport.postReport(
                             PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
                             reportTypeFinal!!,
-                            bankFinal!!,
-                            binding.reportFragmentEtAccountNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                            if(bankFinal == null) null else bankFinal,
+                            if(binding.reportFragmentEtAccountNumber.text == null) null else binding.reportFragmentEtAccountNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
                             binding.reportFragmentEtName.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
                             platformFinal!!,
                             productFinal!!,
@@ -385,7 +385,7 @@ class ReportFragment : Fragment() {
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (!binding.reportFragmentAcTypeReport.text.isNullOrEmpty()) {
-                    if (binding.reportFragmentAcTypeReport.text.toString() == "Penipu") {
+                    if (binding.reportFragmentAcTypeReport.text.toString() == "Penipuan") {
                         binding.reportFragmentLlChooseTypeReportFirst.visibility = View.VISIBLE
                         binding.reportFragmentLlTypeReportExcludeScam.visibility = View.VISIBLE
                     } else {

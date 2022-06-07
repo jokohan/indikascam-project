@@ -48,7 +48,7 @@ class MyReportDetailFragment : Fragment() {
                 val zoomInProofDialog = DialogZoomInProofDetail(proofDetailList[position].image as Bitmap, proofDetailList[position].title, proofDetailList[position].isItImage)
                 zoomInProofDialog.show(parentFragmentManager, "Zoom In Proof")
             } else{
-                openPDFContent(requireContext(), proofDetailList[position].image as InputStream, proofDetailList[position].title)
+                openPDFContent(requireContext(), proofDetailList[position].image as InputStream, proofDetailList[position].titleServer)
             }
         }
     }
@@ -106,7 +106,7 @@ class MyReportDetailFragment : Fragment() {
                         val tmpFileExtension = file.server_file_name.substring(file.server_file_name.length - 4, file.server_file_name.length)
                         proofDetailList.add(ProofDetail(
                             if(tmpFileExtension != ".pdf") BitmapFactory.decodeStream(tmpFile.byteStream()) else tmpFile.byteStream(),
-                            file.client_file_name,
+                            file.client_file_name, file.server_file_name,
                             tmpFileExtension != ".pdf"))
                     }else{
                         try{
@@ -133,20 +133,6 @@ class MyReportDetailFragment : Fragment() {
             }
             loadingDialog.dismiss()
         }
-
-//        binding.myReportDetailFragmentTvReportNumber.text = args.reportId.toString()
-//
-//        for(i in 0..5){
-//            val imageUri: Uri = Uri.Builder()
-//                .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
-//                .authority(resources.getResourcePackageName(R.drawable.ic_flag))
-//                .appendPath(resources.getResourceTypeName(R.drawable.ic_flag))
-//                .appendPath(resources.getResourceEntryName(R.drawable.ic_flag))
-//                .build()
-//            val newItem = Proof(imageUri, proofList.size.toString(),true)
-//            proofList.add(newItem)
-//        }
-
         binding.myReportDetailFragmentRcvProof.adapter = proofDetailAdapter
         binding.myReportDetailFragmentRcvProof.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 

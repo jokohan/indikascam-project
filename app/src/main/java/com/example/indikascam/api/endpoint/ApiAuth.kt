@@ -1,19 +1,16 @@
 package com.example.indikascam.api.endpoint
 
 import com.example.indikascam.api.requests.*
-import com.example.indikascam.api.responses.GetMeResponse
-import com.example.indikascam.api.responses.ResponseWithOnlyOneMessage
-import com.example.indikascam.api.responses.PostLoginResponse
-import com.example.indikascam.api.responses.PostRegisterResponse
+import com.example.indikascam.api.responses.*
 import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiAuth {
 
-//    @POST("api/auth/refresh")
-//    suspend fun postRefresh(
-//        @Header("Authorization") token: String,
-//    ): Response<PostRefreshResponse>
+    @POST("api/auth/refresh")
+    suspend fun postRefresh(
+        @Header("Authorization") postTokenRequest: PostTokenRequest,
+    ): Response<PostRefreshResponse>
 
     @POST("api/auth/login")
     suspend fun postLogin(

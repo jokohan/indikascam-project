@@ -8,7 +8,7 @@
     android:layout_margin="@dimen/dimen_20dp"
     app:cardCornerRadius="@dimen/dimen_16dp"
     app:cardElevation="@dimen/dimen_8dp"
-    app:strokeWidth="@dimen/dimen_4dp"
+    app:strokeWidth="2dp"
     app:strokeColor="@color/design_default_color_primary"
     >
 
@@ -27,14 +27,14 @@
             android:textStyle="bold"
             android:textColor="@color/black"/>
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="8120dp"
             app:cardElevation="3dp"
             app:strokeWidth="3dp"
             android:layout_marginTop="16dp"
-            >
+            android:layout_marginHorizontal="@dimen/dimen_2dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/inboxFragment_cl_blockList"
@@ -77,7 +77,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -92,8 +92,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:text="@string/pemberitahuan"
-                android:textStyle="bold"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"
@@ -108,16 +108,51 @@
                 android:layout_height="1dp"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/tvText"
-                android:background="@color/black"
-                />
+                android:background="@color/black" />
 
         </RelativeLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/inboxFragment_rcv_notification"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="8dp"/>
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/hari_ini"
+                    android:layout_marginTop="@dimen/dimen_8dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/inboxFragment_rcv_notificationToday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/bulan_ini"
+                    android:layout_marginTop="@dimen/dimen_8dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/inboxFragment_rcv_notificationThisMonth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 

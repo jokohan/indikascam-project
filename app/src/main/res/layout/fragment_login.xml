@@ -31,7 +31,6 @@
             android:id="@+id/loginFragment_et_email"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="joko.han1201@gmail.com"
             android:inputType="textEmailAddress"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -49,7 +48,6 @@
             android:id="@+id/loginFragment_et_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="omnomnom"
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 

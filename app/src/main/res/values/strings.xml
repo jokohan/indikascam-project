@@ -94,7 +94,6 @@
     <string name="numberExample">Contoh: %1$s</string>
     <string name="performa_blokir">Performa Blokir</string>
     <string name="total">Total</string>
-    <string name="bulan_ini">Bulan Ini</string>
     <string name="minggu_ini">Minggu Ini</string>
     <string name="blokir_panggilan_4_bulan_terakhir">Blokir Panggilan 4 Bulan terakhir</string>
     <string name="logo">logo</string>
@@ -104,7 +103,6 @@
     <string name="mulai_blokir">Mulai Blokir</string>
     <string name="format_rupiah">%1$s %2$s</string>
     <string name="cari_nomor_ini">Cari Nomor Ini</string>
-    <string name="hari_ini">Hari Ini</string>
     <string name="review_ulang_laporan">Review Ulang Laporan</string>
     <string name="nomor_tidak_ditemukan">Nomor Tidak Ditemukan</string>
     <string name="blokir">Blokir</string>
@@ -123,5 +121,7 @@
     <string name="edit_profil">Edit Profil</string>
     <string name="nomor_ini_tidak_pernah_dilaporkan_sebelumnya">Tidak ada laporan\nSilahkan berhubungan dengan nomor ini\n\n<b>Tetaplah berhati-hati !</b></string>
     <string name="total_kasus">%1$s</string>
+    <string name="hari_ini">Hari Ini</string>
+    <string name="bulan_ini">Bulan Ini</string>
 
 </resources>

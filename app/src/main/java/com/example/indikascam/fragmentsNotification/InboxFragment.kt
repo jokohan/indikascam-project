@@ -1,25 +1,34 @@
 package com.example.indikascam.fragmentsNotification
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.indikascam.R
 import com.example.indikascam.adapter.NotificationAdapter
+import com.example.indikascam.api.RetroInstance
+import com.example.indikascam.api.requests.PostTokenRequest
+import com.example.indikascam.api.responses.GetNotificationResponse
 import com.example.indikascam.databinding.FragmentInboxBinding
-import com.example.indikascam.modelsRcv.Notification
-import java.util.*
+import com.example.indikascam.sessionManager.SessionManager
+import org.json.JSONObject
+import retrofit2.HttpException
+import java.io.IOException
 
 class InboxFragment : Fragment() {
 
     private var _binding: FragmentInboxBinding? = null
     private val binding get() = _binding!!
 
-    private val notifikasiList = ArrayList<Notification>()
-    private val notifikasiListAdapter = NotificationAdapter(notifikasiList)
+    private val notificationTodayList = ArrayList<GetNotificationResponse.Today>()
+    private val notificationMonthList = ArrayList<GetNotificationResponse.ThisMonth>()
+    private val notificationListTodayAdapter = NotificationAdapter(notificationTodayList, null)
+    private val notificationListMonthAdapter = NotificationAdapter(null, notificationMonthList)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,34 +37,52 @@ class InboxFragment : Fragment() {
         _binding = FragmentInboxBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        val sessionManager = SessionManager(requireContext())
+
         binding.inboxFragmentClBlockList.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_inboxFragment_to_blockListFragment)
         }
 
-        if(notifikasiList.size == 0){
-            val c: Calendar = GregorianCalendar()
-            c.time = Date()
-            for(i in 0..6){
-                val list = Notification(
-                    c.time,
-                    when(i){
-                        0 -> "Laporan Anda terhadap nomor telepon 087711887732 telah terkirim dengan status pending"
-                        1 -> "Laporan Anda terhadap nomor rekening 100123456789 telah diterima"
-                        2 -> "Laporan Anda terhadap nomor rekening 100123456789 telah terkirim dengan status Pending"
-                        3 -> "Laporan Anda terhadap nomor telepon 08123456789 telah ditolak"
-                        4 -> "Laporan Anda terhadap nomor telepon telah terkirim dengan status Pending"
-                        5 -> "Pengajuan review ulang terhadap nomor telepon 08111111112 diterima"
-                        6 -> "Pengajuan review ulang terhadap nomor telepon 08111111112 telah terkirim"
-                        else -> "asd"
-                    }
-                )
-                c.add(Calendar.DATE, -1)
-                notifikasiList.add(list)
+        lifecycleScope.launchWhenCreated {
+
+            val response = try{
+                RetroInstance.apiNotification.getNotification(PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"))
+            }catch (e: IOException){
+                Log.e("NotificationIOError", e.message!!)
+                return@launchWhenCreated
+            }catch (e: HttpException){
+                Log.e("NotificationHttpError", e.message!!)
+                return@launchWhenCreated
+            }
+
+            if(response.isSuccessful && response.body() != null){
+                if(response.body()!!.today != notificationTodayList){
+                    notificationTodayList.clear()
+                    notificationTodayList += response.body()!!.today
+                }
+                if(response.body()!!.this_month != notificationMonthList){
+                    notificationMonthList.clear()
+                    notificationMonthList += response.body()!!.this_month
+                }
+
+                binding.inboxFragmentRcvNotificationToday.adapter = notificationListTodayAdapter
+                binding.inboxFragmentRcvNotificationToday.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+                binding.inboxFragmentRcvNotificationThisMonth.adapter = notificationListMonthAdapter
+                binding.inboxFragmentRcvNotificationThisMonth.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+            }else{
+                try{
+                    @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
+                    val errorMessage = jObjError.getJSONObject("error").getString("message")
+                    Log.e("logoutError", errorMessage)
+                    Log.e("logoutError", response.code().toString())
+                }catch (e: Exception){
+                    Log.e("logoutError", e.toString())
+                }
             }
         }
 
-        binding.inboxFragmentRcvNotification.adapter = notifikasiListAdapter
-        binding.inboxFragmentRcvNotification.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
 
         return view
     }

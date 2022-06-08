@@ -2,6 +2,7 @@ package com.example.indikascam.api.endpoint
 
 import com.example.indikascam.api.requests.PostTokenRequest
 import com.example.indikascam.api.responses.GetBlockHistoryResponse
+import com.example.indikascam.api.responses.GetNotificationResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -13,9 +14,9 @@ interface ApiNotification {
         @Header("Authorization") postTokenRequest: PostTokenRequest
     ): Response<GetBlockHistoryResponse>
 
-    @GET("")
+    @GET("api/notification")
     suspend fun getNotification(
         @Header("Authorization") postTokenRequest: PostTokenRequest
-    ): Response<Any>
+    ): Response<GetNotificationResponse>
 
 }

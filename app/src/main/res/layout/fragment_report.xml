@@ -62,7 +62,7 @@
                     android:id="@+id/reportFragment_Et_phoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="phone" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -143,7 +143,7 @@
                         android:id="@+id/reportFragment_et_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress" />
+                        android:inputType="textNoSuggestions" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

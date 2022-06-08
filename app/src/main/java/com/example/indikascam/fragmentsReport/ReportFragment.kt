@@ -71,7 +71,7 @@ class ReportFragment : Fragment() {
                 startActivity(pdfIntent)
             }
         } else if (intention == "deleteFile") {
-            removeProofFromProofListAndUpdateUI(position)
+            removeProofFromProofListAndFinalProofAndUpdateUI(position)
         }
     }
 
@@ -132,13 +132,13 @@ class ReportFragment : Fragment() {
                             reportTypeFinal!!,
                             if(bankFinal == null) null else bankFinal,
                             if(binding.reportFragmentEtAccountNumber.text == null) null else binding.reportFragmentEtAccountNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
-                            binding.reportFragmentEtName.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
-                            platformFinal!!,
-                            productFinal!!,
-                            binding.reportFragmentEtChronology.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                            if(binding.reportFragmentEtName.text == null) null else binding.reportFragmentEtName.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                            platformFinal,
+                            productFinal,
+                            if(binding.reportFragmentEtChronology.text == null) null else binding.reportFragmentEtChronology.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
                             finalProof,
-                            binding.reportFragmentEtTotalLoss.text.toString().toInt(),
-                            binding.reportFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                            if(binding.reportFragmentEtTotalLoss.text.isNullOrEmpty()) null else binding.reportFragmentEtTotalLoss.text.toString().toInt(),
+                            if(binding.reportFragmentEtPhoneNumber.text == null) null else binding.reportFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
                         )
                     }else{
                         RetroInstance.apiReport.postReport(
@@ -152,7 +152,7 @@ class ReportFragment : Fragment() {
                             null,
                             finalProof,
                             null,
-                            binding.reportFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                            if(binding.reportFragmentEtPhoneNumber.text == null) null else binding.reportFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
                         )
                     }
                 }catch (e: IOException) {
@@ -439,8 +439,9 @@ class ReportFragment : Fragment() {
 
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun removeProofFromProofListAndUpdateUI(position: Int) {
+    private fun removeProofFromProofListAndFinalProofAndUpdateUI(position: Int) {
         proofList.removeAt(position)
+        finalProof.removeAt(position)
         proofAdapter.notifyDataSetChanged()
         if (proofList.size == 0) {
             binding.reportFragmentRcvProof.visibility = View.GONE

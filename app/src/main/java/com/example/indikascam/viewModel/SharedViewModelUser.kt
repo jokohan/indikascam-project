@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.indikascam.api.responses.GetBlockStatisticsResponse
 
 class SharedViewModelUser: ViewModel() {
 
@@ -15,6 +16,11 @@ class SharedViewModelUser: ViewModel() {
     private var _profilePicture = MutableLiveData<Bitmap?>()
     private var _isAnonymous = MutableLiveData(0)
     private var _protectionLevel = MutableLiveData(2)
+    private var _totalBlock = MutableLiveData<Int>()
+    private var _totalBlockInMonth = MutableLiveData<Int>()
+    private var _totalBlockInWeek = MutableLiveData<Int>()
+    private var _pieChart = MutableLiveData<GetBlockStatisticsResponse.Data.PieChart>()
+    private var _barChart = MutableLiveData<List<Float>>()
 
     var name: LiveData<String> = _name
     var email: LiveData<String> = _email
@@ -24,6 +30,11 @@ class SharedViewModelUser: ViewModel() {
     var profilePicture: LiveData<Bitmap?> = _profilePicture
     var isAnonymous: LiveData<Int> = _isAnonymous
     var protectionLevel: LiveData<Int> = _protectionLevel
+    var totalBlock: LiveData<Int> = _totalBlock
+    var totalBlockInMonth: LiveData<Int> = _totalBlockInMonth
+    var totalBlockInWeek: LiveData<Int> = _totalBlockInWeek
+    var pieChart: LiveData<GetBlockStatisticsResponse.Data.PieChart> = _pieChart
+    var barChart: LiveData<List<Float>> = _barChart
 
     fun saveName(newName: String){
         _name.value = newName
@@ -57,4 +68,23 @@ class SharedViewModelUser: ViewModel() {
         _protectionLevel.value = newProtectionLevel
     }
 
+    fun saveTotalBlock(newTotalBlock: Int){
+        _totalBlock.value = newTotalBlock
+    }
+
+    fun saveTotalBlockInMonth(newTotalBlockInMonth: Int){
+        _totalBlockInMonth.value = newTotalBlockInMonth
+    }
+
+    fun saveTotalBlockInWeek(newTotalBlockInWeek: Int){
+        _totalBlockInWeek.value = newTotalBlockInWeek
+    }
+
+    fun savePieChart(newPieChart: GetBlockStatisticsResponse.Data.PieChart){
+        _pieChart.value = newPieChart
+    }
+
+    fun saveBarChart(newBarChart: List<Float>){
+        _barChart.value = newBarChart
+    }
 }

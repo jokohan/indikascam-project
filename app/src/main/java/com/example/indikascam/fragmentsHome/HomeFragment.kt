@@ -61,13 +61,14 @@ class HomeFragment : Fragment() {
         val view = binding.root
         sessionManager = SessionManager(requireContext())
 
-        setupHomeFragment()
 
         return view
     }
 
     override fun onResume() {
         super.onResume()
+
+        setupHomeFragment()
 
         me()
 
@@ -139,6 +140,26 @@ class HomeFragment : Fragment() {
 
     private fun setupHomeFragment() {
 
+        sharedViewModelUser.totalBlock.observe(viewLifecycleOwner){
+            binding.homeFragmentTvTotalBlockInAllTime.text = it.toString()
+        }
+
+        sharedViewModelUser.totalBlockInMonth.observe(viewLifecycleOwner){
+            binding.homeFragmentTvTotalBlockInAMonth.text = it.toString()
+        }
+
+        sharedViewModelUser.totalBlockInWeek.observe(viewLifecycleOwner){
+            binding.homeFragmentTvTotalBlockInAWeek.text = it.toString()
+        }
+
+        sharedViewModelUser.pieChart.observe(viewLifecycleOwner){
+            setupPieChart(binding.homeFragmentPcBlokingPerformance, it)
+        }
+
+        sharedViewModelUser.barChart.observe(viewLifecycleOwner){
+            setupBarChart(binding.homeFragmentBcBlokingPerformance, it)
+        }
+
         binding.homeFragmentIvStatistic.setOnClickListener {
             val statisticDialog = DialogStatistic("Tutup")
             statisticDialog.show(parentFragmentManager,"Dialog Statistik")
@@ -186,11 +207,21 @@ class HomeFragment : Fragment() {
                     return@launchWhenCreated
                 }
                 if(response.isSuccessful && response.body() != null){
-                    binding.homeFragmentTvTotalBlockInAllTime.text = response.body()!!.data.total.toString()
-                    binding.homeFragmentTvTotalBlockInAMonth.text = response.body()!!.data.this_month.toString()
-                    binding.homeFragmentTvTotalBlockInAWeek.text = response.body()!!.data.this_week.toString()
-                    setupPieChart(binding.homeFragmentPcBlokingPerformance, response.body()!!.data.pie_chart)
-                    setupBarChart(binding.homeFragmentBcBlokingPerformance, response.body()!!.data.last_4_months)
+                    if(response.body()!!.data.total != sharedViewModelUser.totalBlock.value){
+                        sharedViewModelUser.saveTotalBlock(response.body()!!.data.total)
+                    }
+                    if(response.body()!!.data.this_month != sharedViewModelUser.totalBlockInMonth.value){
+                        sharedViewModelUser.saveTotalBlockInMonth(response.body()!!.data.this_month)
+                    }
+                    if(response.body()!!.data.this_week != sharedViewModelUser.totalBlockInWeek.value){
+                        sharedViewModelUser.saveTotalBlockInWeek(response.body()!!.data.this_week)
+                    }
+                    if(response.body()!!.data.pie_chart != sharedViewModelUser.pieChart.value){
+                        sharedViewModelUser.savePieChart(response.body()!!.data.pie_chart)
+                    }
+                    if(response.body()!!.data.last_4_months != sharedViewModelUser.barChart.value){
+                        sharedViewModelUser.saveBarChart(response.body()!!.data.last_4_months)
+                    }
                 }
             }
         }

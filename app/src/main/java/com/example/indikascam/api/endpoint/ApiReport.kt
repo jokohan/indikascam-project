@@ -48,9 +48,9 @@ interface ApiReport {
         @Part("platform_id") platformId: Int?,
         @Part("product_id") productId: Int?,
         @Part("chronology") chronology: RequestBody?,
-        @Part file: List<MultipartBody.Part>,
+        @Part file: List<MultipartBody.Part>?,
         @Part("total_loss") totalLost: Int?,
-        @Part("scammer_phone_number") phoneNumber: RequestBody
+        @Part("scammer_phone_number") phoneNumber: RequestBody?
     ):Response<Any>
 
 }

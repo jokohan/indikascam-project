@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -79,38 +80,50 @@ class ProfileFragment : Fragment() {
         }
 
         binding.profileFragmentBtnLogout.setOnClickListener {
-            val loadingDialog = DialogProgressBar.progressDialog(requireContext())
-            val snackBar = SnackBarWarningError()
-            val token = sessionManager.fetchAuthToken()
+            val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Keluar")
+            builder.setMessage("Anda ingin keluar dari akun ini?")
+            builder.setIcon(R.drawable.ic_logout)
+            builder.setPositiveButton("Ya"){dialogInterface, _ ->
+                val loadingDialog = DialogProgressBar.progressDialog(requireContext())
+                val snackBar = SnackBarWarningError()
+                val token = sessionManager.fetchAuthToken()
 
-            lifecycleScope.launchWhenCreated {
-                loadingDialog.show()
-                val response = try{
-                    RetroInstance.apiAuth.postLogout(PostTokenRequest("Bearer $token"))
-                }catch (e: IOException) {
-                    Log.e("logoutErrorIO", e.message!!)
-                    return@launchWhenCreated
-                } catch (e: HttpException) {
-                    Log.e("logoutErrorHttp", e.message!!)
-                    return@launchWhenCreated
-                }
-                if(response.isSuccessful && response.body() != null){
-                    sessionManager.saveAuthToken("")
-                    Log.i("logout berhasil", response.body()!!.message)
-                    loginOrNot(sessionManager)
-                } else {
-                    try{
-                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                        val errorMessage = jObjError.getJSONObject("error").getString("message")
-                        Log.e("logoutError", errorMessage)
-                        Log.e("logoutError", response.code().toString())
-                        snackBar.showSnackBar(errorMessage, requireActivity())
-                    }catch (e: Exception){
-                        Log.e("logoutError", e.toString())
+                lifecycleScope.launchWhenCreated {
+                    loadingDialog.show()
+                    val response = try{
+                        RetroInstance.apiAuth.postLogout(PostTokenRequest("Bearer $token"))
+                    }catch (e: IOException) {
+                        Log.e("logoutErrorIO", e.message!!)
+                        return@launchWhenCreated
+                    } catch (e: HttpException) {
+                        Log.e("logoutErrorHttp", e.message!!)
+                        return@launchWhenCreated
                     }
+                    if(response.isSuccessful && response.body() != null){
+                        sessionManager.saveAuthToken("")
+                        sessionManager.saveExpireToken(0)
+                        Log.i("logout berhasil", response.body()!!.message)
+                        loginOrNot(sessionManager)
+                    } else {
+                        try{
+                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = jObjError.getJSONObject("error").getString("message")
+                            Log.e("logoutError", errorMessage)
+                            Log.e("logoutError", response.code().toString())
+                            snackBar.showSnackBar(errorMessage, requireActivity())
+                        }catch (e: Exception){
+                            Log.e("logoutError", e.toString())
+                        }
+                    }
+                    loadingDialog.dismiss()
+                    dialogInterface.dismiss()
                 }
-                loadingDialog.dismiss()
             }
+            builder.setNegativeButton("Tidak"){dialogInterface, _ ->
+                dialogInterface.dismiss()
+            }
+            builder.show()
         }
         return view
     }

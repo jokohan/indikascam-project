@@ -86,7 +86,7 @@ class EditProfileFragment : Fragment() {
                             RetroInstance.apiProfile.postEditProfile(
                                 PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
                                 binding.editProfileFragmentEtName.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
-                                if(binding.editProfileFragmentIvProfilePicture.tag == "ic profile") 0 else 1,
+                                if(binding.editProfileFragmentIvProfilePicture.tag == "ic profile") 1 else 0,
                                 if(binding.editProfileFragmentEtAccountNumber.text.toString() == "") null else binding.editProfileFragmentEtAccountNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
                                 banksFinal,
                                 if(binding.editProfileFragmentEtPhoneNumber.text.toString() == "") null else binding.editProfileFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
@@ -124,7 +124,7 @@ class EditProfileFragment : Fragment() {
 
         binding.editProfileFragmentBtnDeleteProfilePicture.setOnClickListener {
             binding.editProfileFragmentIvProfilePicture.setImageResource(R.drawable.ic_profile)
-            binding.editProfileFragmentIvProfilePicture.tag = R.drawable.ic_profile
+            binding.editProfileFragmentIvProfilePicture.tag = "ic profile"
         }
 
         binding.editProfileFragmentBtnPickProfilePicture.setOnClickListener {
@@ -252,6 +252,8 @@ class EditProfileFragment : Fragment() {
     @SuppressLint("Range")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        val snackBar = SnackBarWarningError()
+
         when(requestCode){
             1 -> if (resultCode == Activity.RESULT_OK && data != null){
                 val imageUri = data.data
@@ -260,8 +262,6 @@ class EditProfileFragment : Fragment() {
                 cursor?.moveToFirst()
                 fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                 cursor?.close()
-                binding.editProfileFragmentIvProfilePicture.setImageURI(imageUri)
-                binding.editProfileFragmentIvProfilePicture.tag = ""
 
                 val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(imageUri!!,"r", null) ?: return
                 val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
@@ -269,9 +269,15 @@ class EditProfileFragment : Fragment() {
                 val outputStream = FileOutputStream(fileOld)
                 inputStream.copyTo(outputStream)
 
-                val requestBody: RequestBody = fileOld!!.asRequestBody("Image/*".toMediaTypeOrNull())
-                val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("profile_picture", fileName, requestBody)
-                profilePic = multipartBody
+                if(outputStream.channel.size() > 2097152){
+                    snackBar.showSnackBar("Ukuran foto profil harus dibawah 2MB", requireActivity())
+                }else{
+                    binding.editProfileFragmentIvProfilePicture.setImageURI(imageUri)
+                    binding.editProfileFragmentIvProfilePicture.tag = ""
+                    val requestBody: RequestBody = fileOld!!.asRequestBody("Image/*".toMediaTypeOrNull())
+                    val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("profile_picture", fileName, requestBody)
+                    profilePic = multipartBody
+                }
             }
         }
     }

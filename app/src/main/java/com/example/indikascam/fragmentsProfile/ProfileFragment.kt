@@ -154,6 +154,7 @@ class ProfileFragment : Fragment() {
                 sharedViewModelUser.saveBankId(response.body()?.bank_id)
                 sharedViewModelUser.saveIsAnonymous(response.body()!!.is_anonymous)
                 sharedViewModelUser.saveProtectionLevel(response.body()!!.protection_level)
+                sharedViewModelUser.saveEmailVerifiedAt(response.body()!!.email_verified_at)
                 try{
                     val profilePicName = response.body()?.profile_picture.toString()
                     val responseFile = try {
@@ -173,6 +174,7 @@ class ProfileFragment : Fragment() {
                         binding.profileFragmentIvProfilePicture.setImageBitmap(bitmap)
                         sharedViewModelUser.saveProfilePicture(bitmap)
                     }else{
+                        sharedViewModelUser.saveProfilePicture(null)
                         try{
                             @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
                             val errorMessage = jObjError.getJSONObject("error").getString("message")

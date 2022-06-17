@@ -37,11 +37,11 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 import retrofit2.HttpException
-
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+
 
 class ReportFragment : Fragment() {
 
@@ -49,6 +49,9 @@ class ReportFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args: ReportFragmentArgs by navArgs()
+
+    val snackBar = SnackBarWarningError()
+
 
     private val proofList = ArrayList<Proof>()
     private val proofAdapter = ProofAdapter(proofList, "reportFragment") {
@@ -102,7 +105,11 @@ class ReportFragment : Fragment() {
         binding.reportFragmentRcvProof.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.reportFragmentBtnAddProof.setOnClickListener {
-            selectProof()
+            if(finalProof.size + 1 > 10){
+                snackBar.showSnackBar("Jumlah maksimal bukti hanya 10, gunakan PDF sebagai alternatif", requireActivity())
+            }else{
+                selectProof()
+            }
         }
 
         if (proofList.size == 0) {
@@ -123,7 +130,6 @@ class ReportFragment : Fragment() {
         binding.reportFragmentBtnReport.setOnClickListener {
             val loadingDialog = DialogProgressBar.progressDialog(requireContext())
             loadingDialog.show()
-            val snackBar = SnackBarWarningError()
             lifecycleScope.launchWhenCreated {
                 val response = try{
                     if(binding.reportFragmentAcTypeReport.text.toString() == "Penipuan"){
@@ -465,23 +471,24 @@ class ReportFragment : Fragment() {
                     val fileName: String?
                     val cursor = context?.contentResolver?.query(imageUri, null, null, null, null)
                     cursor?.moveToFirst()
-                    fileName =
-                        cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                     cursor?.close()
-                    tambahBukti(imageUri, fileName!!, true)
 
-                    val parcelFileDescriptor =
-                        context?.contentResolver?.openFileDescriptor(imageUri, "r", null) ?: return
+                    val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(imageUri, "r", null) ?: return
                     val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-                    val fileOld = File(context?.cacheDir, fileName)
+                    val fileOld = File(context?.cacheDir, fileName!!)
                     val outputStream = FileOutputStream(fileOld)
                     inputStream.copyTo(outputStream)
 
-                    val requestBody: RequestBody =
-                        fileOld.asRequestBody("Image/*".toMediaTypeOrNull())
-                    val multipartBody: MultipartBody.Part =
-                        MultipartBody.Part.createFormData("files[]", fileName, requestBody)
-                    finalProof.add(multipartBody)
+                    if(outputStream.channel.size() > 2097152){
+                        snackBar.showSnackBar("Ukuran file harus dibawah 2MB", requireActivity())
+                    }else{
+                        tambahBukti(imageUri, fileName, true)
+                        val requestBody: RequestBody = fileOld.asRequestBody("Image/*".toMediaTypeOrNull())
+                        val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("files[]", fileName, requestBody)
+                        finalProof.add(multipartBody)
+                    }
+
                 }
                 12 -> if (resultCode == Activity.RESULT_OK && data != null) {
                     val pdfUri = data.data!!
@@ -491,20 +498,24 @@ class ReportFragment : Fragment() {
                     fileName =
                         cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                     cursor?.close()
-                    tambahBukti(pdfUri, fileName!!, false)
 
                     val parcelFileDescriptor =
                         context?.contentResolver?.openFileDescriptor(pdfUri, "r", null) ?: return
                     val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
-                    val fileOld = File(context?.cacheDir, fileName)
+                    val fileOld = File(context?.cacheDir, fileName!!)
                     val outputStream = FileOutputStream(fileOld)
                     inputStream.copyTo(outputStream)
 
-                    val requestBody: RequestBody =
-                        fileOld.asRequestBody("Image/*".toMediaTypeOrNull())
-                    val multipartBody: MultipartBody.Part =
-                        MultipartBody.Part.createFormData("files[]", fileName, requestBody)
-                    finalProof.add(multipartBody)
+                    if(outputStream.channel.size() > 2097152){
+                        snackBar.showSnackBar("Ukuran file harus dibawah 2MB", requireActivity())
+                    }else{
+                        tambahBukti(pdfUri, fileName, false)
+                        val requestBody: RequestBody =
+                            fileOld.asRequestBody("Image/*".toMediaTypeOrNull())
+                        val multipartBody: MultipartBody.Part =
+                            MultipartBody.Part.createFormData("files[]", fileName, requestBody)
+                        finalProof.add(multipartBody)
+                    }
                 }
             }
         }

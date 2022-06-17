@@ -15,12 +15,10 @@ import com.example.indikascam.databinding.FragmentLoginBinding
 import com.example.indikascam.dialog.DialogProgressBar
 import com.example.indikascam.dialog.SnackBarWarningError
 import com.example.indikascam.sessionManager.SessionManager
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
-import java.lang.Exception
+import java.util.*
 
 
 class LoginFragment : Fragment() {
@@ -52,66 +50,65 @@ class LoginFragment : Fragment() {
                     RetroInstance.apiAuth.postLogin(PostLoginRequest(email, password))
                 } catch (e: IOException) {
                     Log.e("loginErrorIO", e.message!!)
-                    snackBar.showSnackBar("Melampaui batas waktu, silahkan coba lagi", requireActivity())
+                    snackBar.showSnackBar(e.message, requireActivity())
                     loadingDialog.dismiss()
                     return@launchWhenCreated
                 } catch (e: HttpException) {
                     Log.e("loginErrorHttp", e.message!!)
-                    snackBar.showSnackBar("Ada yang salah, silahkan coba lagi", requireActivity())
+                    snackBar.showSnackBar(e.message, requireActivity())
                     loadingDialog.dismiss()
                     return@launchWhenCreated
                 }
                 if (response.isSuccessful && response.body() != null) {
                     sessionManager.saveAuthToken(response.body()!!.access_token)
+                    sessionManager.saveExpireToken(response.body()!!.expires_in + Date().time)
                     val emailVerifiedAt: String? = response.body()!!.user.email_verified_at
-                    if (emailVerifiedAt == null){
-                        val action = LoginFragmentDirections.actionLoginFragmentToOtpFragment("register", email)
+                    if (emailVerifiedAt == null) {
+                        val action = LoginFragmentDirections.actionLoginFragmentToOtpFragment(
+                            "register",
+                            email
+                        )
                         Navigation.findNavController(view).navigate(action)
-                    }else{
-                        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment)
+                    } else {
+                        Navigation.findNavController(view)
+                            .navigate(R.id.action_loginFragment_to_homeFragment)
                     }
                 } else {
-                    try{
-                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                        val errorMessage = jObjError.getJSONObject("error").getString("message")
-                        Log.e("loginError", errorMessage)
-                        Log.e("loginError", response.code().toString())
+                    try {
+                        @Suppress("BlockingMethodInNonBlockingContext")
+                        val jObjError = JSONObject(response.errorBody()!!.string())
+                        val errorMessage = if(jObjError.has("message")){
+                            jObjError.getString("message")
+                        }else{
+                            jObjError.getJSONObject("error").getString("message")
+                        }
+                        Log.e("loginErrorMessage", errorMessage)
+                        Log.e("loginErrorCode", response.code().toString())
                         snackBar.showSnackBar(errorMessage, requireActivity())
-
-                    }catch (e: Exception){
-                        Log.e("loginError", e.stackTraceToString())
+                    } catch (e: Exception) {
+                        Log.e("loginErrorCatch", response.code().toString())
+                        Log.e("loginErrorCatch", e.stackTraceToString())
                     }
-
                 }
                 loadingDialog.dismiss()
             }
         }
-
         return view
     }
 
     private fun setupLoginFragment() {
-        //berhasil login kembali ke halaman profil
         binding.loginFragmentBtnLogin.setOnClickListener {
             Navigation.findNavController(binding.root).navigateUp()
-
-            //apabila sudah register dan melakukan login namun belum verifikasi akun, maka harus ke halaman OTP terlebih dahulu
-//            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_otpFragment)
         }
 
-        //melakukan register ke halaman register
         binding.loginFragmentTvRegister.setOnClickListener {
             Navigation.findNavController(binding.root)
                 .navigate(R.id.action_loginFragment_to_registerFragment)
         }
 
-        //melakukan pergantian password ke halaman ubah password
         binding.loginFragmentTvChangePassword.setOnClickListener {
             Navigation.findNavController(binding.root)
                 .navigate(R.id.action_loginFragment_to_changePasswordFragment)
         }
-
-
     }
-
 }

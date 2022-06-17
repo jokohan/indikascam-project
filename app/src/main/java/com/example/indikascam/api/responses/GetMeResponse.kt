@@ -9,9 +9,10 @@ data class GetMeResponse(
     val bank_id: Int?,
     val profile_picture: String?,
     val is_active: Int,
-    val email_verified_at: String,
+    val email_verified_at: String?,
     val is_anonymous: Int,
     val protection_level: Int,
     val created_at: String,
-    val updated_at: String
+    val updated_at: String,
+    val canChangeBankNumber: Boolean
 )

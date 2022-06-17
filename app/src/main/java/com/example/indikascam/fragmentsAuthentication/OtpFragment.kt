@@ -70,14 +70,20 @@ class OtpFragment : Fragment() {
                     if(response.isSuccessful && response.body() != null){
                         Log.i("resend otp berhasil", response.body()!!.message)
                     }else{
-                        try{
-                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                            val errorMessage = jObjError.getJSONObject("error").getString("message")
-                            Log.e("otpResendRegisterError", errorMessage)
-                            Log.e("otpResendRegisterError", response.code().toString())
+                        try {
+                            @Suppress("BlockingMethodInNonBlockingContext")
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = if(jObjError.has("message")){
+                                jObjError.getString("message")
+                            }else{
+                                jObjError.getJSONObject("error").getString("message")
+                            }
+                            Log.e("otpResendRegisterErrorMessage", errorMessage)
+                            Log.e("otpResendRegisterErrorCode", response.code().toString())
                             snackBar.showSnackBar(errorMessage, requireActivity())
-                        }catch (e: Exception){
-                            Log.e("otpResendRegisterError", e.toString())
+                        } catch (e: Exception) {
+                            Log.e("otpResendRegisterErrorCatch", response.code().toString())
+                            Log.e("otpResendRegisterErrorCatch", e.stackTraceToString())
                         }
                     }
                     loadingDialog.dismiss()
@@ -97,14 +103,20 @@ class OtpFragment : Fragment() {
                     if(response.isSuccessful && response.body() != null){
                         Log.i("otp resend berhasil", response.body()!!.message)
                     } else{
-                        try{
-                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                            val errorMessage = jObjError.getJSONObject("error").getString("message")
-                            Log.e("otpResendForgetPasswordError", errorMessage)
-                            Log.e("otpResendForgetPasswordError", response.code().toString())
+                        try {
+                            @Suppress("BlockingMethodInNonBlockingContext")
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = if(jObjError.has("message")){
+                                jObjError.getString("message")
+                            }else{
+                                jObjError.getJSONObject("error").getString("message")
+                            }
+                            Log.e("otpResendForgetPasswordErrorMessage", errorMessage)
+                            Log.e("otpResendForgetPasswordErrorCode", response.code().toString())
                             snackBar.showSnackBar(errorMessage, requireActivity())
-                        }catch (e: Exception){
-                            Log.e("otpResendForgetPasswordError", e.toString())
+                        } catch (e: Exception) {
+                            Log.e("otpResendForgetPasswordErrorCatch", response.code().toString())
+                            Log.e("otpResendForgetPasswordErrorCatch", e.stackTraceToString())
                         }
                     }
                     loadingDialog.dismiss()
@@ -136,14 +148,20 @@ class OtpFragment : Fragment() {
                         val action = OtpFragmentDirections.actionOtpFragmentToCongratulationFragment("Selamat Anda telah menyelesaikan pendaftaran akun. Silahkan lanjutkan :)")
                         Navigation.findNavController(view).navigate(action)
                     }else{
-                        try{
-                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                            val errorMessage = jObjError.getJSONObject("error").getString("message")
-                            Log.e("otpError", errorMessage)
-                            Log.e("otpError", response.code().toString())
+                        try {
+                            @Suppress("BlockingMethodInNonBlockingContext")
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = if(jObjError.has("message")){
+                                jObjError.getString("message")
+                            }else{
+                                jObjError.getJSONObject("error").getString("message")
+                            }
+                            Log.e("otpErrorMessage", errorMessage)
+                            Log.e("otpErrorCode", response.code().toString())
                             snackBar.showSnackBar(errorMessage, requireActivity())
-                        }catch (e: Exception){
-                            Log.e("otpError", e.toString())
+                        } catch (e: Exception) {
+                            Log.e("otpErrorCatch", response.code().toString())
+                            Log.e("otpErrorCatch", e.stackTraceToString())
                         }
                     }
                     loadingDialog.dismiss()
@@ -168,14 +186,20 @@ class OtpFragment : Fragment() {
                         val action = OtpFragmentDirections.actionOtpFragmentToNewPasswordFragment(args.email)
                         Navigation.findNavController(view).navigate(action)
                     }else{
-                        try{
-                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                            val errorMessage = jObjError.getJSONObject("error").getString("message")
-                            Log.e("changePasswordVerificationError", errorMessage)
-                            Log.e("changePasswordVerificationError", response.code().toString())
+                        try {
+                            @Suppress("BlockingMethodInNonBlockingContext")
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = if(jObjError.has("message")){
+                                jObjError.getString("message")
+                            }else{
+                                jObjError.getJSONObject("error").getString("message")
+                            }
+                            Log.e("changePasswordVerificationErrorMessage", errorMessage)
+                            Log.e("changePasswordVerificationErrorCode", response.code().toString())
                             snackBar.showSnackBar(errorMessage, requireActivity())
-                        }catch (e: Exception){
-                            Log.e("changePasswordVerificationError", e.toString())
+                        } catch (e: Exception) {
+                            Log.e("changePasswordVerificationErrorCatch", response.code().toString())
+                            Log.e("changePasswordVerificationErrorCatch", e.stackTraceToString())
                         }
                     }
                     loadingDialog.dismiss()

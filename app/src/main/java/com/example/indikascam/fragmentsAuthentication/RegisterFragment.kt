@@ -34,9 +34,10 @@ class RegisterFragment : Fragment() {
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        val loadingDialog = DialogProgressBar.progressDialog(requireContext())
+        val snackBar = SnackBarWarningError()
+
         binding.registerFragmentBtnRegister.setOnClickListener {
-            val loadingDialog = DialogProgressBar.progressDialog(requireContext())
-            val snackBar = SnackBarWarningError()
 
             val name = binding.registerFragmentEtName.text.toString()
             val email = binding.registerFragmentEtEmail.text.toString()
@@ -50,19 +51,27 @@ class RegisterFragment : Fragment() {
                     RetroInstance.apiAuth.postRegister(postRegisterRequest)
                 } catch (e: IOException) {
                     Log.e("registerErrorIO", e.message!!)
+                    snackBar.showSnackBar(e.message, requireActivity())
+                    loadingDialog.dismiss()
                     return@launchWhenCreated
                 } catch (e: HttpException) {
                     Log.e("registerErrorHttp", e.message!!)
+                    snackBar.showSnackBar(e.message, requireActivity())
+                    loadingDialog.dismiss()
                     return@launchWhenCreated
                 }
                 if (response.isSuccessful && response.body() != null) {
                     val responseToLogin = try{
                         RetroInstance.apiAuth.postLogin(PostLoginRequest(email, password))
                     }catch (e: IOException) {
-                        Log.e("loginErrorIO", e.message!!)
+                        Log.e("loginAfterRegisterErrorIO", e.message!!)
+                        snackBar.showSnackBar(e.message, requireActivity())
+                        loadingDialog.dismiss()
                         return@launchWhenCreated
                     } catch (e: HttpException) {
-                        Log.e("loginErrorHttp", e.message!!)
+                        Log.e("loginAfterRegisterErrorHttp", e.message!!)
+                        snackBar.showSnackBar(e.message, requireActivity())
+                        loadingDialog.dismiss()
                         return@launchWhenCreated
                     }
                     if (responseToLogin.isSuccessful && responseToLogin.body() != null) {
@@ -71,31 +80,41 @@ class RegisterFragment : Fragment() {
                         val action = RegisterFragmentDirections.actionRegisterFragmentToOtpFragment("register", email)
                         Navigation.findNavController(view).navigate(action)
                     } else {
-                        try{
-                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(responseToLogin.errorBody()!!.string())
-                            val errorMessage = jObjError.getJSONObject("error").getString("message")
-                            Log.e("loginError", errorMessage)
-                            Log.e("loginError", responseToLogin.code().toString())
+                        try {
+                            @Suppress("BlockingMethodInNonBlockingContext")
+                            val jObjError = JSONObject(response.errorBody()!!.string())
+                            val errorMessage = if(jObjError.has("message")){
+                                jObjError.getString("message")
+                            }else{
+                                jObjError.getJSONObject("error").getString("message")
+                            }
+                            Log.e("loginAfterRegisterErrorMessage", errorMessage)
+                            Log.e("loginAfterRegisterErrorCode", response.code().toString())
                             snackBar.showSnackBar(errorMessage, requireActivity())
-                        }catch (e: Exception){
-                            Log.e("loginError", e.toString())
+                        } catch (e: Exception) {
+                            Log.e("loginAfterRegisterErrorCatch", response.code().toString())
+                            Log.e("loginAfterRegisterErrorCatch", e.stackTraceToString())
                         }
                     }
                 } else {
-                    try{
-                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                        val errorMessage = jObjError.getJSONObject("error").getString("message")
-                        Log.e("registerError", errorMessage)
-                        Log.e("registerError", response.code().toString())
+                    try {
+                        @Suppress("BlockingMethodInNonBlockingContext")
+                        val jObjError = JSONObject(response.errorBody()!!.string())
+                        val errorMessage = if(jObjError.has("message")){
+                            jObjError.getString("message")
+                        }else{
+                            jObjError.getJSONObject("error").getString("message")
+                        }
+                        Log.e("registerErrorMessage", errorMessage)
+                        Log.e("registerErrorCode", response.code().toString())
                         snackBar.showSnackBar(errorMessage, requireActivity())
-                    }catch (e: Exception){
-                        Log.e("registerError", e.toString())
+                    } catch (e: Exception) {
+                        Log.e("registerErrorCatch", response.code().toString())
+                        Log.e("registerErrorCatch", e.stackTraceToString())
                     }
                 }
                 loadingDialog.dismiss()
             }
-
-
         }
 
         return view

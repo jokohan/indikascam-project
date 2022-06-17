@@ -16,6 +16,7 @@ class SharedViewModelUser: ViewModel() {
     private var _profilePicture = MutableLiveData<Bitmap?>()
     private var _isAnonymous = MutableLiveData(0)
     private var _protectionLevel = MutableLiveData(2)
+    private var _emailVerifiedAt = MutableLiveData<Boolean>()
     private var _totalBlock = MutableLiveData<Int>()
     private var _totalBlockInMonth = MutableLiveData<Int>()
     private var _totalBlockInWeek = MutableLiveData<Int>()
@@ -30,6 +31,7 @@ class SharedViewModelUser: ViewModel() {
     var profilePicture: LiveData<Bitmap?> = _profilePicture
     var isAnonymous: LiveData<Int> = _isAnonymous
     var protectionLevel: LiveData<Int> = _protectionLevel
+    var emailVerifiedAt: LiveData<Boolean> = _emailVerifiedAt
     var totalBlock: LiveData<Int> = _totalBlock
     var totalBlockInMonth: LiveData<Int> = _totalBlockInMonth
     var totalBlockInWeek: LiveData<Int> = _totalBlockInWeek
@@ -66,6 +68,10 @@ class SharedViewModelUser: ViewModel() {
 
     fun saveProtectionLevel(newProtectionLevel: Int){
         _protectionLevel.value = newProtectionLevel
+    }
+
+    fun saveEmailVerifiedAt(newEmailVerifiedAt: String?){
+        _emailVerifiedAt.value = newEmailVerifiedAt != null
     }
 
     fun saveTotalBlock(newTotalBlock: Int){

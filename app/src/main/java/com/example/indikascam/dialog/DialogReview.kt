@@ -71,6 +71,10 @@ class DialogReview(private val reportHistoryList: ReportHistory, private val num
                     }
                 }
             }else{
+                Log.i("asd", reportHistoryList.bankId.toString())
+                Log.i("asd", myAccountNumber.toString())
+                Log.i("asd", myBankId.toString())
+                Log.i("asd", number)
                 if(myAccountNumber == null || myBankId == null){
                     Toast.makeText(requireContext(), "Anda belum mengisi nomor rekening dan nama bank pada profil", Toast.LENGTH_LONG).show()
                 }else if(myAccountNumber != number || myBankId != reportHistoryList.bankId){

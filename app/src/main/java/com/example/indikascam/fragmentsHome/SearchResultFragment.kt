@@ -301,6 +301,10 @@ class SearchResultFragment : Fragment() {
                             reportHistoryAdapter = ReportHistoryAdapter(tmp){
                                 val position = it
                                 val reviewDialog = DialogReview(tmp[position], args.searchNumber[0], args.searchNumber[1], myPhoneNumber, myAccountNumber, myBankId)
+                                Log.i("asd", tmp[position].toString())
+                                Log.i("asd", myAccountNumber.toString())
+                                Log.i("asd", myBankId.toString())
+                                Log.i("asd", args.toString())
                                 reviewDialog.show(parentFragmentManager, "Dialog Review")
                             }
                             binding.searchResultFragmentRcvHistory.adapter = reportHistoryAdapter
@@ -312,6 +316,7 @@ class SearchResultFragment : Fragment() {
                         reportHistoryAdapter = ReportHistoryAdapter(tmp){
                             val position = it
                             val reviewDialog = DialogReview(tmp[position], args.searchNumber[0], args.searchNumber[1], myPhoneNumber, myAccountNumber, myBankId)
+
                             reviewDialog.show(parentFragmentManager, "Dialog Review")
                         }
                         binding.searchResultFragmentRcvHistory.adapter = reportHistoryAdapter

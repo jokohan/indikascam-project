@@ -19,7 +19,9 @@ import java.util.*
 
 @DelicateCoroutinesApi
 class MyCallScreeningService : CallScreeningService() {
+
     private val debugTag = "CallScreeningService"
+
     override fun onScreenCall(p0: Call.Details) {
         val startCallCreationTime = p0.creationTimeMillis
 
@@ -55,7 +57,7 @@ class MyCallScreeningService : CallScreeningService() {
                     }
                     if (responseRefreshToken.isSuccessful && responseRefreshToken.body() != null) {
                         sessionManager.saveAuthToken(responseRefreshToken.body()!!.access_token)
-                        sessionManager.saveExpireToken( (responseRefreshToken.body()!!.expires_in*1000) + Date().time)
+                        sessionManager.saveExpireToken(responseRefreshToken.body()!!.expires_in + Date().time)
                         accessToken = sessionManager.fetchAuthToken()
                         blockCall(p0, phoneNumber, startCallCreationTime, accessToken)
                         Log.i(debugTag, "Berhasil refresh")
@@ -95,37 +97,38 @@ class MyCallScreeningService : CallScreeningService() {
             }
             if(responseBlockingCall.isSuccessful && responseBlockingCall.body() != null){
                 if(responseBlockingCall.body()!!.block){
+                    Log.i(debugTag, phoneNumber)
                     respondToCall(p0, CallResponse.Builder().apply {
                         //end call for scammer
                         setRejectCall(true)
                         //user tidak mendapatkan panggilan masuk
                         setDisallowCall(true)
                     }.build())
-                }else{
-                    respondToCall(p0, CallResponse.Builder().build())
-                }
-                if(startCallCreationTime - System.currentTimeMillis() < 4900){
-                    val responseInsertBlockCall = try{
-                        RetroInstance.apiBlockingCall.insertBlockCall(PostTokenRequest("Bearer $accessToken"),PostBlockingCallRequest(phoneNumber,1, if(responseBlockingCall.body()!!.is_automatic)1 else 0))
-                    } catch (e: IOException) {
-                        Log.e(debugTag, e.message!!)
-                        return@launch
-                    } catch (e: HttpException) {
-                        Log.e(debugTag, e.message!!)
-                        return@launch
-                    }
-                    if(responseInsertBlockCall.isSuccessful && responseInsertBlockCall.body() != null){
-                        Log.i(debugTag, "Berhasil di simpan")
-                    }else{
-                        try{
-                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(responseBlockingCall.errorBody()!!.string())
-                            val errorMessage = jObjError.getJSONObject("error").getString("message")
-                            Log.e("meError", errorMessage)
-                            Log.e("meError", responseBlockingCall.code().toString())
-                        }catch (e: Exception){
-                            Log.e("meError", e.toString())
+                    if(System.currentTimeMillis() - startCallCreationTime < 4900){
+                        val responseInsertBlockCall = try{
+                            RetroInstance.apiBlockingCall.insertBlockCall(PostTokenRequest("Bearer $accessToken"),PostBlockingCallRequest(phoneNumber,1, if(responseBlockingCall.body()!!.is_automatic)1 else 0))
+                        } catch (e: IOException) {
+                            Log.e(debugTag, e.message!!)
+                            return@launch
+                        } catch (e: HttpException) {
+                            Log.e(debugTag, e.message!!)
+                            return@launch
+                        }
+                        if(responseInsertBlockCall.isSuccessful && responseInsertBlockCall.body() != null){
+                            Log.i(debugTag, "Berhasil di simpan")
+                        }else{
+                            try{
+                                @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(responseBlockingCall.errorBody()!!.string())
+                                val errorMessage = jObjError.getJSONObject("error").getString("message")
+                                Log.e("meError", errorMessage)
+                                Log.e("meError", responseBlockingCall.code().toString())
+                            }catch (e: Exception){
+                                Log.e("meError", e.toString())
+                            }
                         }
                     }
+                }else{
+                    respondToCall(p0, CallResponse.Builder().build())
                 }
             }else{
                 try{

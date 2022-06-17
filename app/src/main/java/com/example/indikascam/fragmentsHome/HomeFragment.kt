@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -45,6 +46,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -59,6 +61,7 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
+
         sessionManager = SessionManager(requireContext())
 
 
@@ -70,134 +73,154 @@ class HomeFragment : Fragment() {
 
         setupHomeFragment()
 
+        callRefresh()
+
         me()
 
-        loginOrNot()
-
-        setupBlokingStatistics()
-
-        binding.homeFragmentTilSearchNumber.hint = String.format(resources.getString(R.string.cari_nomor),"Telepon")
-        binding.homeFragmentTvNumberExample.text = String.format(resources.getString(R.string.numberExample),"08123456789")
+        binding.homeFragmentTilSearchNumber.hint = String.format(resources.getString(R.string.cari_nomor), "Telepon")
+        binding.homeFragmentTvNumberExample.text = String.format(resources.getString(R.string.numberExample), "08123456789")
         binding.homeFragmentEtSearchNumber.text = null
 
     }
 
 
+    private fun firstTime() {
+        val prefs = requireContext().getSharedPreferences("first_time", 0)
+        if (prefs.getBoolean("first_time", true)) {
+            val targetView =
+                activity?.requireViewById(R.id.mainActivity_bnv_mainNavigation) as BottomNavigationView
+            val bottomNavigationView = targetView.getChildAt(0) as BottomNavigationMenuView
+            GuideView.Builder(context)
+                .setTitle("Lapor Penipuan")
+                .setContentText("Gunakan fitur ini jika Anda mengalami penipuan sehingga user lain bisa memblokir nomor tersebut dan tidak mengalami hal yang sama")
+                .setGravity(Gravity.auto)
+                .setTargetView(bottomNavigationView[1])
+                .setTitleTypeFace(Typeface.DEFAULT_BOLD)
+                .setContentTypeFace(Typeface.defaultFromStyle(Typeface.ITALIC))
+                .setDismissType(DismissType.anywhere)
+                .setGuideListener {
+                    GuideView.Builder(context)
+                        .setTitle("Cari Nomor Telepon/Rekening")
+                        .setContentText("Gunakan fitur ini sebelum Anda bertransaksi agar terhindar dari penipuan, blokir nomor telepon jika diperlukan")
+                        .setGravity(Gravity.auto)
+                        .setTargetView(binding.homeFragmentClGuideSearchNumber)
+                        .setTitleTypeFace(Typeface.DEFAULT_BOLD)
+                        .setContentTypeFace(Typeface.defaultFromStyle(Typeface.ITALIC))
+                        .setDismissType(DismissType.anywhere)
+                        .setGuideListener {
+                            GuideView.Builder(context)
+                                .setTitle("Lihat Statistik")
+                                .setContentText("Pelajari modus-modus yang paling sering digunakan untuk menipu")
+                                .setGravity(Gravity.auto)
+                                .setTargetView(binding.homeFragmentIvStatistic)
+                                .setTitleTypeFace(Typeface.DEFAULT_BOLD)
+                                .setContentTypeFace(Typeface.defaultFromStyle(Typeface.ITALIC))
+                                .setDismissType(DismissType.anywhere)
+                                .setGuideListener {
+                                    val statisticsDialog = DialogStatistic("Mulai Blokir")
+                                    statisticsDialog.show(
+                                        parentFragmentManager,
+                                        "Statistics Dialog"
+                                    )
+                                }
+                                .build()
+                                .show()
+                        }
+                        .build()
+                        .show()
+                }
+                .build()
+                .show()
 
-    private fun loginOrNot() {
-        val token = sessionManager.fetchAuthToken()
-
-        if(token.isNullOrEmpty()){
-            Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_loginFragment)
-        } else{
-            val prefs = requireContext().getSharedPreferences("first_time", 0)
-            if (prefs.getBoolean("first_time", true)) {
-                val targetView = activity?.requireViewById(R.id.mainActivity_bnv_mainNavigation) as BottomNavigationView
-                val bottomNavigationView = targetView.getChildAt(0) as BottomNavigationMenuView
-                GuideView.Builder(context)
-                    .setTitle("Lapor Penipuan")
-                    .setContentText("Gunakan fitur ini jika Anda mengalami penipuan sehingga user lain bisa memblokir nomor tersebut dan tidak mengalami hal yang sama")
-                    .setGravity(Gravity.auto)
-                    .setTargetView(bottomNavigationView[1])
-                    .setTitleTypeFace(Typeface.DEFAULT_BOLD)
-                    .setContentTypeFace(Typeface.defaultFromStyle(Typeface.ITALIC))
-                    .setDismissType(DismissType.anywhere)
-                    .setGuideListener {
-                        GuideView.Builder(context)
-                            .setTitle("Cari Nomor Telepon/Rekening")
-                            .setContentText("Gunakan fitur ini sebelum Anda bertransaksi agar terhindar dari penipuan, blokir nomor telepon jika diperlukan")
-                            .setGravity(Gravity.auto)
-                            .setTargetView(binding.homeFragmentClGuideSearchNumber)
-                            .setTitleTypeFace(Typeface.DEFAULT_BOLD)
-                            .setContentTypeFace(Typeface.defaultFromStyle(Typeface.ITALIC))
-                            .setDismissType(DismissType.anywhere)
-                            .setGuideListener {
-                                GuideView.Builder(context)
-                                    .setTitle("Lihat Statistik")
-                                    .setContentText("Pelajari modus-modus yang paling sering digunakan untuk menipu")
-                                    .setGravity(Gravity.auto)
-                                    .setTargetView(binding.homeFragmentIvStatistic)
-                                    .setTitleTypeFace(Typeface.DEFAULT_BOLD)
-                                    .setContentTypeFace(Typeface.defaultFromStyle(Typeface.ITALIC))
-                                    .setDismissType(DismissType.anywhere)
-                                    .setGuideListener {
-                                        val statisticsDialog = DialogStatistic("Mulai Blokir")
-                                        statisticsDialog.show(parentFragmentManager, "Statistics Dialog")
-                                    }
-                                    .build()
-                                    .show()
-                            }
-                            .build()
-                            .show()
-                    }
-                    .build()
-                    .show()
-
-                prefs.edit().putBoolean("first_time", false).apply()
-            }
+            prefs.edit().putBoolean("first_time", false).apply()
         }
     }
 
     private fun setupHomeFragment() {
 
-        sharedViewModelUser.totalBlock.observe(viewLifecycleOwner){
+        sharedViewModelUser.totalBlock.observe(viewLifecycleOwner) {
             binding.homeFragmentTvTotalBlockInAllTime.text = it.toString()
         }
 
-        sharedViewModelUser.totalBlockInMonth.observe(viewLifecycleOwner){
+        sharedViewModelUser.totalBlockInMonth.observe(viewLifecycleOwner) {
             binding.homeFragmentTvTotalBlockInAMonth.text = it.toString()
         }
 
-        sharedViewModelUser.totalBlockInWeek.observe(viewLifecycleOwner){
+        sharedViewModelUser.totalBlockInWeek.observe(viewLifecycleOwner) {
             binding.homeFragmentTvTotalBlockInAWeek.text = it.toString()
         }
 
-        sharedViewModelUser.pieChart.observe(viewLifecycleOwner){
+        sharedViewModelUser.pieChart.observe(viewLifecycleOwner) {
             setupPieChart(binding.homeFragmentPcBlokingPerformance, it)
         }
 
-        sharedViewModelUser.barChart.observe(viewLifecycleOwner){
+        sharedViewModelUser.barChart.observe(viewLifecycleOwner) {
             setupBarChart(binding.homeFragmentBcBlokingPerformance, it)
         }
 
         binding.homeFragmentIvStatistic.setOnClickListener {
             val statisticDialog = DialogStatistic("Tutup")
-            statisticDialog.show(parentFragmentManager,"Dialog Statistik")
+            statisticDialog.show(parentFragmentManager, "Dialog Statistik")
         }
 
-        binding.homeFragmentTilSearchNumber.hint = String.format(resources.getString(R.string.cari_nomor),"Telepon")
-        binding.homeFragmentTvNumberExample.text = String.format(resources.getString(R.string.numberExample),"08123456789")
+        binding.homeFragmentTilSearchNumber.hint =
+            String.format(resources.getString(R.string.cari_nomor), "Telepon")
+        binding.homeFragmentTvNumberExample.text =
+            String.format(resources.getString(R.string.numberExample), "08123456789")
 
         binding.homeFragmentBtnSearchNumber.setOnClickListener {
-            val numberType = when(binding.homeFragmentTlChooseNumberType.selectedTabPosition){
-                0 -> "phoneNumber"
-                else -> "accountNumber"
+            if (binding.homeFragmentEtSearchNumber.text.toString().trim() != "") {
+                val numberType = when (binding.homeFragmentTlChooseNumberType.selectedTabPosition) {
+                    0 -> "phoneNumber"
+                    else -> "accountNumber"
+                }
+                val number = binding.homeFragmentEtSearchNumber.text.toString()
+                val searchNumber = if (number[0] == '0' && numberType == "phoneNumber") "+62${
+                    number.substring(
+                        1,
+                        number.length
+                    )
+                }" else number
+                val bundleNumber = arrayOf(numberType, searchNumber)
+                val action =
+                    HomeFragmentDirections.actionHomeFragmentToSearchResultFragment(bundleNumber)
+                Navigation.findNavController(binding.root).navigate(action)
+            } else {
+                val toast = Toast.makeText(
+                    requireContext(),
+                    "Masukkan nomor yang ingin dicari",
+                    Toast.LENGTH_LONG
+                )
+                toast.setGravity(android.view.Gravity.CENTER, 0, 0)
+                toast.show()
             }
-            val searchNumber = binding.homeFragmentEtSearchNumber.text.toString()
-            val bundleNumber = arrayOf(numberType, searchNumber)
-            val action = HomeFragmentDirections.actionHomeFragmentToSearchResultFragment(bundleNumber)
-            Navigation.findNavController(binding.root).navigate(action)
+
         }
 
-        binding.homeFragmentTlChooseNumberType.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+        binding.homeFragmentTlChooseNumberType.addOnTabSelectedListener(object :
+            TabLayout.OnTabSelectedListener {
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
             override fun onTabSelected(tab: TabLayout.Tab) {
-                if(tab.position == 0){
-                    binding.homeFragmentTilSearchNumber.hint = String.format(resources.getString(R.string.cari_nomor),"Telepon")
-                    binding.homeFragmentTvNumberExample.text = String.format(resources.getString(R.string.numberExample),"08123456789")
-                } else{
-                    binding.homeFragmentTilSearchNumber.hint = String.format(resources.getString(R.string.cari_nomor),"Rekening")
-                    binding.homeFragmentTvNumberExample.text = String.format(resources.getString(R.string.numberExample),"100123456789")
+                if (tab.position == 0) {
+                    binding.homeFragmentTilSearchNumber.hint =
+                        String.format(resources.getString(R.string.cari_nomor), "Telepon")
+                    binding.homeFragmentTvNumberExample.text =
+                        String.format(resources.getString(R.string.numberExample), "08123456789")
+                } else {
+                    binding.homeFragmentTilSearchNumber.hint =
+                        String.format(resources.getString(R.string.cari_nomor), "Rekening")
+                    binding.homeFragmentTvNumberExample.text =
+                        String.format(resources.getString(R.string.numberExample), "100123456789")
                 }
             }
         })
     }
 
     private fun setupBlokingStatistics() {
-        if(!sessionManager.fetchAuthToken().isNullOrEmpty()){
+        if (!sessionManager.fetchAuthToken().isNullOrEmpty()) {
             lifecycleScope.launchWhenCreated {
-                val response = try{
+                val response = try {
                     RetroInstance.apiHome.getBlockStatistic(PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"))
                 } catch (e: IOException) {
                     Log.e("meErrorIO", e.message!!)
@@ -206,20 +229,20 @@ class HomeFragment : Fragment() {
                     Log.e("meErrorHttp", e.message!!)
                     return@launchWhenCreated
                 }
-                if(response.isSuccessful && response.body() != null){
-                    if(response.body()!!.data.total != sharedViewModelUser.totalBlock.value){
+                if (response.isSuccessful && response.body() != null) {
+                    if (response.body()!!.data.total != sharedViewModelUser.totalBlock.value) {
                         sharedViewModelUser.saveTotalBlock(response.body()!!.data.total)
                     }
-                    if(response.body()!!.data.this_month != sharedViewModelUser.totalBlockInMonth.value){
+                    if (response.body()!!.data.this_month != sharedViewModelUser.totalBlockInMonth.value) {
                         sharedViewModelUser.saveTotalBlockInMonth(response.body()!!.data.this_month)
                     }
-                    if(response.body()!!.data.this_week != sharedViewModelUser.totalBlockInWeek.value){
+                    if (response.body()!!.data.this_week != sharedViewModelUser.totalBlockInWeek.value) {
                         sharedViewModelUser.saveTotalBlockInWeek(response.body()!!.data.this_week)
                     }
-                    if(response.body()!!.data.pie_chart != sharedViewModelUser.pieChart.value){
+                    if (response.body()!!.data.pie_chart != sharedViewModelUser.pieChart.value) {
                         sharedViewModelUser.savePieChart(response.body()!!.data.pie_chart)
                     }
-                    if(response.body()!!.data.last_4_months != sharedViewModelUser.barChart.value){
+                    if (response.body()!!.data.last_4_months != sharedViewModelUser.barChart.value) {
                         sharedViewModelUser.saveBarChart(response.body()!!.data.last_4_months)
                     }
                 }
@@ -227,10 +250,46 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun me(){
-        if(!sessionManager.fetchAuthToken().isNullOrEmpty()){
+    private fun callRefresh() {
+        if (sessionManager.fetchExpireToken() - Date().time <= 0) {
             lifecycleScope.launchWhenCreated {
-                val response = try{
+                //request refresh token
+                val responseRefreshToken = try {
+                    RetroInstance.apiAuth.postRefresh(PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"))
+                } catch (e: IOException) {
+                    Log.e("meHome", e.message!!)
+                    return@launchWhenCreated
+                } catch (e: HttpException) {
+                    Log.e("meHome", e.message!!)
+                    return@launchWhenCreated
+                }
+                if (responseRefreshToken.isSuccessful && responseRefreshToken.body() != null) {
+                    sessionManager.saveAuthToken(responseRefreshToken.body()!!.access_token)
+                    me()
+                    Log.i("meHome", "Berhasil refresh")
+                } else {
+                    try {
+                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
+                            JSONObject(responseRefreshToken.errorBody()!!.string())
+                        val errorMessage = jObjError.getJSONObject("error").getString("message")
+                        Log.e("meError", errorMessage)
+                        Log.e("meError", responseRefreshToken.code().toString())
+                    } catch (e: Exception) {
+                        Log.e("meError", e.toString())
+                    }
+                }
+            }
+        }
+    }
+
+    private fun me() {
+        if (sessionManager.fetchAuthToken().isNullOrEmpty()) {
+            Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_loginFragment)
+        }else{
+            firstTime()
+            setupBlokingStatistics()
+            lifecycleScope.launchWhenCreated {
+                val response = try {
                     RetroInstance.apiAuth.getMe(GetMeRequest("Bearer ${sessionManager.fetchAuthToken()}"))
                 } catch (e: IOException) {
                     Log.e("meErrorIO", e.message!!)
@@ -239,7 +298,7 @@ class HomeFragment : Fragment() {
                     Log.e("meErrorHttp", e.message!!)
                     return@launchWhenCreated
                 }
-                if(response.isSuccessful && response.body() != null){
+                if (response.isSuccessful && response.body() != null) {
                     sharedViewModelUser.saveName(response.body()!!.name)
                     sharedViewModelUser.saveEmail(response.body()!!.email)
                     sharedViewModelUser.savePhoneNumber(response.body()?.phone_number)
@@ -247,43 +306,48 @@ class HomeFragment : Fragment() {
                     sharedViewModelUser.saveBankId(response.body()?.bank_id)
                     sharedViewModelUser.saveIsAnonymous(response.body()!!.is_anonymous)
                     sharedViewModelUser.saveProtectionLevel(response.body()!!.protection_level)
-                    try{
+                    sharedViewModelUser.saveEmailVerifiedAt(response.body()!!.email_verified_at)
+                    try {
                         val profilePicName = response.body()?.profile_picture.toString()
                         val responseFile = try {
                             RetroInstance.apiProfile.postFile(
                                 PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
                                 PostFileRequest("profile_pictures", profilePicName)
                             )
-                        }catch (e: IOException) {
+                        } catch (e: IOException) {
                             Log.e("loginErrorIO", e.message!!)
                             return@launchWhenCreated
                         } catch (e: HttpException) {
                             Log.e("loginErrorHttp", e.message!!)
                             return@launchWhenCreated
                         }
-                        if(responseFile.isSuccessful && responseFile.body() != null){
+                        if (responseFile.isSuccessful && responseFile.body() != null) {
                             val bitmap = BitmapFactory.decodeStream(responseFile.body()?.byteStream())
                             sharedViewModelUser.saveProfilePicture(bitmap)
-                        }else{
-                            try{
-                                @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                                val errorMessage = jObjError.getJSONObject("error").getString("message")
+                        } else {
+                            sharedViewModelUser.saveProfilePicture(null)
+                            try {
+                                @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
+                                    JSONObject(response.errorBody()!!.string())
+                                val errorMessage =
+                                    jObjError.getJSONObject("error").getString("message")
                                 Log.e("meError", errorMessage)
                                 Log.e("meError", response.code().toString())
-                            }catch (e: Exception){
+                            } catch (e: Exception) {
                                 Log.e("meError", e.toString())
                             }
                         }
-                    }catch (e: Exception){
+                    } catch (e: Exception) {
                         Log.e("meProfilePicError", e.toString())
                     }
-                }else{
-                    try{
-                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
+                } else {
+                    try {
+                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
+                            JSONObject(response.errorBody()!!.string())
                         val errorMessage = jObjError.getJSONObject("error").getString("message")
                         Log.e("meError", errorMessage)
                         Log.e("meError", response.code().toString())
-                    }catch (e: Exception){
+                    } catch (e: Exception) {
                         Log.e("meError", e.toString())
                     }
                     sessionManager.saveAuthToken("")
@@ -360,7 +424,7 @@ class HomeFragment : Fragment() {
         pieChart.centerText = "Blokir Panggilan"
         pieChart.setCenterTextSize(14F)
         pieChart.description.isEnabled = false
-        pieChart.setExtraOffsets(-10f,0f,-10f,-12f)
+        pieChart.setExtraOffsets(-10f, 0f, -10f, -12f)
 
         val l = pieChart.legend
         l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
@@ -371,16 +435,15 @@ class HomeFragment : Fragment() {
         l.textSize = 14F
 
         val entries = arrayListOf<PieEntry>()
-        if(pieChart1.penipuan > 0f){
+        if (pieChart1.penipuan > 0f) {
             entries.add(PieEntry(pieChart1.penipuan, "Penipuan"))
         }
-        if(pieChart1.panggilan_spam > 0f){
+        if (pieChart1.panggilan_spam > 0f) {
             entries.add(PieEntry(pieChart1.panggilan_spam, "Panggilan Spam"))
         }
-        if (pieChart1.panggilan_robot > 0f){
+        if (pieChart1.panggilan_robot > 0f) {
             entries.add(PieEntry(pieChart1.panggilan_robot, "Panggilan Robot"))
         }
-
 
 
         val colors = arrayListOf<Int>()

@@ -17,6 +17,7 @@ class SharedViewModelUser: ViewModel() {
     private var _isAnonymous = MutableLiveData(0)
     private var _protectionLevel = MutableLiveData(2)
     private var _emailVerifiedAt = MutableLiveData<Boolean>()
+    private var _canChangeBankNumber = MutableLiveData<Boolean>()
     private var _totalBlock = MutableLiveData<Int>()
     private var _totalBlockInMonth = MutableLiveData<Int>()
     private var _totalBlockInWeek = MutableLiveData<Int>()
@@ -32,6 +33,7 @@ class SharedViewModelUser: ViewModel() {
     var isAnonymous: LiveData<Int> = _isAnonymous
     var protectionLevel: LiveData<Int> = _protectionLevel
     var emailVerifiedAt: LiveData<Boolean> = _emailVerifiedAt
+    var canChangeBankNumber: LiveData<Boolean> = _canChangeBankNumber
     var totalBlock: LiveData<Int> = _totalBlock
     var totalBlockInMonth: LiveData<Int> = _totalBlockInMonth
     var totalBlockInWeek: LiveData<Int> = _totalBlockInWeek
@@ -72,6 +74,10 @@ class SharedViewModelUser: ViewModel() {
 
     fun saveEmailVerifiedAt(newEmailVerifiedAt: String?){
         _emailVerifiedAt.value = newEmailVerifiedAt != null
+    }
+
+    fun saveCanChangeBankNumber(newCanChangeBankNumber: Boolean){
+        _canChangeBankNumber.value = newCanChangeBankNumber
     }
 
     fun saveTotalBlock(newTotalBlock: Int){

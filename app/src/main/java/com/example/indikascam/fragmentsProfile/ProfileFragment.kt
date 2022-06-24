@@ -155,6 +155,7 @@ class ProfileFragment : Fragment() {
                 sharedViewModelUser.saveIsAnonymous(response.body()!!.is_anonymous)
                 sharedViewModelUser.saveProtectionLevel(response.body()!!.protection_level)
                 sharedViewModelUser.saveEmailVerifiedAt(response.body()!!.email_verified_at)
+                sharedViewModelUser.saveCanChangeBankNumber(response.body()!!.canChangeBankNumber)
                 try{
                     val profilePicName = response.body()?.profile_picture.toString()
                     val responseFile = try {

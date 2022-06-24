@@ -61,7 +61,7 @@ class LoginFragment : Fragment() {
                 }
                 if (response.isSuccessful && response.body() != null) {
                     sessionManager.saveAuthToken(response.body()!!.access_token)
-                    sessionManager.saveExpireToken(response.body()!!.expires_in + Date().time)
+                    sessionManager.saveExpireToken(response.body()!!.expires_in * 1000 + Date().time)
                     val emailVerifiedAt: String? = response.body()!!.user.email_verified_at
                     if (emailVerifiedAt == null) {
                         val action = LoginFragmentDirections.actionLoginFragmentToOtpFragment(

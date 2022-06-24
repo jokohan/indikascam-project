@@ -1,16 +1,17 @@
 package com.example.indikascam.fragmentsProfile
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +26,6 @@ import com.example.indikascam.dialog.DialogProgressBar
 import com.example.indikascam.dialog.DialogZoomInProofDetail
 import com.example.indikascam.modelsRcv.ProofDetail
 import com.example.indikascam.sessionManager.SessionManager
-import com.example.indikascam.util.Util
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.File
@@ -53,6 +53,7 @@ class MyReportDetailFragment : Fragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -81,7 +82,7 @@ class MyReportDetailFragment : Fragment() {
                 binding.myReportDetailFragmentTvTime.text = response.body()!!.data.created_at
                 binding.myReportDetailFragmentTvStatus.text = response.body()!!.data.status
                 binding.myReportDetailFragmentTvName.text = if (response.body()!!.data.scammer_name == null) "-" else response.body()!!.data.scammer_name
-                binding.myReportDetailFragmentTvPhoneNumber.text = if (response.body()!!.data.scammer_phone_number == null) "-" else response.body()!!.data.scammer_phone_number
+                binding.myReportDetailFragmentTvPhoneNumber.text = response.body()!!.data.scammer_phone_number
                 binding.myReportDetailFragmentTvAccountNumber.text = if (response.body()!!.data.bank_account_number == null) "-" else response.body()!!.data.bank_account_number
                 binding.myReportDetailFragmentTvBankName.text = if (response.body()!!.data.bank_name == null) "-" else response.body()!!.data.bank_name
                 binding.myReportDetailFragmentTvPlatform.text = if (response.body()!!.data.platform_name == null) "-" else response.body()!!.data.platform_name
@@ -141,13 +142,12 @@ class MyReportDetailFragment : Fragment() {
     private fun openPDFContent(context: Context, inputStream: InputStream, fileName: String) {
         //saving in cache directory
         Log.i("asd", inputStream.toString())
-        var file : File? = null
-        if(inputStream.toString() == "[size=0].inputStream()"){
-            file = File(context.externalCacheDir?.absolutePath ?: context.cacheDir.absolutePath, fileName)
+        val file: File = if(inputStream.toString() == "[size=0].inputStream()"){
+            File(context.externalCacheDir?.absolutePath ?: context.cacheDir.absolutePath, fileName)
         }else{
             val filePath = context.externalCacheDir?.absolutePath ?: context.cacheDir.absolutePath
             val fileNameExtension = fileName.ifEmpty { context.getString(R.string.app_name) + ".pdf" }
-            file = inputStream.saveToFile(filePath, fileNameExtension)
+            inputStream.saveToFile(filePath, fileNameExtension)
         }
         val uri = FileProvider.getUriForFile(
             context,

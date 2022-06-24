@@ -26,8 +26,8 @@ class MyCallScreeningService : CallScreeningService() {
         val startCallCreationTime = p0.creationTimeMillis
 
         /*
-            0 == incoming call,
-            1 == outgoing call
+            0 == panggilan masuk,
+            1 == panggilan keluar
         */
 
         if (p0.callDirection == 0) {
@@ -57,7 +57,7 @@ class MyCallScreeningService : CallScreeningService() {
                     }
                     if (responseRefreshToken.isSuccessful && responseRefreshToken.body() != null) {
                         sessionManager.saveAuthToken(responseRefreshToken.body()!!.access_token)
-                        sessionManager.saveExpireToken(responseRefreshToken.body()!!.expires_in + Date().time)
+                        sessionManager.saveExpireToken(responseRefreshToken.body()!!.expires_in * 1000 + Date().time)
                         accessToken = sessionManager.fetchAuthToken()
                         blockCall(p0, phoneNumber, startCallCreationTime, accessToken)
                         Log.i(debugTag, "Berhasil refresh")
@@ -97,7 +97,6 @@ class MyCallScreeningService : CallScreeningService() {
             }
             if(responseBlockingCall.isSuccessful && responseBlockingCall.body() != null){
                 if(responseBlockingCall.body()!!.block){
-                    Log.i(debugTag, phoneNumber)
                     respondToCall(p0, CallResponse.Builder().apply {
                         //end call for scammer
                         setRejectCall(true)
@@ -105,6 +104,7 @@ class MyCallScreeningService : CallScreeningService() {
                         setDisallowCall(true)
                     }.build())
                     if(System.currentTimeMillis() - startCallCreationTime < 4900){
+                        Log.i(debugTag, "$phoneNumber berhasil di blokir")
                         val responseInsertBlockCall = try{
                             RetroInstance.apiBlockingCall.insertBlockCall(PostTokenRequest("Bearer $accessToken"),PostBlockingCallRequest(phoneNumber,1, if(responseBlockingCall.body()!!.is_automatic)1 else 0))
                         } catch (e: IOException) {

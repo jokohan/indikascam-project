@@ -25,7 +25,7 @@ class BlockListFragment : Fragment() {
     private var _binding : FragmentBlockListBinding? = null
     private val binding get() = _binding!!
 
-    private val blockedNumberList = ArrayList<BlockedNumber>()
+    private var blockedNumberList = ArrayList<BlockedNumber>()
     private val blockedNumberAdapter = BlockedNumberAdapter(blockedNumberList){
         val phoneNumber = arrayOf("phoneNumber", blockedNumberList[it].phoneNumber)
         val action = BlockListFragmentDirections.actionBlockListFragmentToSearchResultFragment(phoneNumber)
@@ -56,8 +56,12 @@ class BlockListFragment : Fragment() {
                 return@launchWhenCreated
             }
             if(response.isSuccessful && response.body() != null){
-                for(data in response.body()!!.data)
-                blockedNumberList.add(BlockedNumber(data.phone_number, data.block_status))
+                if(blockedNumberList != response.body()!!.data){
+                    blockedNumberList.clear()
+                    for(data in response.body()!!.data) {
+                        blockedNumberList.add(BlockedNumber(data.phone_number, data.block_status))
+                    }
+                }
             }else{
                 try{
                     @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())

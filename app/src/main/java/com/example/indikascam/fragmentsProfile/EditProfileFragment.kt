@@ -37,7 +37,7 @@ import java.io.IOException
 @Suppress("DEPRECATION")
 class EditProfileFragment : Fragment() {
 
-    private var _binding : FragmentProfileEditBinding? = null
+    private var _binding: FragmentProfileEditBinding? = null
     private val binding get() = _binding!!
 
     private var profilePic: MultipartBody.Part? = null
@@ -62,63 +62,77 @@ class EditProfileFragment : Fragment() {
 
         setupEditProfile(sessionManager)
 
+        sharedViewModelUser.canChangeBankNumber.observe(viewLifecycleOwner){
+            if(it){
+                binding.editProfileFragmentTilPilihBank.isEnabled = true
+                binding.editProfileFragmentTilAccountNumber.isEnabled = true
+            }else{
+                binding.editProfileFragmentTilPilihBank.isEnabled = false
+                binding.editProfileFragmentTilAccountNumber.isEnabled = false
+            }
+        }
+
         binding.editProfileFragmentTvEditDone.setOnClickListener {
             val phoneNumberChanges = binding.editProfileFragmentEtPhoneNumber.isEnabled && !binding.editProfileFragmentEtPhoneNumber.text.isNullOrEmpty()
-            val bankIdChanges = binding.hasilPencarianFragmentAcPilihBank.isEnabled && !binding.hasilPencarianFragmentAcPilihBank.text.isNullOrEmpty()
-            val accountNumberChanges = binding.editProfileFragmentEtAccountNumber.isEnabled && !binding.editProfileFragmentEtAccountNumber.text.isNullOrEmpty()
-            if((phoneNumberChanges || bankIdChanges || accountNumberChanges) || (initialName != binding.editProfileFragmentEtName.text.toString()) || binding.editProfileFragmentIvProfilePicture.tag != "initial"){
+            if (phoneNumberChanges ||
+                initialName != binding.editProfileFragmentEtName.text.toString() ||
+                binding.editProfileFragmentIvProfilePicture.tag != "initial" ||
+                binding.editProfileFragmentEtAccountNumber.text.toString() != sharedViewModelUser.bankAccountNumber.value || banksFinal != sharedViewModelUser.bankId.value) {
                 var warningCaption = "Anda yakin ingin mengubah profil?"
                 val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Pemberitahuan")
-                if(phoneNumberChanges || bankIdChanges || accountNumberChanges){
-                    warningCaption = "Anda hanya bisa mengatur "
-                    if(phoneNumberChanges) warningCaption += if(bankIdChanges && accountNumberChanges) "NOMOR TELEPON, " else "NOMOR TELEPON "
-                    if(bankIdChanges) warningCaption += if(accountNumberChanges)"NAMA BANK, " else "NAMA BANK "
-                    if(accountNumberChanges) warningCaption += "NOMOR REKENING "
-                    warningCaption += "1 kali"
+                if (phoneNumberChanges) {
+                    warningCaption = "Anda hanya bisa mengatur NOMOR TELEPON 1 kali"
                 }
                 builder.setMessage(warningCaption)
-                builder.setPositiveButton("Ya"){dialogInterface, _ ->
+                builder.setPositiveButton("Ya") { dialogInterface, _ ->
                     val snackBar = SnackBarWarningError()
                     val sessionManager = SessionManager(requireContext())
                     lifecycleScope.launchWhenCreated {
-                        val response = try{
+                        val response = try {
                             RetroInstance.apiProfile.postEditProfile(
                                 PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
-                                binding.editProfileFragmentEtName.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
-                                if(binding.editProfileFragmentIvProfilePicture.tag == "ic profile") 1 else 0,
-                                if(binding.editProfileFragmentEtAccountNumber.text.toString() == "") null else binding.editProfileFragmentEtAccountNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                binding.editProfileFragmentEtName.text.toString()
+                                    .toRequestBody("text/plain".toMediaTypeOrNull()),
+                                if (binding.editProfileFragmentIvProfilePicture.tag == "ic profile") 1 else 0,
+                                if (binding.editProfileFragmentEtAccountNumber.text.toString() == "") null else binding.editProfileFragmentEtAccountNumber.text.toString()
+                                    .toRequestBody("text/plain".toMediaTypeOrNull()),
                                 banksFinal,
-                                if(binding.editProfileFragmentEtPhoneNumber.text.toString() == "") null else binding.editProfileFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                                if (binding.editProfileFragmentEtPhoneNumber.text.toString() == "") null else binding.editProfileFragmentEtPhoneNumber.text.toString()
+                                    .toRequestBody("text/plain".toMediaTypeOrNull()),
                                 profilePic
                             )
-                        }catch (e: IOException) {
+                        } catch (e: IOException) {
                             Log.e("meErrorIO", e.message!!)
                             return@launchWhenCreated
                         } catch (e: HttpException) {
                             Log.e("meErrorHttp", e.message!!)
                             return@launchWhenCreated
                         }
-                        if(response.isSuccessful && response.body() != null){
+                        if (response.isSuccessful && response.body() != null) {
                             Navigation.findNavController(view).navigateUp()
-                        }else{
-                            try{
-                                @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                                val errorMessage = jObjError.getJSONObject("error").getString("message")
+                        } else {
+                            try {
+                                @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
+                                    JSONObject(response.errorBody()!!.string())
+                                val errorMessage =
+                                    jObjError.getJSONObject("error").getString("message")
                                 Log.e("meError", errorMessage)
                                 Log.e("meError", response.code().toString())
                                 snackBar.showSnackBar(errorMessage, requireActivity())
-                            }catch (e: Exception){
+                            } catch (e: Exception) {
                                 Log.e("meError", e.toString())
                             }
                         }
                     }
                     dialogInterface.dismiss()
                 }
-                builder.setNegativeButton("Tidak"){dialogInterface,_->
+                builder.setNegativeButton("Tidak") { dialogInterface, _ ->
                     dialogInterface.dismiss()
                 }
                 builder.show()
+            }else{
+                Navigation.findNavController(binding.root).navigateUp()
             }
         }
 
@@ -139,112 +153,86 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun setupEditProfile(sessionManager: SessionManager) {
-        sharedViewModelUser.profilePicture.observe(viewLifecycleOwner){
-            if(it == null){
+        sharedViewModelUser.profilePicture.observe(viewLifecycleOwner) {
+            if (it == null) {
                 binding.editProfileFragmentIvProfilePicture.setImageResource(R.drawable.ic_profile)
-            }else{
+            } else {
                 binding.editProfileFragmentIvProfilePicture.setImageBitmap(it)
             }
             binding.editProfileFragmentIvProfilePicture.tag = "initial"
         }
 
-        sharedViewModelUser.name.observe(viewLifecycleOwner){
+        sharedViewModelUser.name.observe(viewLifecycleOwner) {
             binding.editProfileFragmentEtName.setText(it)
             initialName = it
         }
 
-        sharedViewModelUser.phoneNumber.observe(viewLifecycleOwner){
-            if(it != null){
+        sharedViewModelUser.phoneNumber.observe(viewLifecycleOwner) {
+            if (it != null) {
                 binding.editProfileFragmentEtPhoneNumber.setText(it)
                 binding.editProfileFragmentTilPhoneNumber.isEnabled = false
                 binding.editProfileFragmentEtPhoneNumber.isEnabled = false
             }
         }
 
-        sharedViewModelUser.bankId.observe(viewLifecycleOwner){
-            if(it == null){
-                lifecycleScope.launchWhenCreated {
-                    val response = try{
-                        RetroInstance.apiReport.getBank(PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"))
-                    }catch (e: IOException) {
-                        Log.e("bankErrorIO", e.message!!)
-                        return@launchWhenCreated
-                    } catch (e: HttpException) {
-                        Log.e("bankErrorHttp", e.message!!)
-                        return@launchWhenCreated
-                    }
-                    if(response.isSuccessful && response.body() != null){
-                        var bankNames = emptyArray<String>()
-                        var bankIds = emptyArray<Int>()
-                        val banksData = response.body()!!.data
-                        for(data in banksData){
-                            bankNames += data.name
-                            bankIds += data.id
-                        }
-                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, bankNames)
-                        binding.hasilPencarianFragmentAcPilihBank.setAdapter(adapter)
-
-                        binding.hasilPencarianFragmentAcPilihBank.setOnItemClickListener{_, _, i, _ ->
-                            banksFinal = bankIds[i]
-                        }
-                    }else{
-                        try{
-                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                            val errorMessage = jObjError.getJSONObject("error").getString("message")
-                            Log.e("bankError", errorMessage)
-                            Log.e("bankError", response.code().toString())
-                        }catch (e: Exception){
-                            Log.e("bankError", e.toString())
-                        }
-                    }
+        sharedViewModelUser.bankId.observe(viewLifecycleOwner) {
+            lifecycleScope.launchWhenCreated {
+                val response = try {
+                    RetroInstance.apiReport.getBank(PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"))
+                } catch (e: IOException) {
+                    Log.e("bankErrorIO", e.message!!)
+                    return@launchWhenCreated
+                } catch (e: HttpException) {
+                    Log.e("bankErrorHttp", e.message!!)
+                    return@launchWhenCreated
                 }
-            }else{
-                binding.editProfileFragmentTilPilihBank.isEnabled = false
-                binding.hasilPencarianFragmentAcPilihBank.isEnabled = false
-                lifecycleScope.launchWhenCreated {
-                    val response = try{
-                        RetroInstance.apiReport.getBankNameById(PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"), it)
-                    }catch (e: IOException) {
-                        Log.e("bankErrorIO", e.message!!)
-                        return@launchWhenCreated
-                    } catch (e: HttpException) {
-                        Log.e("bankErrorHttp", e.message!!)
-                        return@launchWhenCreated
+                if (response.isSuccessful && response.body() != null) {
+                    var bankNames = emptyArray<String>()
+                    var bankIds = emptyArray<Int>()
+                    val banksData = response.body()!!.data
+                    for (data in banksData) {
+                        bankNames += data.name
+                        bankIds += data.id
                     }
-                    if(response.isSuccessful && response.body() != null){
-                        var bankNames = emptyArray<String>()
-                        bankNames +=  response.body()!!.data.name
-                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, bankNames)
-                        binding.hasilPencarianFragmentAcPilihBank.setAdapter(adapter)
-                        binding.hasilPencarianFragmentAcPilihBank.setText(binding.hasilPencarianFragmentAcPilihBank.adapter.getItem(0).toString())
-                    }else{
-                        try{
-                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
-                            val errorMessage = jObjError.getJSONObject("error").getString("message")
-                            Log.e("bankError", errorMessage)
-                            Log.e("bankError", response.code().toString())
-                        }catch (e: Exception){
-                            Log.e("bankError", e.toString())
-                        }
+                    val adapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_dropdown_item_1line,
+                        bankNames
+                    )
+                    binding.hasilPencarianFragmentAcPilihBank.setAdapter(adapter)
+                    binding.hasilPencarianFragmentAcPilihBank.setOnItemClickListener { _, _, i, _ ->
+                        banksFinal = bankIds[i]
+                    }
+                    if(it != null){
+                        binding.hasilPencarianFragmentAcPilihBank.setText(
+                            binding.hasilPencarianFragmentAcPilihBank.adapter.getItem(
+                                bankIds.indexOf(it)
+                            ).toString(),false
+                        )
+                    }
+                } else {
+                    try {
+                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
+                            JSONObject(response.errorBody()!!.string())
+                        val errorMessage = jObjError.getJSONObject("error").getString("message")
+                        Log.e("bankError", errorMessage)
+                        Log.e("bankError", response.code().toString())
+                    } catch (e: Exception) {
+                        Log.e("bankError", e.toString())
                     }
                 }
             }
         }
 
         sharedViewModelUser.bankAccountNumber.observe(viewLifecycleOwner){
-            if(it != null){
-                binding.editProfileFragmentEtAccountNumber.setText(it)
-                binding.editProfileFragmentTilAccountNumber.isEnabled = false
-                binding.editProfileFragmentEtAccountNumber.isEnabled = false
-            }
+            binding.editProfileFragmentEtAccountNumber.setText(it)
         }
 
-        sharedViewModelUser.email.observe(viewLifecycleOwner){
+        sharedViewModelUser.email.observe(viewLifecycleOwner) {
             binding.editProfileFragmentEtEmail.isEnabled = false
             binding.editProfileFragmentTilEmail.isEnabled = false
             binding.editProfileFragmentEtEmail.setText(it)
         }
-
 
     }
 
@@ -254,8 +242,8 @@ class EditProfileFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         val snackBar = SnackBarWarningError()
 
-        when(requestCode){
-            1 -> if (resultCode == Activity.RESULT_OK && data != null){
+        when (requestCode) {
+            1 -> if (resultCode == Activity.RESULT_OK && data != null) {
                 val imageUri = data.data
                 val fileName: String?
                 val cursor = context?.contentResolver?.query(imageUri!!, null, null, null, null)
@@ -263,19 +251,22 @@ class EditProfileFragment : Fragment() {
                 fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                 cursor?.close()
 
-                val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(imageUri!!,"r", null) ?: return
+                val parcelFileDescriptor =
+                    context?.contentResolver?.openFileDescriptor(imageUri!!, "r", null) ?: return
                 val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
                 val fileOld = fileName?.let { File(context?.cacheDir, it) }
                 val outputStream = FileOutputStream(fileOld)
                 inputStream.copyTo(outputStream)
 
-                if(outputStream.channel.size() > 2097152){
+                if (outputStream.channel.size() > 2097152) {
                     snackBar.showSnackBar("Ukuran foto profil harus dibawah 2MB", requireActivity())
-                }else{
+                } else {
                     binding.editProfileFragmentIvProfilePicture.setImageURI(imageUri)
                     binding.editProfileFragmentIvProfilePicture.tag = ""
-                    val requestBody: RequestBody = fileOld!!.asRequestBody("Image/*".toMediaTypeOrNull())
-                    val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("profile_picture", fileName, requestBody)
+                    val requestBody: RequestBody =
+                        fileOld!!.asRequestBody("Image/*".toMediaTypeOrNull())
+                    val multipartBody: MultipartBody.Part =
+                        MultipartBody.Part.createFormData("profile_picture", fileName, requestBody)
                     profilePic = multipartBody
                 }
             }

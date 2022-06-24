@@ -64,7 +64,6 @@ class HomeFragment : Fragment() {
 
         sessionManager = SessionManager(requireContext())
 
-
         return view
     }
 
@@ -265,6 +264,7 @@ class HomeFragment : Fragment() {
                 }
                 if (responseRefreshToken.isSuccessful && responseRefreshToken.body() != null) {
                     sessionManager.saveAuthToken(responseRefreshToken.body()!!.access_token)
+                    sessionManager.saveExpireToken(responseRefreshToken.body()!!.expires_in * 1000 + Date().time)
                     me()
                     Log.i("meHome", "Berhasil refresh")
                 } else {
@@ -286,6 +286,8 @@ class HomeFragment : Fragment() {
         if (sessionManager.fetchAuthToken().isNullOrEmpty()) {
             Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_loginFragment)
         }else{
+            val now = Date().time
+            Log.i("Expire time left", "${(sessionManager.fetchExpireToken() - now)} ms")
             firstTime()
             setupBlokingStatistics()
             lifecycleScope.launchWhenCreated {
@@ -307,6 +309,7 @@ class HomeFragment : Fragment() {
                     sharedViewModelUser.saveIsAnonymous(response.body()!!.is_anonymous)
                     sharedViewModelUser.saveProtectionLevel(response.body()!!.protection_level)
                     sharedViewModelUser.saveEmailVerifiedAt(response.body()!!.email_verified_at)
+                    sharedViewModelUser.saveCanChangeBankNumber(response.body()!!.canChangeBankNumber)
                     try {
                         val profilePicName = response.body()?.profile_picture.toString()
                         val responseFile = try {

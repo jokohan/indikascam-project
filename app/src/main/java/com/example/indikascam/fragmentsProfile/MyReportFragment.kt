@@ -58,7 +58,7 @@ class MyReportFragment : Fragment() {
                     return@launchWhenCreated
                 }
                 if(response.isSuccessful && response.body() != null){
-                    val sdf = SimpleDateFormat("dd MMM yyyy H:m:s", Locale("in", "ID"))
+                    val sdf = SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale("in", "ID"))
 
                     for(report in response.body()!!.data){
                         val stringToDate = Util().stringToDate(report.created_at)

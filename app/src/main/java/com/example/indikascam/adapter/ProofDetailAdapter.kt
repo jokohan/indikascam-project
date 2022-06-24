@@ -1,18 +1,13 @@
 package com.example.indikascam.adapter
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.indikascam.R
-import com.example.indikascam.dialog.DialogZoomInProofDetail
-import com.example.indikascam.modelsRcv.Proof
 import com.example.indikascam.modelsRcv.ProofDetail
 
 class ProofDetailAdapter(private val myProofDetailList: List<ProofDetail>, private val origin: String, val listener: (String) -> Unit):

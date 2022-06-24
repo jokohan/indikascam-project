@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import com.example.indikascam.R
 import com.example.indikascam.api.RetroInstance
 import com.example.indikascam.api.requests.PostTokenRequest
@@ -21,7 +20,6 @@ import com.example.indikascam.viewModel.SharedViewModelUser
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
-import java.lang.Exception
 
 class DialogSetProtectionLevelEarly: DialogFragment() {
     private val sharedViewModelUser: SharedViewModelUser by activityViewModels()

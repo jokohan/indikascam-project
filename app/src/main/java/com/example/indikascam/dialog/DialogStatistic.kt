@@ -17,15 +17,10 @@ import com.example.indikascam.adapter.StatisticAdapter
 import com.example.indikascam.api.RetroInstance
 import com.example.indikascam.api.requests.PostTokenRequest
 import com.example.indikascam.api.responses.GetScamStatisticsResponse
-import com.example.indikascam.modelsRcv.StatisticPlatformProduct
 import com.example.indikascam.sessionManager.SessionManager
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
-import java.lang.Exception
-import java.text.NumberFormat
-import java.util.*
-import kotlin.collections.ArrayList
 
 class DialogStatistic(private val buttonCaption: String) : DialogFragment() {
 

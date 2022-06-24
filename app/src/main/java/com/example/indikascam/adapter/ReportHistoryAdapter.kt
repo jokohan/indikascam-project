@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.indikascam.R
-import com.example.indikascam.dialog.DialogReview
 import com.example.indikascam.modelsRcv.ReportHistory
 import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat

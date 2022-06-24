@@ -32,6 +32,7 @@ class MyCallScreeningService : CallScreeningService() {
 
         if (p0.callDirection == 0) {
             val phoneNumber = getPhoneNumber(p0)
+            Log.i(debugTag, phoneNumber)
             callApi(p0, phoneNumber, startCallCreationTime)
         }
     }

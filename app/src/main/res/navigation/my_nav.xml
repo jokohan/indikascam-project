@@ -249,5 +249,8 @@
         <argument
             android:name="searchNumber"
             app:argType="string[]" />
+        <action
+            android:id="@+id/action_searchResultFragment_to_reportFragment"
+            app:destination="@id/reportFragment" />
     </fragment>
 </navigation>

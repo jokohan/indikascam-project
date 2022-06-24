@@ -1,13 +1,11 @@
 package com.example.indikascam.fragmentsProfile
 
 import android.os.Bundle
-import android.text.*
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -23,7 +21,6 @@ import com.example.indikascam.viewModel.SharedViewModelUser
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
-import java.lang.Exception
 
 class ProtectionLevelFragment : Fragment() {
 

@@ -9,7 +9,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -17,6 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.indikascam.R
@@ -44,6 +44,8 @@ class SearchResultFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args: SearchResultFragmentArgs by navArgs()
+    private lateinit var numberType: String
+    private lateinit var number: String
 
     private val reportHistoryList = ArrayList<ReportHistory>()
     private var reportHistoryAdapter: ReportHistoryAdapter? = null
@@ -64,11 +66,17 @@ class SearchResultFragment : Fragment() {
 
         sessionManager = SessionManager(requireContext())
 
+        numberType = args.searchNumber[0]
+        number = args.searchNumber[1]
+
         binding.searchResultFragmentTvCaptionNoReport.visibility = View.GONE
         binding.searchResultFragmentTilBankName.visibility = View.GONE
 
-        val numberType = args.searchNumber[0]
-        val number = args.searchNumber[1]
+        binding.searchResultFragmentBtnReport.setOnClickListener {
+            val bundleNumber = arrayOf(numberType, number)
+            val action = SearchResultFragmentDirections.actionSearchResultFragmentToReportFragment(bundleNumber)
+            Navigation.findNavController(view).navigate(action)
+        }
 
         if (number.isEmpty()) {
             binding.searchResultFragmentTvNumber.text = resources.getString(R.string.nomor_tidak_ditemukan)
@@ -366,6 +374,8 @@ class SearchResultFragment : Fragment() {
         }
         binding.searchResultFragmentBtnBlock.compoundDrawableTintList =
             ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+
+
 
         binding.searchResultFragmentBtnBlock.setOnClickListener {
             if (number.isEmpty()) {

@@ -3,7 +3,10 @@ package com.example.indikascam.api.endpoint
 import com.example.indikascam.api.requests.*
 import com.example.indikascam.api.responses.*
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.POST
 
 interface ApiAuth {
 

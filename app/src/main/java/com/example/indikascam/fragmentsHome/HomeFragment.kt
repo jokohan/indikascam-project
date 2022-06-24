@@ -250,32 +250,34 @@ class HomeFragment : Fragment() {
     }
 
     private fun callRefresh() {
-        if (sessionManager.fetchExpireToken() - Date().time <= 0) {
-            lifecycleScope.launchWhenCreated {
-                //request refresh token
-                val responseRefreshToken = try {
-                    RetroInstance.apiAuth.postRefresh(PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"))
-                } catch (e: IOException) {
-                    Log.e("meHome", e.message!!)
-                    return@launchWhenCreated
-                } catch (e: HttpException) {
-                    Log.e("meHome", e.message!!)
-                    return@launchWhenCreated
-                }
-                if (responseRefreshToken.isSuccessful && responseRefreshToken.body() != null) {
-                    sessionManager.saveAuthToken(responseRefreshToken.body()!!.access_token)
-                    sessionManager.saveExpireToken(responseRefreshToken.body()!!.expires_in * 1000 + Date().time)
-                    me()
-                    Log.i("meHome", "Berhasil refresh")
-                } else {
-                    try {
-                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
-                            JSONObject(responseRefreshToken.errorBody()!!.string())
-                        val errorMessage = jObjError.getJSONObject("error").getString("message")
-                        Log.e("meError", errorMessage)
-                        Log.e("meError", responseRefreshToken.code().toString())
-                    } catch (e: Exception) {
-                        Log.e("meError", e.toString())
+        if(sessionManager.fetchExpireToken() != 0L){
+            if (sessionManager.fetchExpireToken() - Date().time <= 0) {
+                lifecycleScope.launchWhenCreated {
+                    //request refresh token
+                    val responseRefreshToken = try {
+                        RetroInstance.apiAuth.postRefresh(PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"))
+                    } catch (e: IOException) {
+                        Log.e("meHome", e.message!!)
+                        return@launchWhenCreated
+                    } catch (e: HttpException) {
+                        Log.e("meHome", e.message!!)
+                        return@launchWhenCreated
+                    }
+                    if (responseRefreshToken.isSuccessful && responseRefreshToken.body() != null) {
+                        sessionManager.saveAuthToken(responseRefreshToken.body()!!.access_token)
+                        sessionManager.saveExpireToken(responseRefreshToken.body()!!.expires_in * 1000 + Date().time)
+                        me()
+                        Log.i("meHome", "Berhasil refresh")
+                    } else {
+                        try {
+                            @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
+                                JSONObject(responseRefreshToken.errorBody()!!.string())
+                            val errorMessage = jObjError.getJSONObject("error").getString("message")
+                            Log.e("meError", errorMessage)
+                            Log.e("meError", responseRefreshToken.code().toString())
+                        } catch (e: Exception) {
+                            Log.e("meError", e.toString())
+                        }
                     }
                 }
             }

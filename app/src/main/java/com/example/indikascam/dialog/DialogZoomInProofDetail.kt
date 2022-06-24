@@ -1,8 +1,6 @@
 package com.example.indikascam.dialog
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,9 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.example.indikascam.R
-import okhttp3.ResponseBody
-import java.io.File
-import java.io.InputStream
 
 class DialogZoomInProofDetail(private val image: Bitmap?,
                         private val title: String,

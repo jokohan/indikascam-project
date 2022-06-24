@@ -78,7 +78,7 @@ class ReportFragment : Fragment() {
         }
     }
 
-    private var reportTypeFinal : Int? = null
+    private var reportTypeFinal: Int? = null
     private var bankFinal: Int? = null
     private var platformFinal: Int? = null
     private var productFinal: Int? = null
@@ -95,8 +95,6 @@ class ReportFragment : Fragment() {
 
         sessionManager = SessionManager(requireContext())
 
-        //nomor yang ingin di laporkan berasal dari halaman lain
-        quickReportNumber()
 
         //munculkan form yang diperlukan setelah memilih jenis gangguan
         requiredFormAfterSelectingReportType()
@@ -105,9 +103,12 @@ class ReportFragment : Fragment() {
         binding.reportFragmentRcvProof.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.reportFragmentBtnAddProof.setOnClickListener {
-            if(finalProof.size + 1 > 10){
-                snackBar.showSnackBar("Jumlah maksimal bukti hanya 10, gunakan PDF sebagai alternatif", requireActivity())
-            }else{
+            if (finalProof.size + 1 > 10) {
+                snackBar.showSnackBar(
+                    "Jumlah maksimal bukti hanya 10, gunakan PDF sebagai alternatif",
+                    requireActivity()
+                )
+            } else {
                 selectProof()
             }
         }
@@ -127,67 +128,83 @@ class ReportFragment : Fragment() {
         getBanks()
         getPlatforms()
 
+        //nomor yang ingin di laporkan berasal dari halaman lain
+        quickReportNumber()
+
         binding.reportFragmentBtnReport.setOnClickListener {
             val loadingDialog = DialogProgressBar.progressDialog(requireContext())
             loadingDialog.show()
             lifecycleScope.launchWhenCreated {
-                val response = try{
-                    if(binding.reportFragmentAcTypeReport.text.toString() == "Penipuan"){
+                val response = try {
+                    if (binding.reportFragmentAcTypeReport.text.toString() == "Penipuan") {
                         RetroInstance.apiReport.postReport(
                             PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
                             reportTypeFinal!!,
-                            if(bankFinal == null) null else bankFinal,
-                            if(binding.reportFragmentEtAccountNumber.text == null) null else binding.reportFragmentEtAccountNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
-                            if(binding.reportFragmentEtName.text == null) null else binding.reportFragmentEtName.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                            if (bankFinal == null) null else bankFinal,
+                            if (binding.reportFragmentEtAccountNumber.text == null) null else binding.reportFragmentEtAccountNumber.text.toString()
+                                .toRequestBody("text/plain".toMediaTypeOrNull()),
+                            if (binding.reportFragmentEtName.text == null) null else binding.reportFragmentEtName.text.toString()
+                                .toRequestBody("text/plain".toMediaTypeOrNull()),
                             platformFinal,
                             productFinal,
-                            if(binding.reportFragmentEtChronology.text == null) null else binding.reportFragmentEtChronology.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                            if (binding.reportFragmentEtChronology.text.isNullOrEmpty()) null else binding.reportFragmentEtChronology.text.toString()
+                                .toRequestBody("text/plain".toMediaTypeOrNull()),
                             finalProof,
-                            if(binding.reportFragmentEtTotalLoss.text.isNullOrEmpty()) null else binding.reportFragmentEtTotalLoss.text.toString().toInt(),
-                            if(binding.reportFragmentEtPhoneNumber.text == null) null else binding.reportFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                            if (binding.reportFragmentEtTotalLoss.text.isNullOrEmpty()) null else binding.reportFragmentEtTotalLoss.text.toString()
+                                .toInt(),
+                            if (binding.reportFragmentEtPhoneNumber.text.toString().trim().isEmpty()) null else binding.reportFragmentEtPhoneNumber.text.toString()
+                                .toRequestBody("text/plain".toMediaTypeOrNull())
                         )
-                    }else{
-                        RetroInstance.apiReport.postReport(
-                            PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
-                            reportTypeFinal!!,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            null,
-                            finalProof,
-                            null,
-                            if(binding.reportFragmentEtPhoneNumber.text == null) null else binding.reportFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-                        )
+                    } else {
+                        if(binding.reportFragmentEtPhoneNumber.text.toString().trim().isEmpty()){
+                            snackBar.showSnackBar("Silahkan isi nomor telepon", requireActivity())
+                            loadingDialog.dismiss()
+                            return@launchWhenCreated
+                        }else{
+                            RetroInstance.apiReport.postReport(
+                                PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
+                                reportTypeFinal!!,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                null,
+                                finalProof,
+                                null,
+                                binding.reportFragmentEtPhoneNumber.text.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+                            )
+                        }
                     }
-                }catch (e: IOException) {
+                } catch (e: IOException) {
                     Log.e("reportErrorIO", e.message!!)
+                    loadingDialog.dismiss()
                     return@launchWhenCreated
-                }catch (e: HttpException) {
+                } catch (e: HttpException) {
                     Log.e("reportErrorHttp", e.message!!)
+                    loadingDialog.dismiss()
                     return@launchWhenCreated
                 }
-                if(response.isSuccessful && response.body() != null){
-                    Navigation.findNavController(binding.root).navigate(R.id.action_reportFragment_to_homeFragment)
+                if (response.isSuccessful && response.body() != null) {
+                    Navigation.findNavController(binding.root)
+                        .navigate(R.id.action_reportFragment_to_homeFragment)
                     val dialogThankYou = DialogThankYouForReporting()
                     dialogThankYou.show(parentFragmentManager, "")
-                }else{
-                    try{
-                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError = JSONObject(response.errorBody()!!.string())
+                } else {
+                    try {
+                        @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
+                            JSONObject(response.errorBody()!!.string())
                         val errorMessage = jObjError.getJSONObject("error").getString("message")
                         Log.e("reportError", errorMessage)
                         Log.e("reportError", response.code().toString())
                         snackBar.showSnackBar(errorMessage, requireActivity())
-                    }catch (e: Exception){
+                    } catch (e: Exception) {
                         Log.e("reportError", e.toString())
                     }
                 }
                 loadingDialog.dismiss()
             }
-
         }
-
     }
 
     private fun getPlatforms() {
@@ -433,11 +450,12 @@ class ReportFragment : Fragment() {
     private fun quickReportNumber() {
         if (args.numberToReport != null) {
             val tmp = args.numberToReport!!
-            val number = tmp[0]
-            val numberType = tmp[1]
+            val number = tmp[1]
+            val numberType = tmp[0]
             if (numberType == "phoneNumber") {
                 binding.reportFragmentEtPhoneNumber.setText(number)
             } else if (numberType == "accountNumber") {
+                binding.reportFragmentCbReportAccountNumberToo.isChecked = true
                 binding.reportFragmentEtAccountNumber.setText(number)
             }
         }
@@ -471,21 +489,25 @@ class ReportFragment : Fragment() {
                     val fileName: String?
                     val cursor = context?.contentResolver?.query(imageUri, null, null, null, null)
                     cursor?.moveToFirst()
-                    fileName = cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    fileName =
+                        cursor?.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                     cursor?.close()
 
-                    val parcelFileDescriptor = context?.contentResolver?.openFileDescriptor(imageUri, "r", null) ?: return
+                    val parcelFileDescriptor =
+                        context?.contentResolver?.openFileDescriptor(imageUri, "r", null) ?: return
                     val inputStream = FileInputStream(parcelFileDescriptor.fileDescriptor)
                     val fileOld = File(context?.cacheDir, fileName!!)
                     val outputStream = FileOutputStream(fileOld)
                     inputStream.copyTo(outputStream)
 
-                    if(outputStream.channel.size() > 2097152){
+                    if (outputStream.channel.size() > 2097152) {
                         snackBar.showSnackBar("Ukuran file harus dibawah 2MB", requireActivity())
-                    }else{
+                    } else {
                         tambahBukti(imageUri, fileName, true)
-                        val requestBody: RequestBody = fileOld.asRequestBody("Image/*".toMediaTypeOrNull())
-                        val multipartBody: MultipartBody.Part = MultipartBody.Part.createFormData("files[]", fileName, requestBody)
+                        val requestBody: RequestBody =
+                            fileOld.asRequestBody("Image/*".toMediaTypeOrNull())
+                        val multipartBody: MultipartBody.Part =
+                            MultipartBody.Part.createFormData("files[]", fileName, requestBody)
                         finalProof.add(multipartBody)
                     }
 
@@ -506,9 +528,9 @@ class ReportFragment : Fragment() {
                     val outputStream = FileOutputStream(fileOld)
                     inputStream.copyTo(outputStream)
 
-                    if(outputStream.channel.size() > 2097152){
+                    if (outputStream.channel.size() > 2097152) {
                         snackBar.showSnackBar("Ukuran file harus dibawah 2MB", requireActivity())
-                    }else{
+                    } else {
                         tambahBukti(pdfUri, fileName, false)
                         val requestBody: RequestBody =
                             fileOld.asRequestBody("Image/*".toMediaTypeOrNull())

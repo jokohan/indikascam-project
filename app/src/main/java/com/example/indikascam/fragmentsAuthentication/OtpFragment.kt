@@ -3,10 +3,10 @@ package com.example.indikascam.fragmentsAuthentication
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
@@ -22,7 +22,6 @@ import com.example.indikascam.sessionManager.SessionManager
 import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
-import java.lang.Exception
 
 class OtpFragment : Fragment() {
 

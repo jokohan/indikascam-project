@@ -92,13 +92,12 @@ class EditProfileFragment : Fragment() {
                         val response = try {
                             RetroInstance.apiProfile.postEditProfile(
                                 PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
-                                binding.editProfileFragmentEtName.text.toString()
-                                    .toRequestBody("text/plain".toMediaTypeOrNull()),
+                                binding.editProfileFragmentEtName.text.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
                                 if (binding.editProfileFragmentIvProfilePicture.tag == "ic profile") 1 else 0,
-                                if (binding.editProfileFragmentEtAccountNumber.text.toString() == "") null else binding.editProfileFragmentEtAccountNumber.text.toString()
+                                if (binding.editProfileFragmentEtAccountNumber.text.toString().isEmpty()) null else binding.editProfileFragmentEtAccountNumber.text.toString()
                                     .toRequestBody("text/plain".toMediaTypeOrNull()),
                                 banksFinal,
-                                if (binding.editProfileFragmentEtPhoneNumber.text.toString() == "") null else binding.editProfileFragmentEtPhoneNumber.text.toString()
+                                if (binding.editProfileFragmentEtPhoneNumber.text.toString().isEmpty()) null else binding.editProfileFragmentEtPhoneNumber.text.toString()
                                     .toRequestBody("text/plain".toMediaTypeOrNull()),
                                 profilePic
                             )

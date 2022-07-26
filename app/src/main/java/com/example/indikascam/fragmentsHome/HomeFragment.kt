@@ -303,47 +303,51 @@ class HomeFragment : Fragment() {
                     return@launchWhenCreated
                 }
                 if (response.isSuccessful && response.body() != null) {
-                    sharedViewModelUser.saveName(response.body()!!.name)
-                    sharedViewModelUser.saveEmail(response.body()!!.email)
-                    sharedViewModelUser.savePhoneNumber(response.body()?.phone_number)
-                    sharedViewModelUser.saveBankAccountNumber(response.body()?.bank_account_number)
-                    sharedViewModelUser.saveBankId(response.body()?.bank_id)
-                    sharedViewModelUser.saveIsAnonymous(response.body()!!.is_anonymous)
-                    sharedViewModelUser.saveProtectionLevel(response.body()!!.protection_level)
-                    sharedViewModelUser.saveEmailVerifiedAt(response.body()!!.email_verified_at)
-                    sharedViewModelUser.saveCanChangeBankNumber(response.body()!!.canChangeBankNumber)
-                    try {
-                        val profilePicName = response.body()?.profile_picture.toString()
-                        val responseFile = try {
-                            RetroInstance.apiProfile.postFile(
-                                PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
-                                PostFileRequest("profile_pictures", profilePicName)
-                            )
-                        } catch (e: IOException) {
-                            Log.e("loginErrorIO", e.message!!)
-                            return@launchWhenCreated
-                        } catch (e: HttpException) {
-                            Log.e("loginErrorHttp", e.message!!)
-                            return@launchWhenCreated
-                        }
-                        if (responseFile.isSuccessful && responseFile.body() != null) {
-                            val bitmap = BitmapFactory.decodeStream(responseFile.body()?.byteStream())
-                            sharedViewModelUser.saveProfilePicture(bitmap)
-                        } else {
-                            sharedViewModelUser.saveProfilePicture(null)
-                            try {
-                                @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
-                                    JSONObject(response.errorBody()!!.string())
-                                val errorMessage =
-                                    jObjError.getJSONObject("error").getString("message")
-                                Log.e("meError", errorMessage)
-                                Log.e("meError", response.code().toString())
-                            } catch (e: Exception) {
-                                Log.e("meError", e.toString())
+                    if(response.body()!!.email_verified_at == null){
+                        Navigation.findNavController(binding.root).navigate(R.id.action_homeFragment_to_loginFragment)
+                    }else{
+                        sharedViewModelUser.saveName(response.body()!!.name)
+                        sharedViewModelUser.saveEmail(response.body()!!.email)
+                        sharedViewModelUser.savePhoneNumber(response.body()?.phone_number)
+                        sharedViewModelUser.saveBankAccountNumber(response.body()?.bank_account_number)
+                        sharedViewModelUser.saveBankId(response.body()?.bank_id)
+                        sharedViewModelUser.saveIsAnonymous(response.body()!!.is_anonymous)
+                        sharedViewModelUser.saveProtectionLevel(response.body()!!.protection_level)
+                        sharedViewModelUser.saveEmailVerifiedAt(response.body()!!.email_verified_at)
+                        sharedViewModelUser.saveCanChangeBankNumber(response.body()!!.canChangeBankNumber)
+                        try {
+                            val profilePicName = response.body()?.profile_picture.toString()
+                            val responseFile = try {
+                                RetroInstance.apiProfile.postFile(
+                                    PostTokenRequest("Bearer ${sessionManager.fetchAuthToken()}"),
+                                    PostFileRequest("profile_pictures", profilePicName)
+                                )
+                            } catch (e: IOException) {
+                                Log.e("loginErrorIO", e.message!!)
+                                return@launchWhenCreated
+                            } catch (e: HttpException) {
+                                Log.e("loginErrorHttp", e.message!!)
+                                return@launchWhenCreated
                             }
+                            if (responseFile.isSuccessful && responseFile.body() != null) {
+                                val bitmap = BitmapFactory.decodeStream(responseFile.body()?.byteStream())
+                                sharedViewModelUser.saveProfilePicture(bitmap)
+                            } else {
+                                sharedViewModelUser.saveProfilePicture(null)
+                                try {
+                                    @Suppress("BlockingMethodInNonBlockingContext") val jObjError =
+                                        JSONObject(response.errorBody()!!.string())
+                                    val errorMessage =
+                                        jObjError.getJSONObject("error").getString("message")
+                                    Log.e("meError", errorMessage)
+                                    Log.e("meError", response.code().toString())
+                                } catch (e: Exception) {
+                                    Log.e("meError", e.toString())
+                                }
+                            }
+                        } catch (e: Exception) {
+                            Log.e("meProfilePicError", e.toString())
                         }
-                    } catch (e: Exception) {
-                        Log.e("meProfilePicError", e.toString())
                     }
                 } else {
                     try {

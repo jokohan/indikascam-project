@@ -164,6 +164,9 @@ class OtpFragment : Fragment() {
                         }
                     }
                     loadingDialog.dismiss()
+                    if(timer != 61000L){
+                        countDownTimer.cancel()
+                    }
                 }
 
             }else{
@@ -202,8 +205,10 @@ class OtpFragment : Fragment() {
                         }
                     }
                     loadingDialog.dismiss()
+                    if(timer != 61000L){
+                        countDownTimer.cancel()
+                    }
                 }
-
             }
         }
 
